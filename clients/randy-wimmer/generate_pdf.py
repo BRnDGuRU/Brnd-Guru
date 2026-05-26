@@ -194,63 +194,68 @@ def cover_page_draw(canvas, doc):
     canvas.line(bx, by - 38, W - 54, by - 38)
 
     # ── PROPOSAL label ──
-    label_y = H - 200
+    label_y = H - 186
     canvas.setFont("Helvetica-Bold", 10)
     canvas.setFillColor(COVER_OG)
     canvas.drawString(bx, label_y, "P R O P O S A L")
 
-    # ── Main title lines ──
+    # ── Main title lines (30pt, 40pt leading) ──
     title_lines = ["Govt. Contracting's", "Webinar-Led Revenue", "Infrastructure"]
     for i, line in enumerate(title_lines):
-        canvas.setFont("Helvetica-Bold", 33)
+        canvas.setFont("Helvetica-Bold", 30)
         canvas.setFillColor(WHITE)
-        canvas.drawString(bx, label_y - 20 - i * 43, line)
+        canvas.drawString(bx, label_y - 22 - i * 40, line)
 
     # ── Orange subtitle ──
-    sub_y = label_y - 20 - 3 * 43 - 6
-    canvas.setFont("Helvetica-Bold", 15)
+    sub_y = label_y - 22 - 3 * 40 - 10
+    canvas.setFont("Helvetica-Bold", 14)
     canvas.setFillColor(COVER_OG)
     canvas.drawString(bx, sub_y, "6-Agent Automation System")
 
-    # Orange accent line
-    acl_y = sub_y - 18
+    # Orange accent line (clear gap below subtitle)
+    acl_y = sub_y - 20
     canvas.setFillColor(COVER_OG)
-    canvas.rect(bx, acl_y, W - bx - 54, 2.5, fill=1, stroke=0)
+    canvas.rect(bx, acl_y, W - bx - 54, 2, fill=1, stroke=0)
 
-    # ── PREPARED FOR block ──
-    pf_top = acl_y - 44
+    # ── PREPARED FOR block — positioned cleanly below accent line ──
+    pf_label_y   = acl_y - 30   # "PREPARED FOR" label
+    pf_name_y    = pf_label_y - 26  # "Randy Wimmer"
+    pf_company_y = pf_name_y - 18   # company line
 
-    # Left orange bar accent
+    # Left orange bar aligned to block content
+    bar_bottom = pf_company_y - 2
+    bar_top    = pf_label_y + 10
     canvas.setFillColor(COVER_OG)
-    canvas.rect(bx - 14, pf_top - 8, 4, 82, fill=1, stroke=0)
+    canvas.rect(bx - 14, bar_bottom, 4, bar_top - bar_bottom, fill=1, stroke=0)
 
     canvas.setFont("Helvetica-Bold", 8)
     canvas.setFillColor(colors.HexColor("#aaaaaa"))
-    canvas.drawString(bx, pf_top + 56, "P R E P A R E D   F O R")
+    canvas.drawString(bx, pf_label_y, "P R E P A R E D   F O R")
 
-    canvas.setFont("Helvetica-Bold", 21)
+    canvas.setFont("Helvetica-Bold", 20)
     canvas.setFillColor(WHITE)
-    canvas.drawString(bx, pf_top + 28, "Randy Wimmer")
+    canvas.drawString(bx, pf_name_y, "Randy Wimmer")
 
     canvas.setFont("Helvetica", 10)
     canvas.setFillColor(colors.HexColor("#888888"))
-    canvas.drawString(bx, pf_top + 10, "Government Contracting Academy / ISO Certification Group")
+    canvas.drawString(bx, pf_company_y, "Government Contracting Academy / ISO Certification Group")
 
     # ── PREPARED BY block ──
-    pb_top = pf_top - 46
+    pb_label_y = pf_company_y - 30
+    pb_name_y  = pb_label_y - 20
 
     canvas.setFont("Helvetica-Bold", 8)
     canvas.setFillColor(colors.HexColor("#aaaaaa"))
-    canvas.drawString(bx, pb_top + 22, "P R E P A R E D   B Y")
+    canvas.drawString(bx, pb_label_y, "P R E P A R E D   B Y")
 
     canvas.setFont("Helvetica-Bold", 13)
     canvas.setFillColor(WHITE)
-    canvas.drawString(bx, pb_top, "Shivanshu — BrndGuru")
+    canvas.drawString(bx, pb_name_y, "Shivanshu — BrndGuru")
 
     # ── Date / validity ──
     canvas.setFont("Helvetica", 9)
     canvas.setFillColor(colors.HexColor("#666666"))
-    canvas.drawString(bx, pb_top - 20, "May 26, 2026   |   Valid Until: June 10, 2026   |   Confidential")
+    canvas.drawString(bx, pb_name_y - 22, "May 26, 2026   |   Valid Until: June 10, 2026   |   Confidential")
 
     # ── Footer bar ──
     canvas.setFillColor(COVER_FT)
