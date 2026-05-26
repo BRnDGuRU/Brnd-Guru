@@ -8,6 +8,8 @@ from reportlab.platypus import (
 )
 from reportlab.lib.enums import TA_CENTER, TA_LEFT, TA_RIGHT
 from reportlab.platypus import PageBreak
+from reportlab.graphics.shapes import Drawing, Rect, String, Line, Polygon
+from reportlab.graphics import renderPDF
 
 NAVY   = colors.HexColor("#1e3a5f")
 MINT   = colors.HexColor("#2ec4a5")
@@ -336,7 +338,7 @@ story.append(Spacer(1, 12))
 
 # Agent 6
 story.append(KeepTogether([
-    agent_header(6, "REVENUE CONTROL TOWER DASHBOARD", "Control Tower | MONTH 3"),
+    agent_header(6, "REVENUE CONTROL TOWER DASHBOARD", "Control Tower | MONTH 1"),
     Spacer(1, 6),
     Paragraph("Full visibility across every touchpoint. One dashboard to see what's working, what's not, and where to scale.", S_body),
     Spacer(1, 4),
@@ -371,6 +373,7 @@ tools = [
     ("Webinar Platform",    "Zoom Webinars",        "Live webinar hosting, attendance tracking, Q&A, recording & replay delivery",                      "Agent 1",                "Existing subscription"),
     ("LinkedIn — Pages",    "LinkedIn (Organic)",   "Founder profile, company pages (GCA, ICG), newsletter publishing, scheduled content posting",     "Agents 3, 4",            "Existing accounts — no extra cost"),
     ("LinkedIn — Ads",      "LinkedIn Campaign Mgr","Paid acquisition campaigns, audience targeting, retargeting, lookalike audiences, CPL/CPA tracking","Agent 2",                "Ad budget billed separately ($500–$1,500/month)"),
+    ("LinkedIn — Outreach", "HeyReach",             "LinkedIn connection automation — send up to 500 targeted connection requests/month with follow-up sequences", "Future",             "~$39/month (with coupon)"),
     ("AI Automation",       "Claude AI",            "Content drafting, inbound DM reply assist, sequence optimization, intent detection (human-in-the-loop)", "Agents 3, 4, 5",   "$100/month (included in agency fee)"),
     ("Analytics & BI",      "Revenue Dashboard",    "Unified reporting across all channels — registrations, calls, pipeline, revenue, attribution",      "Agent 6",                "Built inside GHL + connected data sources"),
 ]
@@ -406,9 +409,9 @@ story.append(Spacer(1, 8))
 story.append(pricing_table(
     ["Phase", "Month", "Agents Delivered", "Focus"],
     [
-        ["Phase 1", "Month 1", "Agent 1 + Agent 2", "Build the core conversion path — webinar funnel + paid traffic"],
-        ["Phase 2", "Month 2", "Agent 3 + Agent 4", "Layer in authority content + LinkedIn intent & engagement monitoring"],
-        ["Phase 3", "Month 3", "Agent 5 + Agent 6", "Activate email engine + deploy full revenue dashboard"],
+        ["Phase 1", "Month 1", "Agent 1 + Agent 2 + Agent 6", "Core funnel, paid traffic engine & full revenue dashboard live from day one"],
+        ["Phase 2", "Month 2", "Agent 3 + Agent 4",           "Authority content layer + LinkedIn intent & engagement monitoring"],
+        ["Phase 3", "Month 3", "Agent 5",                     "Full email nurture, intent scoring & reactivation engine"],
     ],
     [0.8*inch, 0.8*inch, 1.7*inch, 3.7*inch]
 ))
@@ -496,6 +499,7 @@ story.append(pricing_table(
         ["Zoom Webinars",          "Live webinar hosting & replay delivery",  "Existing subscription"],
         ["LinkedIn (Organic)",     "Content scheduling, pages, newsletters",  "No extra cost"],
         ["LinkedIn Campaign Mgr",  "Paid ads, retargeting & lookalikes",      "$500–$1,500 (ad spend)"],
+        ["HeyReach",               "LinkedIn outreach automation (future activation)", "~$39 (with coupon)"],
     ],
     [1.9*inch, 2.6*inch, 2.5*inch]
 ))
@@ -506,15 +510,193 @@ story.append(pricing_table(
     ["Category", "Range"],
     [
         ["Agency Fee (services + AI automation)", "$900"],
-        ["Tools & Platforms (excl. ads)",         "$97 (GHL only — all others existing/free)"],
+        ["Tools & Platforms (excl. ads)",         "$97 GHL + $39 HeyReach (future) = ~$136"],
         ["LinkedIn Ads Budget",                    "$500–$1,500"],
-        ["Total Monthly Estimate",                 "~$1,497–$2,497/month"],
+        ["Total Monthly Estimate",                 "~$1,536–$2,536/month"],
     ],
     [4*inch, 3*inch],
     highlight_last=True
 ))
 story.append(Spacer(1, 6))
 story.append(Paragraph("*LinkedIn ad spend is the primary variable cost. Recommended starting budget: $500/month. Scale as cost-per-registrant improves.", S_note))
+story.append(Spacer(1, 14))
+
+# ── ROI & LIFETIME VALUE ──────────────────────────────────────────────────────
+story.append(section_header("ROI & LIFETIME VALUE"))
+story.append(Spacer(1, 8))
+story.append(Paragraph(
+    "This is not a campaign spend. It is a permanent revenue infrastructure — built once, running forever. "
+    "The system compounds over time: the funnel fills faster, the audience grows warmer, and each additional "
+    "deal closed carries zero incremental cost. <b>One ISO certification deal closed ($22K avg) covers 11 months of the entire system.</b>",
+    S_body))
+story.append(Spacer(1, 10))
+
+# ── ROI Metric Cards ──
+def make_roi_cards():
+    PT = 72 / inch
+    d = Drawing(504, 95)
+    card_w, card_h = 154, 85
+    configs = [
+        (0,   colors.HexColor("#fff3cd"), colors.HexColor("#856404"), WHITE if False else DGRAY,
+         "MONTHLY SYSTEM COST", "~$2,000", "Agency + tools + ads (avg)"),
+        (175, colors.HexColor("#d4edda"), colors.HexColor("#155724"), DGRAY,
+         "AVG ISO DEAL VALUE",  "$22,000", "Per certification package closed"),
+        (350, NAVY,              GOLD,               WHITE,
+         "ROI PER DEAL CLOSED", "11x",    "1 deal = 11 months fully covered"),
+    ]
+    for x, bg, label_c, text_c, label, val, sub in configs:
+        d.add(Rect(x, 0, card_w, card_h, fillColor=bg,
+                   strokeColor=colors.HexColor("#ced4da"), strokeWidth=0.6, rx=4, ry=4))
+        d.add(String(x + card_w/2, 70, label,
+                     fontName="Helvetica-Bold", fontSize=7, fillColor=label_c, textAnchor="middle"))
+        d.add(String(x + card_w/2, 40, val,
+                     fontName="Helvetica-Bold", fontSize=24, fillColor=text_c, textAnchor="middle"))
+        d.add(String(x + card_w/2, 10, sub,
+                     fontName="Helvetica", fontSize=7, fillColor=text_c, textAnchor="middle"))
+    return d
+
+story.append(make_roi_cards())
+story.append(Spacer(1, 14))
+
+# ── 12-Month Revenue Projection Chart ──
+story.append(Paragraph("12-Month Revenue Projection (Conservative Estimate)", S_h2))
+story.append(Paragraph(
+    "Assumes setup in Months 1–2, first deal in Month 3, scaling to 4 deals/month by Month 10+.",
+    S_body))
+story.append(Spacer(1, 6))
+
+def make_roi_chart():
+    d = Drawing(504, 200)
+    cx, cy, cw, ch = 55, 30, 440, 155
+    max_v = 90000
+    investment = [2000] * 12
+    revenue    = [0, 0, 22000, 22000, 44000, 44000, 44000, 66000, 66000, 66000, 88000, 88000]
+
+    # Grid lines & Y labels
+    for val, lbl in [(0,"$0"),(22000,"$22K"),(44000,"$44K"),(66000,"$66K"),(88000,"$88K")]:
+        y = cy + (val / max_v) * ch
+        d.add(Line(cx, y, cx+cw, y,
+                   strokeColor=colors.HexColor("#e9ecef"), strokeWidth=0.4))
+        d.add(String(cx-4, y-4, lbl,
+                     fontName="Helvetica", fontSize=6.5, fillColor=DGRAY, textAnchor="end"))
+
+    # Axes
+    d.add(Line(cx, cy, cx, cy+ch, strokeColor=DGRAY, strokeWidth=0.8))
+    d.add(Line(cx, cy, cx+cw, cy, strokeColor=DGRAY, strokeWidth=0.8))
+
+    grp_w = cw / 12
+    bw    = grp_w * 0.30
+
+    for i in range(12):
+        x0 = cx + i * grp_w + grp_w * 0.12
+
+        # Investment bar (blue)
+        ih = max((investment[i] / max_v) * ch, 2)
+        d.add(Rect(x0, cy, bw, ih,
+                   fillColor=colors.HexColor("#3498db"), strokeWidth=0))
+
+        # Revenue bar (green) — only draw if > 0
+        if revenue[i] > 0:
+            rh = (revenue[i] / max_v) * ch
+            d.add(Rect(x0 + bw + 2, cy, bw, rh,
+                       fillColor=colors.HexColor("#27ae60"), strokeWidth=0))
+
+        # Month label
+        d.add(String(x0 + bw, cy - 10, f"M{i+1}",
+                     fontName="Helvetica", fontSize=6, fillColor=DGRAY, textAnchor="middle"))
+
+    # Legend
+    lx, ly = cx + cw - 160, cy + ch + 10
+    d.add(Rect(lx,    ly, 9, 9, fillColor=colors.HexColor("#3498db"), strokeWidth=0))
+    d.add(String(lx+13, ly+1, "Monthly Investment (~$2K)",
+                 fontName="Helvetica", fontSize=7, fillColor=DGRAY))
+    d.add(Rect(lx,    ly-14, 9, 9, fillColor=colors.HexColor("#27ae60"), strokeWidth=0))
+    d.add(String(lx+13, ly-13, "Revenue (Deals Closed)",
+                 fontName="Helvetica", fontSize=7, fillColor=DGRAY))
+
+    # "Break-even" annotation arrow on Month 3
+    bx = cx + 2*grp_w + grp_w*0.12 + bw
+    by = cy + (22000/max_v)*ch + 6
+    d.add(String(bx+4, by+8, "First deal →",
+                 fontName="Helvetica-Bold", fontSize=6.5,
+                 fillColor=colors.HexColor("#27ae60")))
+
+    return d
+
+story.append(make_roi_chart())
+story.append(Spacer(1, 10))
+
+# ── Long-Term Projection Table ──
+story.append(Paragraph("Long-Term ROI Projection", S_h2))
+story.append(Paragraph(
+    "The system cost stays flat. Revenue scales as the audience, funnel, and trust compound month over month.",
+    S_body))
+story.append(Spacer(1, 6))
+
+lt_headers = ["Timeframe", "Deals Closed (Est.)", "Revenue Generated", "System Cost", "Net ROI Multiple"]
+lt_rows = [
+    ["Month 1–2",   "0 (Setup)",    "$0",          "~$4,000",   "—"],
+    ["Month 3–6",   "5–6 deals",    "~$110–132K",  "~$8,000",   "~14–17x"],
+    ["Month 7–12",  "10–12 deals",  "~$220–264K",  "~$12,000",  "~18–22x"],
+    ["Full Year 1", "15–18 deals",  "~$330–396K",  "~$24,000",  "~14–17x"],
+    ["Year 2",      "28–36 deals",  "~$616–792K",  "~$24,000",  "~26–33x"],
+    ["Year 3",      "40–52 deals",  "~$880K–1.1M", "~$24,000",  "~37–46x"],
+]
+
+lt_data = [[Paragraph(h, style(f"lth{i}", fontName="Helvetica-Bold", fontSize=8.5,
+            textColor=WHITE, alignment=TA_CENTER, leading=13)) for i, h in enumerate(lt_headers)]]
+for j, row in enumerate(lt_rows):
+    is_total = "Year" in row[0] and "Full" in row[0]
+    is_y2    = row[0] == "Year 2"
+    is_y3    = row[0] == "Year 3"
+    bg = colors.HexColor("#e8f8f5") if is_total else (colors.HexColor("#dff0e8") if is_y2 else (colors.HexColor("#c8f0db") if is_y3 else None))
+    bold = is_total or is_y2 or is_y3
+    lt_data.append([Paragraph(c, style(f"ltc{j}{k}",
+                    fontName="Helvetica-Bold" if bold else "Helvetica",
+                    fontSize=8.5, textColor=NAVY if bold else DGRAY, leading=13))
+                    for k, c in enumerate(row)])
+
+lt_tbl = Table(lt_data, colWidths=[1.1*inch, 1.3*inch, 1.5*inch, 1.1*inch, 2.0*inch])
+lt_ts = [
+    ("BACKGROUND",    (0,0), (-1,0),  NAVY),
+    ("ROWBACKGROUNDS",(0,1), (-1,-1), [WHITE, LGRAY]),
+    ("GRID",          (0,0), (-1,-1), 0.4, colors.HexColor("#dce3ea")),
+    ("TOPPADDING",    (0,0), (-1,-1), 6),
+    ("BOTTOMPADDING", (0,0), (-1,-1), 6),
+    ("LEFTPADDING",   (0,0), (-1,-1), 8),
+    ("RIGHTPADDING",  (0,0), (-1,-1), 8),
+    ("ALIGN",         (0,0), (-1,-1), "CENTER"),
+    ("VALIGN",        (0,0), (-1,-1), "MIDDLE"),
+    ("LINEABOVE",     (0,4), (-1,4),  1.5, MINT),    # Full Year 1 row
+    ("BACKGROUND",    (0,4), (-1,4),  colors.HexColor("#e8f8f5")),
+    ("LINEABOVE",     (0,5), (-1,5),  1.5, GOLD),    # Year 2
+    ("BACKGROUND",    (0,5), (-1,5),  colors.HexColor("#fff9e6")),
+    ("LINEABOVE",     (0,6), (-1,6),  1.5, GOLD),    # Year 3
+    ("BACKGROUND",    (0,6), (-1,6),  colors.HexColor("#fff3cd")),
+]
+lt_tbl.setStyle(TableStyle(lt_ts))
+story.append(lt_tbl)
+story.append(Spacer(1, 6))
+
+# ── Lifetime value callout box ──
+lv_tbl = Table([[
+    Paragraph("⚡", style("lv_icon", fontName="Helvetica-Bold", fontSize=16, textColor=GOLD, leading=20)),
+    Paragraph(
+        "<b>This system is a permanent asset.</b> Unlike ads or one-off campaigns, every agent built here "
+        "continues running indefinitely. The webinar funnel keeps filling. The email engine keeps nurturing. "
+        "The dashboard keeps optimizing. At Year 3, you're running a $1M+ revenue machine on the same $900/month agency fee.",
+        style("lv_txt", fontName="Helvetica", fontSize=9, textColor=WHITE, leading=14)),
+]], colWidths=[0.5*inch, 6.5*inch])
+lv_tbl.setStyle(TableStyle([
+    ("BACKGROUND",    (0,0), (-1,-1), NAVY),
+    ("TOPPADDING",    (0,0), (-1,-1), 12),
+    ("BOTTOMPADDING", (0,0), (-1,-1), 12),
+    ("LEFTPADDING",   (0,0), (-1,-1), 12),
+    ("RIGHTPADDING",  (0,0), (-1,-1), 12),
+    ("VALIGN",        (0,0), (-1,-1), "MIDDLE"),
+    ("LINERIGHT",     (0,0), (0,-1),  2, GOLD),
+]))
+story.append(lv_tbl)
 story.append(Spacer(1, 14))
 
 # ── TERMS & CONDITIONS ───────────────────────────────────────────────────────
