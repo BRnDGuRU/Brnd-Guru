@@ -137,35 +137,40 @@ def cover_page_draw(canvas, doc):
     from reportlab.lib.pagesizes import letter
     W, H = letter  # 612 x 792
 
+    COVER_BG  = colors.HexColor("#111111")   # BrndGuru black
+    COVER_OG  = colors.HexColor("#FF6600")   # BrndGuru orange
+    COVER_OG2 = colors.HexColor("#CC5200")   # darker orange (depth)
+    COVER_FT  = colors.HexColor("#080808")   # footer near-black
+
     canvas.saveState()
 
-    # Full-page NAVY background
-    canvas.setFillColor(NAVY)
+    # Full-page black background
+    canvas.setFillColor(COVER_BG)
     canvas.rect(0, 0, W, H, fill=1, stroke=0)
 
-    # Top-right MINT triangle corner accent
-    canvas.setFillColor(MINT)
+    # Top-right orange triangle corner accent
+    canvas.setFillColor(COVER_OG)
     p = canvas.beginPath()
     p.moveTo(W, H); p.lineTo(W - 230, H); p.lineTo(W, H - 230)
     p.close()
     canvas.drawPath(p, fill=1, stroke=0)
 
-    # Inner brighter triangle (depth layer)
-    canvas.setFillColor(colors.HexColor("#25a98e"))
+    # Inner darker orange triangle (depth layer)
+    canvas.setFillColor(COVER_OG2)
     p2 = canvas.beginPath()
     p2.moveTo(W, H); p2.lineTo(W - 120, H); p2.lineTo(W, H - 120)
     p2.close()
     canvas.drawPath(p2, fill=1, stroke=0)
 
-    # Bottom-left GOLD triangle accent
-    canvas.setFillColor(GOLD)
+    # Bottom-left orange triangle accent
+    canvas.setFillColor(COVER_OG)
     p3 = canvas.beginPath()
     p3.moveTo(0, 0); p3.lineTo(150, 0); p3.lineTo(0, 150)
     p3.close()
     canvas.drawPath(p3, fill=1, stroke=0)
 
-    # Left-edge MINT vertical accent bar
-    canvas.setFillColor(MINT)
+    # Left-edge orange vertical accent bar
+    canvas.setFillColor(COVER_OG)
     canvas.rect(0, H * 0.22, 5, H * 0.52, fill=1, stroke=0)
 
     # ── BRNDGURU wordmark ──
@@ -175,23 +180,23 @@ def cover_page_draw(canvas, doc):
     canvas.setFillColor(WHITE)
     brnd_w = canvas.stringWidth("BRND", "Helvetica-Bold", fs)
     canvas.drawString(bx, by, "BRND")
-    canvas.setFillColor(MINT)
+    canvas.setFillColor(COVER_OG)
     canvas.drawString(bx + brnd_w, by, "GURU")
 
     # Tagline
     canvas.setFont("Helvetica", 11)
-    canvas.setFillColor(colors.HexColor("#7ec8e3"))
+    canvas.setFillColor(colors.HexColor("#aaaaaa"))
     canvas.drawString(bx, by - 22, "AI-Powered Revenue Systems")
 
-    # Thin MINT rule below wordmark
-    canvas.setStrokeColor(MINT)
+    # Thin orange rule below wordmark
+    canvas.setStrokeColor(COVER_OG)
     canvas.setLineWidth(1.5)
     canvas.line(bx, by - 38, W - 54, by - 38)
 
     # ── PROPOSAL label ──
     label_y = H - 200
     canvas.setFont("Helvetica-Bold", 10)
-    canvas.setFillColor(MINT)
+    canvas.setFillColor(COVER_OG)
     canvas.drawString(bx, label_y, "P R O P O S A L")
 
     # ── Main title lines ──
@@ -201,26 +206,26 @@ def cover_page_draw(canvas, doc):
         canvas.setFillColor(WHITE)
         canvas.drawString(bx, label_y - 20 - i * 43, line)
 
-    # ── GOLD subtitle ──
+    # ── Orange subtitle ──
     sub_y = label_y - 20 - 3 * 43 - 6
     canvas.setFont("Helvetica-Bold", 15)
-    canvas.setFillColor(GOLD)
+    canvas.setFillColor(COVER_OG)
     canvas.drawString(bx, sub_y, "6-Agent Automation System")
 
-    # GOLD accent line
+    # Orange accent line
     acl_y = sub_y - 18
-    canvas.setFillColor(GOLD)
+    canvas.setFillColor(COVER_OG)
     canvas.rect(bx, acl_y, W - bx - 54, 2.5, fill=1, stroke=0)
 
     # ── PREPARED FOR block ──
     pf_top = acl_y - 44
 
-    # Left MINT bar accent
-    canvas.setFillColor(MINT)
+    # Left orange bar accent
+    canvas.setFillColor(COVER_OG)
     canvas.rect(bx - 14, pf_top - 8, 4, 82, fill=1, stroke=0)
 
     canvas.setFont("Helvetica-Bold", 8)
-    canvas.setFillColor(colors.HexColor("#7ec8e3"))
+    canvas.setFillColor(colors.HexColor("#aaaaaa"))
     canvas.drawString(bx, pf_top + 56, "P R E P A R E D   F O R")
 
     canvas.setFont("Helvetica-Bold", 21)
@@ -228,14 +233,14 @@ def cover_page_draw(canvas, doc):
     canvas.drawString(bx, pf_top + 28, "Randy Wimmer")
 
     canvas.setFont("Helvetica", 10)
-    canvas.setFillColor(colors.HexColor("#a8c6e0"))
+    canvas.setFillColor(colors.HexColor("#888888"))
     canvas.drawString(bx, pf_top + 10, "Government Contracting Academy / ISO Certification Group")
 
     # ── PREPARED BY block ──
     pb_top = pf_top - 46
 
     canvas.setFont("Helvetica-Bold", 8)
-    canvas.setFillColor(colors.HexColor("#7ec8e3"))
+    canvas.setFillColor(colors.HexColor("#aaaaaa"))
     canvas.drawString(bx, pb_top + 22, "P R E P A R E D   B Y")
 
     canvas.setFont("Helvetica-Bold", 13)
@@ -244,27 +249,27 @@ def cover_page_draw(canvas, doc):
 
     # ── Date / validity ──
     canvas.setFont("Helvetica", 9)
-    canvas.setFillColor(colors.HexColor("#6a8fa8"))
+    canvas.setFillColor(colors.HexColor("#666666"))
     canvas.drawString(bx, pb_top - 20, "May 26, 2026   |   Valid Until: June 10, 2026   |   Confidential")
 
     # ── Footer bar ──
-    canvas.setFillColor(colors.HexColor("#0f1d2e"))
+    canvas.setFillColor(COVER_FT)
     canvas.rect(0, 0, W, 50, fill=1, stroke=0)
 
     canvas.setFont("Helvetica-Bold", 9)
-    canvas.setFillColor(MINT)
+    canvas.setFillColor(COVER_OG)
     canvas.drawString(50, 18, "brndguruofficial@gmail.com")
 
     sep_x = 50 + canvas.stringWidth("brndguruofficial@gmail.com", "Helvetica-Bold", 9) + 12
-    canvas.setFillColor(colors.HexColor("#3d6080"))
+    canvas.setFillColor(colors.HexColor("#444444"))
     canvas.drawString(sep_x, 18, "|")
 
     canvas.setFont("Helvetica", 9)
-    canvas.setFillColor(colors.HexColor("#6a8fa8"))
+    canvas.setFillColor(colors.HexColor("#888888"))
     canvas.drawString(sep_x + 14, 18, "brndguru.com")
 
     canvas.setFont("Helvetica", 9)
-    canvas.setFillColor(colors.HexColor("#3d6080"))
+    canvas.setFillColor(colors.HexColor("#444444"))
     canvas.drawRightString(W - 50, 18, "Confidential — For Randy Wimmer Only")
 
     canvas.restoreState()
@@ -507,7 +512,7 @@ tools = [
     ("LinkedIn — Outreach", "HeyReach",             "LinkedIn connection automation — up to 500 targeted connection requests/month with follow-up sequences",    "Agent 4",            "~$39/month (with coupon)"),
     ("AI Automation",       "Claude AI",            "Content drafting, DM reply assist, sequence optimization, intent detection (human-in-the-loop)",      "Agents 3, 4, 5",   "$100/month (included in agency fee)"),
     ("Automation Engine",   "n8n (Self-Hosted)",    "Workflow automation server — connects GHL, LinkedIn, Zoom, email, and all agents via automated flows", "All Agents",         "FREE (Community Edition — open source)"),
-    ("VPS Hosting",         "Cloud VPS Server",     "Dedicated virtual server to host n8n self-hosted instance — DigitalOcean / Vultr / Hetzner",         "n8n hosting",        "~$20–40/month (2 vCPU, 4GB RAM)"),
+    ("VPS Hosting",         "Cloud VPS Server",     "Dedicated virtual server to host n8n self-hosted instance — DigitalOcean / Vultr / Hetzner",         "n8n hosting",        "$250 / 2 years (one-time — ~$10/mo amortized)"),
     ("Analytics & BI",      "Revenue Dashboard",    "Unified reporting across all channels — registrations, calls, pipeline, revenue, attribution",        "Agent 6",            "Built inside GHL + n8n data flows"),
 ]
 
@@ -535,7 +540,7 @@ story.append(tool_tbl)
 story.append(Spacer(1, 6))
 story.append(Paragraph(
     "* LinkedIn Ads budget is client-funded and billed directly to the client's ad account. "
-    "n8n Community Edition is free and open-source — VPS cost is the only hosting expense (~$20–40/month). "
+    "n8n Community Edition is free and open-source — VPS cost is the only hosting expense ($250 billed once for 2 years, ~$10/month amortized). "
     "BrndGuru manages all setup, configuration, and optimization.",
     S_note))
 story.append(Spacer(1, 14))
@@ -638,7 +643,7 @@ story.append(pricing_table(
         ["LinkedIn Campaign Mgr",  "Paid ads, retargeting & lookalikes",      "$500–$1,500 (ad spend)"],
         ["HeyReach",               "LinkedIn connection & outreach automation","~$39 (with coupon)"],
         ["n8n (Self-Hosted)",      "Workflow automation engine (Community Ed.)","FREE (open source)"],
-        ["VPS Hosting",            "Server to host n8n (DigitalOcean/Vultr)", "~$20–40/month"],
+        ["VPS Hosting",            "Server to host n8n (DigitalOcean/Vultr)", "$250 / 2 years (one-time)"],
     ],
     [1.9*inch, 2.6*inch, 2.5*inch]
 ))
@@ -649,9 +654,9 @@ story.append(pricing_table(
     ["Category", "Range"],
     [
         ["Agency Fee (services + AI automation)", "$900"],
-        ["Tools & Platforms (excl. ads)",         "GHL $97 + HeyReach $39 + VPS $20–40 = ~$156–176"],
+        ["Tools & Platforms (excl. ads)",         "GHL $97 + HeyReach $39 + VPS ~$10 (amortized) = ~$146"],
         ["LinkedIn Ads Budget",                    "$500–$1,500"],
-        ["Total Monthly Estimate",                 "~$1,556–$2,576/month"],
+        ["Total Monthly Estimate",                 "~$1,546–$2,546/month"],
     ],
     [4*inch, 3*inch],
     highlight_last=True
