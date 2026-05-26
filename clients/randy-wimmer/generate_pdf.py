@@ -133,28 +133,151 @@ def goal_box(text):
     ]))
     return tbl
 
+def cover_page_draw(canvas, doc):
+    from reportlab.lib.pagesizes import letter
+    W, H = letter  # 612 x 792
+
+    canvas.saveState()
+
+    # Full-page NAVY background
+    canvas.setFillColor(NAVY)
+    canvas.rect(0, 0, W, H, fill=1, stroke=0)
+
+    # Top-right MINT triangle corner accent
+    canvas.setFillColor(MINT)
+    p = canvas.beginPath()
+    p.moveTo(W, H); p.lineTo(W - 230, H); p.lineTo(W, H - 230)
+    p.close()
+    canvas.drawPath(p, fill=1, stroke=0)
+
+    # Inner brighter triangle (depth layer)
+    canvas.setFillColor(colors.HexColor("#25a98e"))
+    p2 = canvas.beginPath()
+    p2.moveTo(W, H); p2.lineTo(W - 120, H); p2.lineTo(W, H - 120)
+    p2.close()
+    canvas.drawPath(p2, fill=1, stroke=0)
+
+    # Bottom-left GOLD triangle accent
+    canvas.setFillColor(GOLD)
+    p3 = canvas.beginPath()
+    p3.moveTo(0, 0); p3.lineTo(150, 0); p3.lineTo(0, 150)
+    p3.close()
+    canvas.drawPath(p3, fill=1, stroke=0)
+
+    # Left-edge MINT vertical accent bar
+    canvas.setFillColor(MINT)
+    canvas.rect(0, H * 0.22, 5, H * 0.52, fill=1, stroke=0)
+
+    # ── BRNDGURU wordmark ──
+    bx, by = 54, H - 96
+    fs = 46
+    canvas.setFont("Helvetica-Bold", fs)
+    canvas.setFillColor(WHITE)
+    brnd_w = canvas.stringWidth("BRND", "Helvetica-Bold", fs)
+    canvas.drawString(bx, by, "BRND")
+    canvas.setFillColor(MINT)
+    canvas.drawString(bx + brnd_w, by, "GURU")
+
+    # Tagline
+    canvas.setFont("Helvetica", 11)
+    canvas.setFillColor(colors.HexColor("#7ec8e3"))
+    canvas.drawString(bx, by - 22, "AI-Powered Revenue Systems")
+
+    # Thin MINT rule below wordmark
+    canvas.setStrokeColor(MINT)
+    canvas.setLineWidth(1.5)
+    canvas.line(bx, by - 38, W - 54, by - 38)
+
+    # ── PROPOSAL label ──
+    label_y = H - 200
+    canvas.setFont("Helvetica-Bold", 10)
+    canvas.setFillColor(MINT)
+    canvas.drawString(bx, label_y, "P R O P O S A L")
+
+    # ── Main title lines ──
+    title_lines = ["Govt. Contracting's", "Webinar-Led Revenue", "Infrastructure"]
+    for i, line in enumerate(title_lines):
+        canvas.setFont("Helvetica-Bold", 33)
+        canvas.setFillColor(WHITE)
+        canvas.drawString(bx, label_y - 20 - i * 43, line)
+
+    # ── GOLD subtitle ──
+    sub_y = label_y - 20 - 3 * 43 - 6
+    canvas.setFont("Helvetica-Bold", 15)
+    canvas.setFillColor(GOLD)
+    canvas.drawString(bx, sub_y, "6-Agent Automation System")
+
+    # GOLD accent line
+    acl_y = sub_y - 18
+    canvas.setFillColor(GOLD)
+    canvas.rect(bx, acl_y, W - bx - 54, 2.5, fill=1, stroke=0)
+
+    # ── PREPARED FOR block ──
+    pf_top = acl_y - 44
+
+    # Left MINT bar accent
+    canvas.setFillColor(MINT)
+    canvas.rect(bx - 14, pf_top - 8, 4, 82, fill=1, stroke=0)
+
+    canvas.setFont("Helvetica-Bold", 8)
+    canvas.setFillColor(colors.HexColor("#7ec8e3"))
+    canvas.drawString(bx, pf_top + 56, "P R E P A R E D   F O R")
+
+    canvas.setFont("Helvetica-Bold", 21)
+    canvas.setFillColor(WHITE)
+    canvas.drawString(bx, pf_top + 28, "Randy Wimmer")
+
+    canvas.setFont("Helvetica", 10)
+    canvas.setFillColor(colors.HexColor("#a8c6e0"))
+    canvas.drawString(bx, pf_top + 10, "Government Contracting Academy / ISO Certification Group")
+
+    # ── PREPARED BY block ──
+    pb_top = pf_top - 46
+
+    canvas.setFont("Helvetica-Bold", 8)
+    canvas.setFillColor(colors.HexColor("#7ec8e3"))
+    canvas.drawString(bx, pb_top + 22, "P R E P A R E D   B Y")
+
+    canvas.setFont("Helvetica-Bold", 13)
+    canvas.setFillColor(WHITE)
+    canvas.drawString(bx, pb_top, "Shivanshu — BrndGuru")
+
+    # ── Date / validity ──
+    canvas.setFont("Helvetica", 9)
+    canvas.setFillColor(colors.HexColor("#6a8fa8"))
+    canvas.drawString(bx, pb_top - 20, "May 26, 2026   |   Valid Until: June 10, 2026   |   Confidential")
+
+    # ── Footer bar ──
+    canvas.setFillColor(colors.HexColor("#0f1d2e"))
+    canvas.rect(0, 0, W, 50, fill=1, stroke=0)
+
+    canvas.setFont("Helvetica-Bold", 9)
+    canvas.setFillColor(MINT)
+    canvas.drawString(50, 18, "brndguruofficial@gmail.com")
+
+    sep_x = 50 + canvas.stringWidth("brndguruofficial@gmail.com", "Helvetica-Bold", 9) + 12
+    canvas.setFillColor(colors.HexColor("#3d6080"))
+    canvas.drawString(sep_x, 18, "|")
+
+    canvas.setFont("Helvetica", 9)
+    canvas.setFillColor(colors.HexColor("#6a8fa8"))
+    canvas.drawString(sep_x + 14, 18, "brndguru.com")
+
+    canvas.setFont("Helvetica", 9)
+    canvas.setFillColor(colors.HexColor("#3d6080"))
+    canvas.drawRightString(W - 50, 18, "Confidential — For Randy Wimmer Only")
+
+    canvas.restoreState()
+
+
+def later_pages_draw(canvas, doc):
+    pass
+
+
 story = []
 
-# ── COVER BANNER ──────────────────────────────────────────────────────────────
-cover_cells = [
-    Paragraph("PROPOSAL", S_title),
-    Paragraph("Govt. Contracting's Webinar-Led Revenue Infrastructure", S_subtitle),
-    Paragraph("6-Agent Automation System", S_subtitle),
-    Spacer(1, 6),
-    Paragraph("Prepared For: &nbsp; Randy Wimmer — Government Contracting Academy", S_meta),
-    Paragraph("Prepared By: &nbsp; Shivanshu — BrndGuru &nbsp;|&nbsp; brndguruofficial@gmail.com", S_meta),
-    Paragraph("Date: May 26, 2026 &nbsp;|&nbsp; Valid Until: June 10, 2026", S_meta),
-]
-cover_tbl = Table([cover_cells], colWidths=[7*inch])
-cover_tbl.setStyle(TableStyle([
-    ("BACKGROUND",    (0,0), (-1,-1), NAVY),
-    ("TOPPADDING",    (0,0), (-1,-1), 22),
-    ("BOTTOMPADDING", (0,0), (-1,-1), 22),
-    ("LEFTPADDING",   (0,0), (-1,-1), 18),
-    ("RIGHTPADDING",  (0,0), (-1,-1), 18),
-]))
-story.append(cover_tbl)
-story.append(Spacer(1, 14))
+# Page 1 is the cover (drawn via canvas callback); push story to page 2
+story.append(PageBreak())
 
 # ── CORE OUTCOME BANNER ───────────────────────────────────────────────────────
 outcome_tbl = Table([[
@@ -789,5 +912,5 @@ story.append(sig_tbl)
 story.append(Spacer(1, 12))
 story.append(Paragraph("Questions? Contact brndguruofficial@gmail.com  |  Proposal valid until June 10, 2026", S_note))
 
-doc.build(story)
+doc.build(story, onFirstPage=cover_page_draw, onLaterPages=later_pages_draw)
 print("PDF generated:", OUTPUT)
