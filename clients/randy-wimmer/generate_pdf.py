@@ -257,7 +257,7 @@ story.append(Spacer(1, 12))
 story.append(KeepTogether([
     agent_header(3, "LINKEDIN CONTENT AUTHORITY AGENT", "Authority Engine | MONTH 2"),
     Spacer(1, 6),
-    Paragraph("Builds Randy's organic presence and keeps the audience warm between webinars and outreach.", S_body),
+    Paragraph("Builds Randy's organic presence and keeps the audience warm between webinars.", S_body),
     Spacer(1, 4),
 ]))
 for item in [
@@ -273,45 +273,61 @@ for item in [
 ]:
     story.append(bullet(item))
 story.append(Spacer(1, 4))
-story.append(goal_box("Build authority, trust, and organic visibility so inbound demand supplements outbound."))
+story.append(goal_box("Build authority, trust, and organic visibility that drives inbound webinar registrations."))
 story.append(Spacer(1, 12))
 
 # Agent 4
 story.append(KeepTogether([
-    agent_header(4, "LINKEDIN RELATIONSHIP ACTIVATION + AI REPLY SYSTEM", "Relationship Engine | MONTH 2"),
+    agent_header(4, "LINKEDIN INTENT & ENGAGEMENT MONITORING AGENT", "Intelligence Engine | MONTH 2"),
     Spacer(1, 6),
-    Paragraph("Activates the 21K+ existing network and builds new high-intent connections — with AI-assisted replies to escalate hot leads.", S_body),
+    Paragraph("Monitors LinkedIn activity across Randy's profile and company pages — tracking who's engaging, detecting buying signals, and surfacing warm leads automatically so no opportunity is missed.", S_body),
     Spacer(1, 4),
 ]))
-story.append(Paragraph("<b>A. Existing Network Reactivation</b>", S_h3))
-for item in ["Reconnect with 21K+ existing connections (segmented outreach)","Identify and tag warm leads from existing network","Invite engaged contacts to upcoming webinars","Move warm contacts into nurture pipeline"]:
+story.append(Paragraph("<b>A. Profile & Content Engagement Tracking</b>", S_h3))
+for item in [
+    "Monitor post engagement (likes, comments, shares) across founder profile and company pages",
+    "Track profile viewers — log who's visiting and flag ICP matches",
+    "Identify repeat engagers (people who consistently interact with content)",
+    "Tag and segment warm engagers into GHL CRM automatically",
+]:
     story.append(bullet(item))
-story.append(Paragraph("<b>B. New Connection Growth Engine</b>", S_h3))
-for item in ["Target ICP: Compliance, AI Governance, ISO, Security, Risk Leaders","Decision makers at target GovCon companies","300–500 new connection requests/month (HeyReach)","High-intent connection messaging strategy"]:
+story.append(Paragraph("<b>B. Inbound DM & Comment Management (AI-Assisted)</b>", S_h3))
+for item in [
+    "AI-drafted replies to inbound DMs and comments (human reviews before sending)",
+    "Detect buying intent signals in conversations (ISO questions, pricing enquiries, call requests)",
+    "Detect webinar interest from comment activity",
+    "Auto-tag high-intent leads and escalate to booking funnel immediately",
+]:
     story.append(bullet(item))
-story.append(Paragraph("<b>C. AI Reply Assist (Human-in-the-Loop)</b>", S_h3))
-for item in ["Detect buying intent signals in DM replies","Detect webinar interest in conversations","AI-drafted reply suggestions (reviewed before sending — not full autopilot)","Escalate hot leads to Randy's calendar immediately"]:
+story.append(Paragraph("<b>C. Audience Intelligence & Segmentation</b>", S_h3))
+for item in [
+    "Weekly audience insight report (who's engaging, by role and company type)",
+    "Segment warm audience into webinar invitees vs call-ready leads",
+    "Feed high-intent signals into GHL for automated follow-up sequences",
+    "Newsletter subscriber growth tracking (GovCon Times + Good Enough Entrepreneur)",
+]:
     story.append(bullet(item))
 story.append(Spacer(1, 4))
-story.append(goal_box("Activate relationships and book more webinars through direct, personal LinkedIn outreach."))
+story.append(goal_box("Surface warm leads from existing LinkedIn activity and route them into the booking funnel automatically."))
 story.append(Spacer(1, 12))
 
 # Agent 5
 story.append(KeepTogether([
     agent_header(5, "EMAIL INTENT & NURTURE ENGINE", "Intent Engine | MONTH 3"),
     Spacer(1, 6),
-    Paragraph("Activates the 25K verified GovCon email list. Drives registrations, nurtures leads, and re-engages cold contacts.", S_body),
+    Paragraph("Automates the full email pipeline — from webinar reminders to post-call follow-up — ensuring every lead is nurtured until they book or buy.", S_body),
     Spacer(1, 4),
 ]))
 for item in [
-    "Webinar reminder email sequences (integrated with GHL)",
-    "Pre-webinar nurture (value delivery before the session)",
-    "Replay & follow-up sequences (no-show recovery via email)",
-    "High-intent outbound campaigns via Twain.ai (300–500 personalized leads/month)",
-    "Post-webinar nurture (multi-step follow-up to book calls)",
-    "Bootcamp / offer upsell sequences",
-    "Reactivation campaigns (dormant list segments)",
-    "Intent scoring & segmentation (tag leads by engagement level)",
+    "Webinar reminder sequences — T-24hr, T-3hr, T-15min (automated inside GHL)",
+    "Pre-webinar nurture (value-building emails before each session)",
+    "Replay delivery automation (sent to no-shows within 1 hour of webinar end)",
+    "No-show recovery sequence (3-step re-engagement to rebook missed attendees)",
+    "Post-webinar follow-up (multi-step sequence pushing attendees to book a 1:1 call)",
+    "Bootcamp / offer upsell sequences (push warm leads to monthly bootcamp enrollment)",
+    "Reactivation campaigns (dormant registrant segments — 30/60/90-day re-engagement)",
+    "Intent scoring & segmentation (auto-tag leads by engagement: hot / warm / cold)",
+    "GHL pipeline automation (move leads between stages based on email actions)",
 ]:
     story.append(bullet(item))
 story.append(Spacer(1, 4))
@@ -353,12 +369,9 @@ tools = [
     ("CRM & Automation",    "GoHighLevel (GHL)",    "CRM, pipeline management, funnel builder, landing pages, calendar integration",                  "Agents 1, 5, 6",         "Already subscribed — $97/month"),
     ("Email Infrastructure","GHL Email",            "Transactional & marketing email delivery, webinar reminders, nurture sequences, reactivation campaigns", "Agents 1, 5",    "Configured inside GHL — no extra cost"),
     ("Webinar Platform",    "Zoom Webinars",        "Live webinar hosting, attendance tracking, Q&A, recording & replay delivery",                      "Agent 1",                "Existing subscription"),
-    ("LinkedIn — Outreach", "HeyReach",             "Automated LinkedIn connection requests & messaging workflows (up to 500/month)",                    "Agent 4",                "~$39/month with coupon"),
-    ("LinkedIn — Pages",    "LinkedIn (Organic)",   "Founder profile, company pages (GCA, ICG), newsletter publishing, content posting",                "Agents 3, 4",            "Existing accounts — no extra cost"),
+    ("LinkedIn — Pages",    "LinkedIn (Organic)",   "Founder profile, company pages (GCA, ICG), newsletter publishing, scheduled content posting",     "Agents 3, 4",            "Existing accounts — no extra cost"),
     ("LinkedIn — Ads",      "LinkedIn Campaign Mgr","Paid acquisition campaigns, audience targeting, retargeting, lookalike audiences, CPL/CPA tracking","Agent 2",                "Ad budget billed separately ($500–$1,500/month)"),
-    ("Personalization",     "Sendr.io",             "Hyper-personalized landing pages, personalized video delivery (name + company called out)",         "Agent 4",                "~$69/month with coupon"),
-    ("Email Personalization","Twain.ai",            "AI-powered research & copy for high-intent personalized email sequences (300–500 leads/month)",     "Agent 5",                "~$1/lead ($300–600/month)"),
-    ("AI Automation",       "Claude AI",            "AI Reply Assist for LinkedIn DMs, content drafting, sequence optimization, human-in-the-loop review","Agents 3, 4, 5",       "$100/month (included in agency fee)"),
+    ("AI Automation",       "Claude AI",            "Content drafting, inbound DM reply assist, sequence optimization, intent detection (human-in-the-loop)", "Agents 3, 4, 5",   "$100/month (included in agency fee)"),
     ("Analytics & BI",      "Revenue Dashboard",    "Unified reporting across all channels — registrations, calls, pipeline, revenue, attribution",      "Agent 6",                "Built inside GHL + connected data sources"),
 ]
 
@@ -384,7 +397,7 @@ tool_tbl.setStyle(TableStyle([
 ]))
 story.append(tool_tbl)
 story.append(Spacer(1, 6))
-story.append(Paragraph("* LinkedIn Ads budget is client-funded and billed directly to the client's ad account. BrndGuru manages the campaigns.", S_note))
+story.append(Paragraph("* LinkedIn Ads budget is client-funded and billed directly to the client's ad account. BrndGuru manages strategy, targeting, and optimization.", S_note))
 story.append(Spacer(1, 14))
 
 # ── IMPLEMENTATION TIMELINE ──────────────────────────────────────────────────
@@ -394,7 +407,7 @@ story.append(pricing_table(
     ["Phase", "Month", "Agents Delivered", "Focus"],
     [
         ["Phase 1", "Month 1", "Agent 1 + Agent 2", "Build the core conversion path — webinar funnel + paid traffic"],
-        ["Phase 2", "Month 2", "Agent 3 + Agent 4", "Layer in authority content + LinkedIn relationship engine"],
+        ["Phase 2", "Month 2", "Agent 3 + Agent 4", "Layer in authority content + LinkedIn intent & engagement monitoring"],
         ["Phase 3", "Month 3", "Agent 5 + Agent 6", "Activate email engine + deploy full revenue dashboard"],
     ],
     [0.8*inch, 0.8*inch, 1.7*inch, 3.7*inch]
@@ -416,10 +429,10 @@ kpi_data = [
     ["2 — Paid Acquisition",      "Cost per qualified call booking",   "<$150"],
     ["3 — LinkedIn Content",      "Engagement rate",                   "3–5%+"],
     ["3 — LinkedIn Content",      "Webinar sign-ups from organic",     "10+/cycle"],
-    ["4 — LinkedIn Relationship", "Connection acceptance rate",        "25–40%"],
-    ["4 — LinkedIn Relationship", "Calls booked from DMs",            "5+/month"],
+    ["4 — LinkedIn Intelligence", "Warm leads surfaced per week",      "10–20+"],
+    ["4 — LinkedIn Intelligence", "Inbound DM reply rate",            ">60%"],
     ["5 — Email Engine",          "Open rate",                         "30–45%"],
-    ["5 — Email Engine",          "Calls booked from sequences",       "10+/month"],
+    ["5 — Email Engine",          "Calls booked from nurture sequences","10+/month"],
     ["6 — Dashboard",             "Full pipeline visibility",          "Weekly"],
 ]
 kpi_tbl = Table(kpi_data, colWidths=[2.4*inch, 3.1*inch, 1.5*inch])
@@ -478,14 +491,11 @@ story.append(Spacer(1, 4))
 story.append(pricing_table(
     ["Tool / Platform", "Purpose", "Est. Monthly Cost"],
     [
-        ["GoHighLevel (GHL)",      "CRM, funnels, email automation",         "$97 (already subscribed)"],
-        ["GHL Email",              "Email delivery & sequences",              "Included in GHL"],
-        ["Zoom Webinars",          "Webinar hosting",                         "Existing subscription"],
-        ["LinkedIn (Organic)",     "Content, pages, outreach",                "No extra cost"],
-        ["LinkedIn Campaign Mgr",  "Paid ads & retargeting",                  "$500–$1,500 (ad spend)"],
-        ["HeyReach",               "LinkedIn connection automation",           "~$39 (with coupon)"],
-        ["Sendr.io",               "Personalized video landing pages",         "~$69 (with coupon)"],
-        ["Twain.ai",               "AI email personalization",                 "~$1/lead ($300–600)"],
+        ["GoHighLevel (GHL)",      "CRM, funnels, landing pages, pipeline mgmt","$97 (already subscribed)"],
+        ["GHL Email",              "Email delivery, sequences & automation",  "Included in GHL"],
+        ["Zoom Webinars",          "Live webinar hosting & replay delivery",  "Existing subscription"],
+        ["LinkedIn (Organic)",     "Content scheduling, pages, newsletters",  "No extra cost"],
+        ["LinkedIn Campaign Mgr",  "Paid ads, retargeting & lookalikes",      "$500–$1,500 (ad spend)"],
     ],
     [1.9*inch, 2.6*inch, 2.5*inch]
 ))
@@ -496,15 +506,15 @@ story.append(pricing_table(
     ["Category", "Range"],
     [
         ["Agency Fee (services + AI automation)", "$900"],
-        ["Tools & Platforms (excl. ads)",         "~$205–$705"],
+        ["Tools & Platforms (excl. ads)",         "$97 (GHL only — all others existing/free)"],
         ["LinkedIn Ads Budget",                    "$500–$1,500"],
-        ["Total Monthly Estimate",                 "~$1,605–$3,105/month"],
+        ["Total Monthly Estimate",                 "~$1,497–$2,497/month"],
     ],
     [4*inch, 3*inch],
     highlight_last=True
 ))
 story.append(Spacer(1, 6))
-story.append(Paragraph("*LinkedIn ad spend is the primary variable. Recommended starting budget: $500/month. Scale as ROAS improves.", S_note))
+story.append(Paragraph("*LinkedIn ad spend is the primary variable cost. Recommended starting budget: $500/month. Scale as cost-per-registrant improves.", S_note))
 story.append(Spacer(1, 14))
 
 # ── TERMS & CONDITIONS ───────────────────────────────────────────────────────
