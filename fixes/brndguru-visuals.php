@@ -9,6 +9,14 @@ if (!defined('ABSPATH')) exit;
 // ── Inject CSS globally ───────────────────────────────────────
 add_action('wp_head', function () { ?>
 <style id="bg-visuals-css">
+/* ── Hide any accidental empty strip sections ── */
+.bg-dot-grid:empty,
+.bg-photo-full:empty,
+section:empty,
+div[style*="background"]:empty { display: none !important; }
+/* Prevent photo strip from sticking to top of page */
+.bg-dot-grid { margin-top: 0; }
+
 /* ── Dot grid pattern helper ── */
 .bg-dot-grid {
     background-image: radial-gradient(circle, #333 1px, transparent 1px);
@@ -205,32 +213,40 @@ add_filter('the_content', function ($content) {
 
     if (!isset($visuals[$id])) return $content;
 
-    $v      = $visuals[$id];
-    $output = '';
+    $v = $visuals[$id];
 
-    // Strip of 3-4 photos after the hero section
+    // ── Photo strip: inject after the SECOND </section> so it goes below the hero ──
     if (!empty($v['after_hero'])) {
-        // Insert after first </section> tag
-        $pos = strpos($content, '</section>');
-        if ($pos !== false) {
-            $content = substr($content, 0, $pos + 10) . $v['after_hero'] . substr($content, $pos + 10);
+        $first  = strpos($content, '</section>');
+        if ($first !== false) {
+            $second = strpos($content, '</section>', $first + 10);
+            $insert_at = ($second !== false) ? $second + 10 : $first + 10;
+            $content = substr($content, 0, $insert_at) . $v['after_hero'] . substr($content, $insert_at);
         } else {
-            $output .= $v['after_hero'];
+            // No section tags — append at end
+            $content .= $v['after_hero'];
         }
     }
 
-    // Full-bleed photo banner in the middle
+    // ── Full-bleed banner: insert before the LAST <section> (before CTA) ──
     if (!empty($v['mid_banner'])) {
-        // Insert before the last </section> tag
-        $last = strrpos($content, '<section');
-        if ($last !== false) {
-            $content = substr($content, 0, $last) . $v['mid_banner'] . substr($content, $last);
+        // Find second-to-last <section> occurrence for a mid-page position
+        $positions = [];
+        $offset = 0;
+        while (($pos = strpos($content, '<section', $offset)) !== false) {
+            $positions[] = $pos;
+            $offset = $pos + 1;
+        }
+        // Insert before the last section
+        if (count($positions) >= 2) {
+            $insert_at = end($positions);
+            $content = substr($content, 0, $insert_at) . $v['mid_banner'] . substr($content, $insert_at);
         } else {
             $content .= $v['mid_banner'];
         }
     }
 
-    return $output . $content;
+    return $content;
 });
 
 /* ─── Helper: 3-4 photo strip ─────────────────────────────── */
