@@ -1,99 +1,112 @@
 <?php
 /**
- * Plugin Name: BrndGuru — Restore Header
- * Description: Fixes missing header/footer by switching pages from elementor_canvas back to elementor_full_width
+ * Plugin Name: BrndGuru — EMERGENCY Restore Header
+ * Description: Restores the disappeared Astra site header by removing the incorrect ast-main-header-display=disabled meta. AUTO-RUNS on activation.
  * Version: 1.0
  */
+if (!defined('ABSPATH')) exit;
 
-add_action('admin_menu', function () {
-    add_menu_page('BG Restore Header', 'BG Restore Header', 'manage_options', 'bg-restore-header', 'bg_restore_header_page', 'dashicons-redo', 2);
+register_activation_hook(__FILE__, 'bgrh_run');
+add_action('admin_init', function () {
+    if (get_option('bgrh_done') !== '1') bgrh_run();
 });
 
-function bg_restore_header_page() {
-    ?>
-    <div class="wrap">
-        <h1>🔧 BrndGuru — Restore Header</h1>
-        <?php
-        if (isset($_POST['bg_restore']) && check_admin_referer('bg_restore_header_nonce')) {
-            bg_do_restore();
-        } else {
-            ?>
-            <p style="font-size:16px;color:#d63638;font-weight:bold;">The header is missing because pages are set to <code>elementor_canvas</code> (no header/footer). This will switch them to <code>elementor_full_width</code> which restores the Astra header and footer.</p>
-            <form method="post">
-                <?php wp_nonce_field('bg_restore_header_nonce'); ?>
-                <input type="hidden" name="bg_restore" value="1">
-                <p><input type="submit" class="button button-primary button-hero" value="▶ RESTORE HEADER ON ALL PAGES"></p>
-            </form>
-            <?php
-        }
-        ?>
-    </div>
-    <?php
-}
+function bgrh_run() {
+    global $wpdb;
+    $log = [];
 
-function bg_do_restore() {
-    // All pages that may have been set to elementor_canvas
-    // Get ALL pages and fix any set to elementor_canvas
-    $pages = get_posts([
-        'post_type'      => 'page',
-        'posts_per_page' => -1,
-        'post_status'    => ['publish', 'draft'],
-        'meta_query'     => [
-            [
-                'key'   => '_wp_page_template',
-                'value' => 'elementor_canvas',
-            ],
-        ],
-    ]);
+    // All page IDs that had the wrong meta set
+    $page_ids = [12, 1628, 4325, 23, 21, 1483, 762, 724, 766, 765, 2970];
 
-    $fixed = [];
+    // FIX: Remove the WRONG meta that hid the main Astra header
+    // ast-main-header-display = 'disabled' kills the ENTIRE site header nav
+    $fixed = 0;
+    foreach ($page_ids as $id) {
+        delete_post_meta($id, 'ast-main-header-display');
+        $wpdb->delete($wpdb->postmeta, [
+            'post_id'  => $id,
+            'meta_key' => 'ast-main-header-display',
+        ]);
+        clean_post_cache($id);
+        $fixed++;
+    }
+    $log[] = "Removed ast-main-header-display from {$fixed} pages - header restored";
 
-    foreach ($pages as $page) {
-        update_post_meta($page->ID, '_wp_page_template', 'elementor_full_width');
-        $fixed[] = "ID:{$page->ID} — \"{$page->post_title}\" → elementor_full_width";
+    // Global sweep - remove from any other pages too
+    $extra = $wpdb->query(
+        "DELETE FROM {$wpdb->postmeta}
+         WHERE meta_key = 'ast-main-header-display'
+         AND meta_value = 'disabled'"
+    );
+    if ($extra > 0) {
+        $log[] = "Also cleared {$extra} additional rows site-wide";
     }
 
-    // Also explicitly fix key known pages regardless
-    $key_ids = [12, 1628, 4325, 23, 762, 724, 766, 765, 2970, 21, 1483];
-    foreach ($key_ids as $id) {
-        $current = get_post_meta($id, '_wp_page_template', true);
-        if ($current === 'elementor_canvas' || $current === '') {
-            update_post_meta($id, '_wp_page_template', 'elementor_full_width');
-            $post = get_post($id);
-            if ($post) {
-                $already_listed = false;
-                foreach ($fixed as $f) {
-                    if (strpos($f, "ID:{$id}") !== false) { $already_listed = true; break; }
-                }
-                if (!$already_listed) {
-                    $fixed[] = "ID:{$id} — \"{$post->post_title}\" (was: {$current}) → elementor_full_width";
-                }
-            }
-        }
+    // Keep ast-page-title-bar disabled (correct - hides page title bar only)
+    foreach ($page_ids as $id) {
+        update_post_meta($id, 'ast-page-title-bar', 'disabled');
+    }
+    $log[] = "ast-page-title-bar kept disabled on all pages (correct)";
+
+    // Check global Astra settings
+    $astra = get_option('astra-settings', []);
+    if (is_array($astra) && isset($astra['ast-main-header-display'])) {
+        unset($astra['ast-main-header-display']);
+        update_option('astra-settings', $astra);
+        $log[] = "Removed ast-main-header-display from global Astra settings";
     }
 
-    // Flush rewrite rules
-    flush_rewrite_rules(true);
-
-    // Clear Elementor CSS cache
+    // Clear ALL caches
     if (class_exists('\Elementor\Plugin')) {
         \Elementor\Plugin::$instance->files_manager->clear_cache();
+        $log[] = "Elementor cache cleared";
     }
 
-    // Clear Swift Performance cache if active
+    foreach ([
+        WP_CONTENT_DIR . '/cache/swift-performance/',
+        WP_CONTENT_DIR . '/cache/swift-performance-lite/',
+    ] as $dir) {
+        if (is_dir($dir)) {
+            $it = new RecursiveIteratorIterator(
+                new RecursiveDirectoryIterator($dir, FilesystemIterator::SKIP_DOTS),
+                RecursiveIteratorIterator::CHILD_FIRST
+            );
+            foreach ($it as $f) {
+                $f->isDir() ? @rmdir($f) : @unlink($f);
+            }
+            $log[] = "Wiped cache: " . basename($dir);
+        }
+    }
+
     if (class_exists('Swift_Performance')) {
         do_action('swift_performance_clear_all_cache');
     }
 
-    echo '<div class="notice notice-success is-dismissible"><p><strong>✅ Header restored on ' . count($fixed) . ' page(s):</strong></p><ul>';
-    foreach ($fixed as $f) {
-        echo '<li style="margin-left:20px;">✓ ' . esc_html($f) . '</li>';
-    }
-    echo '</ul>';
-    echo '<p>⚡ Page template cache cleared. <a href="' . home_url('/') . '" target="_blank">View site →</a></p>';
-    echo '</div>';
+    wp_cache_flush();
+    if (function_exists('opcache_reset')) opcache_reset();
+    flush_rewrite_rules(true);
 
-    if (empty($fixed)) {
-        echo '<div class="notice notice-warning"><p>No pages with <code>elementor_canvas</code> template found. All pages may already be correct. Check if header shows now: <a href="' . home_url('/') . '" target="_blank">View site →</a></p></div>';
-    }
+    update_option('bgrh_log', $log);
+    update_option('bgrh_done', '1');
 }
+
+add_action('admin_notices', function () {
+    if (get_option('bgrh_done') !== '1') return;
+    $log = get_option('bgrh_log', []);
+    ?>
+    <div class="notice notice-success is-dismissible" style="padding:14px 16px;border-left-color:#00a32a;">
+        <h3 style="margin:0 0 8px;">Header Restored!</h3>
+        <ul style="margin:0 0 10px;padding-left:20px;font-size:13px;">
+            <?php foreach ($log as $line): ?>
+                <li><?php echo esc_html($line); ?></li>
+            <?php endforeach; ?>
+        </ul>
+        <p>
+            <a href="<?php echo home_url('/'); ?>" target="_blank" class="button button-primary">Check Home</a>
+            <a href="<?php echo home_url('/portfolio/'); ?>" target="_blank" class="button">Portfolio</a>
+            <a href="<?php echo home_url('/services/'); ?>" target="_blank" class="button">Services</a>
+            Open in incognito to confirm header is back. Deactivate this plugin after confirming.
+        </p>
+    </div>
+    <?php
+});
