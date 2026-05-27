@@ -1,15 +1,15 @@
 <?php
 /**
  * Plugin Name: BrndGuru — Real Content Update
- * Description: Replaces all page text with real BRND GURU content (IT staffing outbound agency). AUTO-RUNS on activation.
- * Version: 1.0
+ * Description: Replaces all page text with real BRND GURU content — B2B growth & automation consulting agency. AUTO-RUNS on activation.
+ * Version: 2.0
  */
 if (!defined('ABSPATH')) exit;
 
 register_activation_hook(__FILE__, 'bgrc_run');
 
 add_action('admin_init', function () {
-    if (get_option('bgrc_done') !== '1') bgrc_run();
+    if (get_option('bgrc_done') !== '2') bgrc_run();
 });
 
 function bgrc_replace($page_id, array $map) {
@@ -18,7 +18,7 @@ function bgrc_replace($page_id, array $map) {
         "SELECT meta_value FROM {$wpdb->postmeta} WHERE post_id=%d AND meta_key='_elementor_data' LIMIT 1",
         $page_id
     ));
-    if (!$raw) return '(no elementor data)';
+    if (!$raw) return '(no elementor data found)';
 
     $changed = 0;
     foreach ($map as $old => $new) {
@@ -48,93 +48,97 @@ function bgrc_run() {
 
         // Hero badge
         'Top 100 Design Studios in USA'
-            => '#1 Outbound Agency for IT &amp; Tech Staffing',
+            => 'B2B Growth &amp; Automation Consulting — London',
 
         // Book button
         'Book a Meeting'
             => 'Book a Strategy Call',
 
-        // Stats row
-        '72'                            => '500+',
-        'Hour Prototype Guarantee'      => 'Qualified Meetings Booked',
-        '100+'                          => '40+',
-        'Brands Transformed'            => 'IT Staffing Firms Served',
-        '10+'                           => '3×',
-        'Years of Pixel-Perfect Craft'  => 'Average Pipeline Growth',
+        // Stats
+        '72'
+            => '200+',
+        'Hour Prototype Guarantee'
+            => 'B2B Clients Grown',
+        '100+'
+            => '5×',
+        'Brands Transformed'
+            => 'Average ROI on Outbound',
+        '10+'
+            => '£50M+',
+        'Years of Pixel-Perfect Craft'
+            => 'Pipeline Generated for Clients',
 
-        // Services section heading
+        // Services section
         'Services We Offer'
-            => 'How We Fill Your Pipeline',
+            => 'How We Grow Your Business',
 
-        // Service 1 — UI/UX → LinkedIn Automation
+        // Service 1: UI/UX → LinkedIn Automation
         '1.UI\/UX Design'
             => '1. LinkedIn Outreach Automation',
         '1.UI/UX Design'
             => '1. LinkedIn Outreach Automation',
         'Interfaces that delight users and drive conversions. We design with outcomes in mind.'
-            => 'Precision LinkedIn outreach at scale using HeyReach &amp; Aimfox. We build hyper-personalised sequences targeting IT directors and hiring managers at your ideal accounts.',
+            => 'Precision outreach at scale using HeyReach &amp; Aimfox. We build personalised sequences that turn cold prospects into booked discovery calls.',
 
-        // Service 2 — Brand Design → Cold Email
+        // Service 2: Brand Design → Cold Email
         '2.Brand Design'
             => '2. Cold Email Infrastructure',
         'Visual identities that command attention and build trust. Logos, style guides, and assets crafted to tell your story.'
-            => 'End-to-end cold email systems via ManyReach. Domain acquisition, warming, technical setup, and A/B-tested sequences built specifically for IT staffing outreach.',
+            => 'End-to-end cold email systems via ManyReach. Domain setup, warming, deliverability, copywriting, and A/B-tested sequences — all done for you.',
 
-        // Service 3 — Webflow → AI Agents
+        // Service 3: Webflow → AI Agents
         '3.Webflow Development'
             => '3. AI Agent Development',
         'Websites that load fast, rank higher, and grow with you. No bloated code—just seamless Webflow experiences.'
-            => 'Custom n8n-based AI agents that automate prospect research, message personalisation, and follow-up — running 24\/7 without extra headcount.',
+            => 'Custom AI agents built on n8n that automate lead research, personalisation, follow-up, and reporting — working around the clock without extra headcount.',
 
-        // Service 4 — No-Code → GoHighLevel
+        // Service 4: No-Code → GoHighLevel & n8n
         '4.No-Code Development'
-            => '4. GoHighLevel CRM &amp; n8n Automation',
+            => '4. GoHighLevel CRM &amp; Automation',
         'Launch functional MVPs without engineering headaches. Solutions in weeks, not months.'
-            => 'Full GoHighLevel CRM setup and n8n workflow automation. Pipeline architecture, reporting dashboards, and integrations across your entire outbound stack.',
+            => 'Complete GoHighLevel CRM builds and n8n workflow automation. We connect your entire growth stack so nothing falls through the cracks.',
 
-        // Portfolio / Case Studies section
+        // Case studies section
         'Showcase of Selected Work'
             => 'Client Results',
 
         'FinTech Startup -Stealth Mode'
-            => 'TechStaff Partners — 3× Pipeline in 60 Days',
-        'Simplified IA'                 => 'LinkedIn Automation',
-        'Data Visualization'            => 'Cold Email',
+            => 'SaaS Scale-Up — 3× Pipeline in 60 Days',
+        'Simplified IA'         => 'LinkedIn Automation',
+        'Data Visualization'    => 'Cold Email',
 
         'LawLex - Webflow Website'
-            => 'Apex IT Recruitment — 47 Meetings in 30 Days',
-        'CMS'                           => 'HeyReach',
-        'Dynamic Filtering'             => 'ManyReach',
+            => 'Professional Services Firm — 40+ Meetings Booked',
+        'CMS'                   => 'HeyReach',
+        'Dynamic Filtering'     => 'ManyReach',
 
         'Greenify - Social Engagement'
-            => 'CloudTalent Agency — GoHighLevel CRM Build',
-        'Animation'                     => 'n8n Automation',
-        'Bold Color Palette'            => 'GHL Pipeline',
+            => 'B2B Agency — Full CRM Rebuild',
+        'Animation'             => 'n8n Automation',
+        'Bold Color Palette'    => 'GHL Pipeline',
 
         'Quizora - No-Code MVP for EdTech'
-            => 'NovaTech Staffing — Full GTM Strategy',
-        'Gamified'                      => 'AI Agents',
-        'Stripe Subscription'           => 'Outbound GTM',
+            => 'Consultancy — GTM Strategy &amp; Outbound Launch',
+        'Gamified'              => 'AI Agents',
+        'Stripe Subscription'   => 'Outbound GTM',
 
         'View All Case Studies'
             => 'View All Results',
 
-        // Testimonials section
+        // Testimonials
         'What Clients Say About Us'
-            => 'What IT Staffing Firms Say',
+            => 'What Our Clients Say',
 
         'Where Ideas Meet Extraordinary Design'
-            => 'The Outbound Engine Every Staffing Firm Needs',
+            => 'The Growth Engine for Ambitious B2B Businesses',
 
-        // Testimonial 1
         'We struggled with user drop-offs for months. Web Rocket redesigned our dashboard with intuitive workflows, and our retention skyrocketed by 40% in 30 days. Their team actually listens to users—no'
-            => 'BRND GURU booked us 23 qualified meetings in the first 30 days. Our previous agency took 6 months to get half that. The LinkedIn automation sequences they built are unlike anything we\'ve seen. Highly recommend.',
+            => 'BRND GURU transformed our outbound in 30 days. The LinkedIn automation they built books us 20+ qualified calls a month — consistently. Best investment we\'ve made in growth.',
 
-        // Testimonial 2
         'Our old branding looked like every other brewery. Web Rocket gave us a bold, hoppy-inspired identity that\'s now on merch, trucks, and even trade shows. Sales jumped 65% post-rebrand—worth every p'
-            => 'We tried cold email before and got nowhere. BRND GURU rebuilt our entire infrastructure from scratch — new domains, new copy, new sequences. Now we\'re landing IT directors at FTSE 500 firms every week.',
+            => 'We had the service but couldn\'t get in front of buyers. BRND GURU built our cold email infrastructure from scratch and within 6 weeks we were having conversations with decision-makers we could never reach before.',
 
-        // Blog section title
+        // Blog section
         'The Studio Journal'
             => 'From the BRND GURU Blog',
     ]);
@@ -145,15 +149,14 @@ function bgrc_run() {
     $log['About'] = bgrc_replace(1628, [
 
         'We Design &amp; Build Digital Experiences That Move the Needle'
-            => 'We Get IT &amp; Tech Staffing Firms More Qualified Meetings. Guaranteed.',
-
+            => 'We Help B2B Businesses Build Outbound Engines That Generate Consistent Revenue.',
         'We Design & Build Digital Experiences That Move the Needle'
-            => 'We Get IT & Tech Staffing Firms More Qualified Meetings. Guaranteed.',
+            => 'We Help B2B Businesses Build Outbound Engines That Generate Consistent Revenue.',
 
         'How We Work: Painless, Proven, Pixel-Perfect'
-            => 'How We Work: Research, Build, Launch, Scale',
+            => 'How We Work: Audit, Build, Launch, Scale',
 
-        'Step 1'  => 'Step 1: ICP &amp; Messaging Audit',
+        'Step 1'  => 'Step 1: Strategy &amp; Audit',
         'Step 2'  => 'Step 2: Infrastructure Build',
         'Step 3'  => 'Step 3: Launch &amp; Optimise',
 
@@ -175,68 +178,54 @@ function bgrc_run() {
             => 'What We Do',
 
         'Consulting Services'
-            => 'Outbound Services for IT Staffing',
+            => 'B2B Growth Consulting Services',
 
         'Every service we offer is anchored in strategy. We don\'t execute blindly — we consult first, then build.'
-            => 'Every engagement starts with your ICP, messaging, and infrastructure. We don\'t run campaigns blindly — we build systems that consistently deliver qualified meetings.',
-
-        // Fallback without unicode escape
+            => 'Every engagement starts with strategy. We audit your current approach, identify the gaps, and build the systems that turn outreach into revenue.',
         "Every service we offer is anchored in strategy. We don't execute blindly — we consult first, then build."
-            => "Every engagement starts with your ICP, messaging, and infrastructure. We don't run campaigns blindly — we build systems that consistently deliver qualified meetings.",
+            => "Every engagement starts with strategy. We audit your current approach, identify the gaps, and build the systems that turn outreach into revenue.",
 
         // Service 1
-        '🎨'
-            => '🔗',
-        'Brand Identity &amp; Strategy'
-            => 'LinkedIn Outreach Automation',
-        'Brand Identity & Strategy'
-            => 'LinkedIn Outreach Automation',
+        '🎨'    => '🔗',
+        'Brand Identity &amp; Strategy'     => 'LinkedIn Outreach Automation',
+        'Brand Identity & Strategy'         => 'LinkedIn Outreach Automation',
         'We build brand systems that communicate authority and create lasting market recognition. From positioning and messaging to visual identity and brand guidelines.'
-            => 'Precision LinkedIn outreach at scale using HeyReach &amp; Aimfox. We build hyper-personalised sequences targeting IT directors and hiring managers at your ideal accounts — fully managed.',
+            => 'Precision B2B outreach at scale using HeyReach &amp; Aimfox. We build personalised sequences targeting your ideal decision-makers — fully managed and continuously optimised.',
 
         // Service 2
-        '✏️'
-            => '📧',
-        'UI\/UX &amp; Product Design'
-            => 'Cold Email Infrastructure',
-        'UI/UX & Product Design'
-            => 'Cold Email Infrastructure',
+        '✏️'   => '📧',
+        'UI\/UX &amp; Product Design'       => 'Cold Email Infrastructure',
+        'UI/UX & Product Design'            => 'Cold Email Infrastructure',
         'Strategic design that removes friction from the user journey. Wireframes, prototypes, and final UI that convert visitors into customers.'
-            => 'End-to-end cold email systems via ManyReach. Domain acquisition, warming, technical setup, copywriting, and A/B-tested sequences built specifically for IT staffing outreach.',
+            => 'End-to-end cold email systems via ManyReach. Domain acquisition, technical setup, warming, copywriting, and tested sequences that land in inboxes and generate replies.',
 
         // Service 3
         'No-Code Development'
             => 'AI Agent Development',
         'Launch production-ready digital products in weeks, not months. We leverage the best no-code platforms to deliver faster and smarter.'
-            => 'Custom n8n-based AI agents that automate prospect research, message personalisation, and follow-up sequences — working 24\/7 without extra headcount.',
+            => 'Custom AI agents built on n8n. Automate prospect research, message personalisation, follow-up sequences, and lead enrichment — 24\/7 with zero manual effort.',
 
         // Service 4
-        '🌐'
-            => '⚡',
+        '🌐'   => '⚡',
         'Webflow Development'
             => 'GoHighLevel CRM Builds',
         'Bespoke Webflow websites that your marketing team can own and update. Fast, responsive, and built to rank.'
-            => 'Full GoHighLevel CRM setup and management. Pipeline architecture, automation workflows, reporting dashboards, and integrations with your existing outbound tools.',
+            => 'Full GoHighLevel CRM setup tailored to your sales process. Pipeline architecture, automation workflows, reporting dashboards, and integrations — built to close more deals.',
 
         // Service 5
-        '🛒'
-            => '🔄',
-        'Shopify Growth &amp; Development'
-            => 'n8n Workflow Automation',
-        'Shopify Growth & Development'
-            => 'n8n Workflow Automation',
+        '🛒'   => '🔄',
+        'Shopify Growth &amp; Development'  => 'n8n Workflow Automation',
+        'Shopify Growth & Development'      => 'n8n Workflow Automation',
         'Full-service Shopify engagements — from store architecture and design to conversion optimisation and growth strategy.'
-            => 'Connect your entire outbound stack with custom n8n automations. Lead enrichment, CRM updates, Slack notifications, and cross-platform triggers — all flowing automatically.',
+            => 'Connect every tool in your growth stack with custom n8n automations. Lead enrichment, CRM sync, notifications, cross-platform triggers — your entire operation flowing on autopilot.',
 
         // Bottom CTA
         'Not Sure Which Service You Need?'
-            => 'Ready to Fill Your Pipeline?',
+            => 'Not Sure Where to Start?',
         'Book a free 30-minute discovery call. We\'ll diagnose your biggest challenge and recommend the right engagement.'
-            => 'Book a free 30-minute strategy call. We\'ll audit your current outbound approach and show you exactly how many meetings you should be getting.',
+            => 'Book a free 30-minute strategy call. We\'ll review your current setup and give you a clear plan for generating more revenue from outbound.',
         'Book a Free Discovery Call →'
-            => 'Book Your Free Audit Call →',
-        'Book a Free Discovery Call →'
-            => 'Book Your Free Audit Call →',
+            => 'Book a Free Strategy Call →',
     ]);
 
     // ══════════════════════════════════════════════
@@ -245,10 +234,10 @@ function bgrc_run() {
     $log['Contact'] = bgrc_replace(23, [
 
         "Let's Build Something Awesome!"
-            => "Let's Talk IT Staffing Outbound",
+            => "Let's Grow Your Business",
 
         'Got a project that needs pixel-perfect design or bulletproof code? Drop us a line—we reply within 24 hours.'
-            => 'Ready to book more meetings with IT directors and hiring managers? Tell us about your firm — we reply within 24 hours.',
+            => 'Ready to build a smarter outbound system? Tell us about your business — we reply within 24 hours.',
 
         'Where to Find Us'
             => 'Find Us',
@@ -256,15 +245,15 @@ function bgrc_run() {
         'Studio HQ'
             => 'Headquarters',
         '123 Design Street, San Francisco (By appointment only)'
-            => 'London, United Kingdom (Remote-first agency)',
+            => 'London, United Kingdom (Remote-first)',
 
         'Remote Teams'
-            => 'Working Hours',
+            => 'Working With Clients Globally',
         'We work with clients in 12+ timezones (EST to GMT+5:30).'
-            => 'We work with IT staffing firms across the UK, US, Canada &amp; Australia (GMT to GMT+11).',
+            => 'We work with B2B businesses across the UK, Europe, North America &amp; Australia.',
     ]);
 
-    // ── Global cache clear ────────────────────────
+    // ── Clear all caches ──────────────────────────
     if (class_exists('\Elementor\Plugin')) {
         \Elementor\Plugin::$instance->files_manager->clear_cache();
     }
@@ -274,11 +263,11 @@ function bgrc_run() {
     if (function_exists('wp_cache_flush')) wp_cache_flush();
 
     update_option('bgrc_log', $log);
-    update_option('bgrc_done', '1');
+    update_option('bgrc_done', '2');
 }
 
 add_action('admin_notices', function () {
-    if (get_option('bgrc_done') !== '1') return;
+    if (get_option('bgrc_done') !== '2') return;
     $log = get_option('bgrc_log', []);
     ?>
     <div class="notice notice-success is-dismissible" style="padding:14px 16px;">
@@ -288,7 +277,7 @@ add_action('admin_notices', function () {
                 <li><strong><?php echo esc_html($page); ?>:</strong> <?php echo esc_html($result); ?></li>
             <?php endforeach; ?>
         </ul>
-        <p style="margin:6px 0;">
+        <p>
             <a href="<?php echo home_url('/'); ?>" target="_blank" class="button button-primary">🏠 Home</a>
             <a href="<?php echo home_url('/about/'); ?>" target="_blank" class="button">About</a>
             <a href="<?php echo home_url('/services/'); ?>" target="_blank" class="button">Services</a>
