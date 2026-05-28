@@ -2,7 +2,7 @@
 /**
  * Plugin Name: BrndGuru — About, Home & Blog Redesign
  * Description: Dark theme with visuals for About Us, Home, and Blog pages.
- * Version: 1.0
+ * Version: 2.0
  */
 if (!defined('ABSPATH')) exit;
 
@@ -294,7 +294,8 @@ add_filter('the_content', function ($content) {
   </div>
 </section>';
 
-    $content = $content . $stats . $services_grid . $photo_strip . $mid_banner;
+    // NOTE: photo_strip is handled by visuals plugin — not duplicated here
+    $content = $content . $stats . $services_grid . $mid_banner;
     return $content;
 }, 20);
 
@@ -371,7 +372,8 @@ add_filter('the_content', function ($content) {
   </div>
 </section>';
 
-    $content = $content . $stats . $values . $photo_strip . $mid_banner;
+    // NOTE: photo_strip is handled by visuals plugin — not duplicated here
+    $content = $content . $stats . $values . $mid_banner;
     return $content;
 }, 20);
 
