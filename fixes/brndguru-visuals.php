@@ -2,7 +2,7 @@
 /**
  * Plugin Name: BrndGuru — Visual Enhancements
  * Description: Adds stock photos, background patterns, and visual depth to all BRND GURU pages. AUTO-RUNS on activation.
- * Version: 1.0
+ * Version: 2.0
  */
 if (!defined('ABSPATH')) exit;
 
@@ -131,7 +131,10 @@ div[style*="background"]:empty { display: none !important; }
 <?php });
 
 // ── Inject visuals into page content ─────────────────────────
+// Priority 20 = runs AFTER Elementor renders (priority 10), so we see full HTML
 add_filter('the_content', function ($content) {
+    // Only run on singular pages, not archives/loops
+    if (!is_singular()) return $content;
     $id = get_the_ID();
 
     // Photos chosen per page context
@@ -247,7 +250,7 @@ add_filter('the_content', function ($content) {
     }
 
     return $content;
-});
+}, 20); /* priority 20 — after Elementor renders at 10 */
 
 /* ─── Helper: 3-4 photo strip ─────────────────────────────── */
 function bg_photo_strip(array $photos): string {
