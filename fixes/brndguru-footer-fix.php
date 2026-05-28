@@ -1,189 +1,165 @@
 <?php
 /**
- * Plugin Name: BrndGuru — Footer Fix
- * Description: Fixes footer tagline, Quick Links, Services column, and newsletter heading. AUTO-RUNS on activation.
+ * Plugin Name: BrndGuru — Footer Dark Theme Fix
+ * Description: Forces footer to dark theme (#0d0d0d) with light text, orange links. CSS + JS luminance pass.
  * Version: 1.0
  */
 if (!defined('ABSPATH')) exit;
 
-register_activation_hook(__FILE__, 'bgff_run');
+register_activation_hook(__FILE__, 'bgfooter_run');
 add_action('admin_init', function () {
-    if (get_option('bgff_done') !== '1') bgff_run();
+    if (get_option('bgfooter_done') !== '1') bgfooter_run();
 });
 
-function bgff_run() {
+function bgfooter_run() {
     global $wpdb;
     $log = [];
 
-    // Footer is post ID 46 (elementor-hf post type)
-    $footer_id = 46;
-
-    // ── Step 1: Fix text via str_replace on _elementor_data ──
-    $raw = $wpdb->get_var($wpdb->prepare(
-        "SELECT meta_value FROM {$wpdb->postmeta}
-         WHERE post_id = %d AND meta_key = '_elementor_data' LIMIT 1",
-        $footer_id
-    ));
-
-    if ($raw) {
-        $changes = 0;
-
-        $replacements = [
-            // Tagline
-            'We craft high-performance digital experiences that drive real business results.'
-                => 'London-based B2B consulting agency. We build outbound systems that fill your pipeline with qualified meetings.',
-            // Newsletter heading
-            'Get the Latest Inspiration'
-                => 'Get Growth Insights',
-            // Any old tagline variants
-            'We craft high-converting websites, apps, and brands'
-                => 'We build outbound systems that fill your pipeline',
-            'high-converting websites, apps, and brands for startups, agencies, and businesses that refuse to settle for good enough.'
-                => 'outbound systems that fill your pipeline with qualified meetings.',
-        ];
-
-        foreach ($replacements as $old => $new) {
-            if (strpos($raw, $old) !== false) {
-                $raw = str_replace($old, $new, $raw);
-                $changes++;
-                $log[] = "✓ Replaced: \"{$old}\"";
-            }
-        }
-
-        if ($changes > 0) {
-            $wpdb->update($wpdb->postmeta,
-                ['meta_value' => $raw],
-                ['post_id' => $footer_id, 'meta_key' => '_elementor_data']
-            );
-            $wpdb->delete($wpdb->postmeta, ['post_id' => $footer_id, 'meta_key' => '_elementor_css']);
-            clean_post_cache($footer_id);
-            $log[] = "Elementor data updated ({$changes} changes)";
-        } else {
-            $log[] = "⚠ No matches in _elementor_data — trying post_content";
-        }
-    } else {
-        $log[] = "⚠ No _elementor_data found for footer (ID:46)";
-    }
-
-    // ── Step 2: Fix post_content of footer ───────────────────
-    $post_raw = $wpdb->get_var(
-        "SELECT post_content FROM {$wpdb->posts} WHERE ID = {$footer_id}"
-    );
-    if ($post_raw && strpos($post_raw, 'high-performance digital') !== false) {
-        $new_content = str_replace(
-            'We craft high-performance digital experiences that drive real business results.',
-            'London-based B2B consulting agency. We build outbound systems that fill your pipeline with qualified meetings.',
-            $post_raw
-        );
-        $wpdb->update($wpdb->posts,
-            ['post_content' => $new_content, 'post_modified' => current_time('mysql')],
-            ['ID' => $footer_id]
-        );
-        $log[] = "✓ post_content updated";
-        clean_post_cache($footer_id);
-    }
-
-    // ── Step 3: Fix WordPress nav menus for Quick Links & Services ──
-    // Find the nav menus and update their items
-
-    // Quick Links menu — ensure correct pages are listed
-    $quick_links_menu = wp_get_nav_menus();
-    foreach ($quick_links_menu as $menu) {
-        if (stripos($menu->name, 'quick') !== false || stripos($menu->name, 'footer') !== false) {
-            $items = wp_get_nav_menu_items($menu->term_id);
-            if ($items) {
-                $log[] = "Found menu '{$menu->name}' with " . count($items) . " items";
-            }
+    if (class_exists('\Elementor\Plugin')) \Elementor\Plugin::$instance->files_manager->clear_cache();
+    foreach ([WP_CONTENT_DIR.'/cache/swift-performance/', WP_CONTENT_DIR.'/cache/swift-performance-lite/'] as $dir) {
+        if (is_dir($dir)) {
+            $it = new RecursiveIteratorIterator(new RecursiveDirectoryIterator($dir, FilesystemIterator::SKIP_DOTS), RecursiveIteratorIterator::CHILD_FIRST);
+            foreach ($it as $f) { $f->isDir() ? @rmdir($f) : @unlink($f); }
         }
     }
-
-    // ── Step 4: Update footer Services menu items ──────────────
-    // Find any menu containing old service names and rename them
-    $service_renames = [
-        'Brand Design'        => 'LinkedIn Automation',
-        'UI/UX Design'        => 'Cold Email Infrastructure',
-        'Webflow Development' => 'GoHighLevel CRM',
-        'No-Code Development' => 'AI Agent Development',
-        'Shopify Xcelerator'  => 'n8n Automation',
-    ];
-
-    foreach ($service_renames as $old => $new) {
-        $result = $wpdb->query($wpdb->prepare(
-            "UPDATE {$wpdb->posts}
-             SET post_title = %s
-             WHERE post_type = 'nav_menu_item'
-             AND post_title = %s
-             AND post_status = 'publish'",
-            $new, $old
-        ));
-        if ($result) {
-            $log[] = "✓ Nav menu: '{$old}' → '{$new}'";
-        }
-    }
-
-    // Also update _menu_item_title meta
-    foreach ($service_renames as $old => $new) {
-        $wpdb->query($wpdb->prepare(
-            "UPDATE {$wpdb->postmeta} pm
-             INNER JOIN {$wpdb->posts} p ON pm.post_id = p.ID
-             SET pm.meta_value = %s
-             WHERE pm.meta_key = '_menu_item_title'
-             AND pm.meta_value = %s
-             AND p.post_type = 'nav_menu_item'",
-            $new, $old
-        ));
-    }
-
-    // ── Step 5: Broad search — find tagline ANYWHERE in DB ───
-    $tagline_old = 'We craft high-performance digital experiences that drive real business results.';
-    $tagline_new = 'London-based B2B consulting agency. We build outbound systems that fill your pipeline with qualified meetings.';
-
-    $found = $wpdb->get_results($wpdb->prepare(
-        "SELECT post_id, meta_id, meta_key FROM {$wpdb->postmeta}
-         WHERE meta_value LIKE %s LIMIT 20",
-        '%' . $wpdb->esc_like('high-performance digital experiences') . '%'
-    ));
-
-    foreach ($found as $row) {
-        $val = $wpdb->get_var("SELECT meta_value FROM {$wpdb->postmeta} WHERE meta_id = {$row->meta_id}");
-        if ($val) {
-            $new_val = str_replace($tagline_old, $tagline_new, $val);
-            $wpdb->update($wpdb->postmeta, ['meta_value' => $new_val], ['meta_id' => $row->meta_id]);
-            clean_post_cache($row->post_id);
-            $log[] = "✓ Found tagline in post_id:{$row->post_id} key:{$row->meta_key} — fixed";
-        }
-    }
-
-    // ── Clear caches ──────────────────────────────────────────
-    if (class_exists('\Elementor\Plugin')) {
-        \Elementor\Plugin::$instance->files_manager->clear_cache();
-    }
-    if (class_exists('Swift_Performance')) {
-        do_action('swift_performance_clear_all_cache');
-    }
+    if (class_exists('Swift_Performance')) do_action('swift_performance_clear_all_cache');
     wp_cache_flush();
-    delete_transient('elementor_css_print_method');
+    if (function_exists('opcache_reset')) opcache_reset();
 
-    update_option('bgff_log', $log);
-    update_option('bgff_done', '1');
+    $log[] = "✓ Footer dark theme applied with full cache clear";
+    update_option('bgfooter_log', $log);
+    update_option('bgfooter_done', '1');
 }
 
+add_action('wp_footer', function () {
+    if (is_admin()) return;
+    ?>
+<style id="bg-footer-dark-css">
+footer, .footer, .site-footer, .elementor-section.elementor-footer,
+.elementor-top-section.elementor-footer, .e-con.elementor-footer,
+.ast-footer-widget-area, .footer-widget-area,
+[class*="footer"] .elementor-section, [class*="footer"] .elementor-top-section,
+[class*="footer"] .e-con, [class*="footer"] .elementor-column,
+[class*="footer"] .elementor-widget-wrap {
+    background-color: #0d0d0d !important;
+}
+footer .elementor-heading-title, footer .elementor-heading-title a,
+footer .elementor-widget-heading h1, footer .elementor-widget-heading h2,
+footer .elementor-widget-heading h3, footer .elementor-widget-heading h4,
+footer .elementor-widget-heading h5, footer .elementor-widget-heading h6,
+.footer-widget-area .elementor-heading-title, .site-footer .elementor-heading-title,
+footer h1, footer h2, footer h3, footer h4, footer h5, footer h6,
+[class*="footer"] h1, [class*="footer"] h2, [class*="footer"] h3,
+[class*="footer"] h4, [class*="footer"] h5, [class*="footer"] h6 {
+    color: #ffffff !important;
+}
+footer p, footer .elementor-widget-text-editor, footer .elementor-widget-text-editor p,
+footer .elementor-icon-list-text, .footer-widget-area p, .site-footer p,
+.footer-widget-area .elementor-widget-text-editor p,
+[class*="footer"] p, [class*="footer"] .elementor-widget-text-editor p {
+    color: #b5b5b5 !important;
+}
+footer a:not(.elementor-button):not(.button),
+.footer-widget-area a:not(.elementor-button):not(.button),
+.site-footer a:not(.elementor-button):not(.button),
+[class*="footer"] a:not(.elementor-button):not(.button) {
+    color: #e4522b !important;
+    text-decoration: none;
+}
+footer a:not(.elementor-button):not(.button):hover,
+.footer-widget-area a:not(.elementor-button):not(.button):hover,
+.site-footer a:not(.elementor-button):not(.button):hover {
+    color: #ff6b47 !important;
+    text-decoration: underline;
+}
+footer .elementor-button, footer .elementor-button-link, footer a.elementor-button,
+footer .button, .footer-widget-area .elementor-button, .site-footer .elementor-button {
+    background-color: #e4522b !important;
+    color: #ffffff !important;
+    font-weight: 700 !important;
+}
+footer .elementor-button:hover, footer .elementor-button-link:hover,
+footer a.elementor-button:hover, footer .button:hover {
+    background-color: #c03b1e !important;
+}
+footer .elementor-divider-separator, footer hr,
+.footer-widget-area .elementor-divider-separator, .site-footer .elementor-divider-separator,
+[class*="footer"] .elementor-divider-separator, [class*="footer"] hr {
+    border-color: #262626 !important;
+}
+footer .elementor-background-overlay, .footer-widget-area .elementor-background-overlay,
+[class*="footer"] .elementor-background-overlay {
+    background-color: transparent !important;
+    opacity: 0 !important;
+}
+.site-footer .copyright, footer .copyright, [class*="footer"] .copyright,
+.ast-footer-bottom, .footer-bottom {
+    color: #b5b5b5 !important;
+    border-color: #262626 !important;
+}
+.ast-footer-widget-area { background-color: #0d0d0d !important; }
+.ast-footer-widget-area h1, .ast-footer-widget-area h2, .ast-footer-widget-area h3,
+.ast-footer-widget-area h4, .ast-footer-widget-area h5, .ast-footer-widget-area h6 {
+    color: #ffffff !important;
+}
+.ast-footer-widget-area p, .ast-footer-widget-area .elementor-widget-text-editor p {
+    color: #b5b5b5 !important;
+}
+</style>
+<script id="bg-footer-dark-js">
+(function(){
+  function luminance(r,g,b){ return (0.2126*r + 0.7152*g + 0.0722*b)/255; }
+  function parseColor(str){
+    if(!str) return null;
+    var m = str.match(/rgba?\(([^)]+)\)/);
+    if(!m) return null;
+    var p = m[1].split(',').map(function(x){return parseFloat(x.trim());});
+    return {r:p[0], g:p[1], b:p[2], a:(p.length>3? p[3] : 1)};
+  }
+  function fixFooter(){
+    var footer = document.querySelector('footer, .footer, .site-footer, .ast-footer-widget-area, [class*="footer"]');
+    if(!footer) return;
+    var all = footer.querySelectorAll('*');
+    for(var i=0;i<all.length;i++){
+      var el = all[i];
+      var tag = el.tagName;
+      if(tag==='IMG' || tag==='SVG' || tag==='PATH' || tag==='VIDEO' || tag==='IFRAME') continue;
+      if(el.classList && (el.classList.contains('elementor-button') || el.classList.contains('button') || el.classList.contains('bg-btn'))) continue;
+      var cs = getComputedStyle(el);
+      var bg = parseColor(cs.backgroundColor);
+      if(bg && bg.a > 0.15 && luminance(bg.r,bg.g,bg.b) > 0.62){
+        el.style.setProperty('background-color', '#0d0d0d', 'important');
+        if(cs.backgroundImage && cs.backgroundImage.indexOf('gradient')>-1 && cs.backgroundImage.indexOf('url(')===-1){
+          el.style.setProperty('background-image', 'none', 'important');
+        }
+      }
+      var col = parseColor(cs.color);
+      if(col && col.a > 0.3 && luminance(col.r,col.g,col.b) < 0.30){
+        var isOrange = col.r>150 && col.g<140 && col.b<110;
+        if(!isOrange){
+          var isHeading = /^H[1-6]$/.test(tag) || (el.className+'').match(/title|heading|h[1-6]|copyright/i);
+          el.style.setProperty('color', isHeading ? '#ffffff' : '#b5b5b5', 'important');
+        }
+      }
+    }
+  }
+  if(document.readyState==='loading'){ document.addEventListener('DOMContentLoaded', fixFooter); }
+  else { fixFooter(); }
+  setTimeout(fixFooter, 600);
+  window.addEventListener('load', fixFooter);
+})();
+</script>
+<?php }, 9999);
+
 add_action('admin_notices', function () {
-    if (get_option('bgff_done') !== '1') return;
-    $log = get_option('bgff_log', []);
+    if (get_option('bgfooter_done') !== '1') return;
     ?>
     <div class="notice notice-success is-dismissible" style="padding:14px 16px;">
-        <h3 style="margin:0 0 8px;">✅ Footer Fixed!</h3>
-        <ul style="margin:0 0 10px;padding-left:20px;font-size:13px;font-family:monospace;">
-            <?php foreach ($log as $line) : ?>
-                <li><?php echo esc_html($line); ?></li>
-            <?php endforeach; ?>
+        <h3 style="margin:0 0 8px;">✅ Footer Dark Theme Applied</h3>
+        <ul style="margin:0 0 10px;padding-left:20px;font-size:13px;">
+            <?php foreach (get_option('bgfooter_log', []) as $l): ?><li><?php echo esc_html($l); ?></li><?php endforeach; ?>
         </ul>
-        <p>
-            <a href="<?php echo home_url('/'); ?>" target="_blank" class="button button-primary">View Site →</a>
-            &nbsp; Scroll to footer to verify.
-            &nbsp; Deactivate + delete when done.
-        </p>
+        <p style="margin:0;">Check footer on all pages for dark background, light text, orange links. Verify in incognito mode.</p>
     </div>
     <?php
 });
