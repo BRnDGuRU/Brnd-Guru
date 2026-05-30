@@ -173,27 +173,35 @@ function brndguru_visuals_global_js() {
         100% { opacity: 1;   transform: scale(1.2); }
     }
 
-    /* ── Dot grid on ALL Elementor sections sitewide ── */
+    /* ── Alternating section shades so each section stands out ── */
+    .elementor-top-section:nth-child(odd),
+    .elementor-section:nth-child(odd) {
+        background-color: #111111 !important;
+    }
+    .elementor-top-section:nth-child(even),
+    .elementor-section:nth-child(even) {
+        background-color: #181818 !important;
+    }
+
+    /* ── Dot grid on all sections ── */
     .elementor-section,
     .elementor-top-section,
-    .e-con,
-    .elementor-inner-section {
+    .e-con {
         background-image:
-            radial-gradient(circle, rgba(255,255,255,0.04) 1px, transparent 1px) !important;
+            radial-gradient(circle, rgba(255,255,255,0.035) 1px, transparent 1px) !important;
         background-size: 30px 30px !important;
-        background-blend-mode: overlay;
     }
 
-    /* ── Thin orange left-border accent on alternating sections ── */
-    .elementor-section:nth-child(even),
-    .elementor-top-section:nth-child(even) {
-        border-left: 2px solid rgba(228,82,43,0.12) !important;
+    /* ── Subtle bottom border between sections ── */
+    .elementor-section,
+    .elementor-top-section {
+        border-bottom: 1px solid rgba(255,255,255,0.04) !important;
     }
 
-    /* ── Orange top accent line on first section ── */
-    .elementor-section:first-of-type,
-    .elementor-top-section:first-of-type {
-        border-top: 1px solid rgba(228,82,43,0.2) !important;
+    /* ── Orange accent on alternating sections left edge ── */
+    .elementor-top-section:nth-child(even),
+    .elementor-section:nth-child(even) {
+        border-left: 3px solid rgba(228,82,43,0.15) !important;
     }
     </style>
     <?php
