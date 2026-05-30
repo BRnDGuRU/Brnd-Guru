@@ -146,56 +146,56 @@ function brndguru_visuals_css() {
 function brndguru_visuals_global_js() {
     ?>
     <style id="brndguru-global-orbs">
+    /* ── Animated glow orbs fixed to viewport ── */
     body::before {
         content: '';
         position: fixed;
         top: -200px; left: -200px;
         width: 700px; height: 700px;
-        background: radial-gradient(circle, rgba(228,82,43,0.06) 0%, transparent 65%);
+        background: radial-gradient(circle, rgba(228,82,43,0.08) 0%, transparent 65%);
         border-radius: 50%;
         pointer-events: none;
-        z-index: 0;
+        z-index: 1;
         animation: bvPulse 9s ease-in-out infinite alternate;
     }
     body::after {
         content: '';
         position: fixed;
         bottom: -150px; right: -150px;
-        width: 500px; height: 500px;
-        background: radial-gradient(circle, rgba(228,82,43,0.04) 0%, transparent 65%);
+        width: 600px; height: 600px;
+        background: radial-gradient(circle, rgba(228,82,43,0.06) 0%, transparent 65%);
         border-radius: 50%;
         pointer-events: none;
-        z-index: 0;
+        z-index: 1;
     }
     @keyframes bvPulse {
-        0%   { opacity: 0.6; transform: scale(1);    }
-        100% { opacity: 1;   transform: scale(1.15); }
+        0%   { opacity: 0.5; transform: scale(1);    }
+        100% { opacity: 1;   transform: scale(1.2); }
+    }
+
+    /* ── Dot grid on ALL Elementor sections sitewide ── */
+    .elementor-section,
+    .elementor-top-section,
+    .e-con,
+    .elementor-inner-section {
+        background-image:
+            radial-gradient(circle, rgba(255,255,255,0.04) 1px, transparent 1px) !important;
+        background-size: 30px 30px !important;
+        background-blend-mode: overlay;
+    }
+
+    /* ── Thin orange left-border accent on alternating sections ── */
+    .elementor-section:nth-child(even),
+    .elementor-top-section:nth-child(even) {
+        border-left: 2px solid rgba(228,82,43,0.12) !important;
+    }
+
+    /* ── Orange top accent line on first section ── */
+    .elementor-section:first-of-type,
+    .elementor-top-section:first-of-type {
+        border-top: 1px solid rgba(228,82,43,0.2) !important;
     }
     </style>
-    <script id="brndguru-global-js">
-    (function () {
-        function applyDots() {
-            var secs = document.querySelectorAll(
-                '.elementor-section, .elementor-top-section, .e-con'
-            );
-            secs.forEach(function (s) {
-                var bg = window.getComputedStyle(s).backgroundColor;
-                var m  = bg.match(/rgba?\((\d+),\s*(\d+),\s*(\d+)/);
-                if (!m) return;
-                var l = (0.2126 * +m[1] + 0.7152 * +m[2] + 0.0722 * +m[3]) / 255;
-                if (l < 0.10) {
-                    s.style.backgroundImage =
-                        'radial-gradient(circle, rgba(255,255,255,0.055) 1px, transparent 1px)';
-                    s.style.backgroundSize = '32px 32px';
-                }
-            });
-        }
-        document.readyState === 'loading'
-            ? document.addEventListener('DOMContentLoaded', applyDots)
-            : applyDots();
-        setTimeout(applyDots, 900);
-    })();
-    </script>
     <?php
 }
 
