@@ -100,13 +100,23 @@ def cover_draw(canvas, doc):
     canvas.setFillColor(ORANGE)
     canvas.rect(bx, H - 304, W - bx - 52, 2, fill=1, stroke=0)
 
+    bw2   = W - bx - 52
+    box_y = H - 422
+    box_h = 108
+    # Dark body of box
     canvas.setFillColor(colors.HexColor("#1a1a1a"))
-    canvas.rect(bx, H - 415, W - bx - 52, 98, fill=1, stroke=0)
-    canvas.setStrokeColor(ORANGE); canvas.setLineWidth(1)
-    canvas.rect(bx, H - 415, W - bx - 52, 98, fill=0, stroke=1)
-    canvas.setFont("Helvetica-Bold", 9)
+    canvas.rect(bx, box_y, bw2, box_h, fill=1, stroke=0)
+    # Orange header strip at top of box
     canvas.setFillColor(ORANGE)
-    canvas.drawString(bx + 12, H - 320, "W H A T   T H I S   A G E N T   D O E S :")
+    canvas.rect(bx, box_y + box_h - 22, bw2, 22, fill=1, stroke=0)
+    # Orange border around full box
+    canvas.setStrokeColor(ORANGE); canvas.setLineWidth(1)
+    canvas.rect(bx, box_y, bw2, box_h, fill=0, stroke=1)
+    # Label — white text inside the orange strip
+    canvas.setFont("Helvetica-Bold", 8.5)
+    canvas.setFillColor(WHITE)
+    canvas.drawString(bx + 12, box_y + box_h - 15, "W H A T   T H I S   A G E N T   D O E S :")
+    # Body lines — inside the dark area
     canvas.setFont("Helvetica", 11)
     canvas.setFillColor(WHITE)
     for i, line in enumerate([
@@ -114,7 +124,7 @@ def cover_draw(canvas, doc):
         "follows up automatically, and converts",
         "attendees into booked sales calls — 24/7.",
     ]):
-        canvas.drawString(bx + 12, H - 342 - i*17, line)
+        canvas.drawString(bx + 12, box_y + box_h - 44 - i*18, line)
 
     canvas.setFont("Helvetica-Bold", 8)
     canvas.setFillColor(colors.HexColor("#aaaaaa"))
@@ -489,6 +499,188 @@ story.append(Paragraph(
     "Once all 5 items are confirmed, BrndGuru begins building immediately. "
     "Target: Agent 1 live within 14 business days.",
     s("final", fontName="Helvetica-Bold", fontSize=10, textColor=NAVY, leading=15, alignment=TA_CENTER)))
+
+# ══════════════════════════════════════════════════════════════════════════════
+# PAGE 7 — TECHNICAL WORKFLOW & TRIGGER MAP
+# ══════════════════════════════════════════════════════════════════════════════
+story.append(PageBreak())
+story.append(banner("AGENT 1 — TECHNICAL WORKFLOW & TRIGGER MAP"))
+story.append(Spacer(1, 5))
+story.append(Paragraph(
+    "Full automation trigger map — every step, every tool, every API action. For implementation reference.",
+    s("twi", fontName="Helvetica-Oblique", fontSize=9, textColor=GRAY, leading=13)))
+story.append(Spacer(1, 8))
+
+_CW = [0.32*inch, 1.1*inch, 0.85*inch, 2.73*inch, 2.0*inch]
+
+_hdr = Table([[
+    Paragraph("#",               s("th0", fontName="Helvetica-Bold", fontSize=7.5, textColor=WHITE, leading=10, alignment=TA_CENTER)),
+    Paragraph("TRIGGER",         s("th1", fontName="Helvetica-Bold", fontSize=7.5, textColor=WHITE, leading=10)),
+    Paragraph("TOOL",            s("th2", fontName="Helvetica-Bold", fontSize=7.5, textColor=WHITE, leading=10, alignment=TA_CENTER)),
+    Paragraph("ACTION / OUTPUT", s("th3", fontName="Helvetica-Bold", fontSize=7.5, textColor=WHITE, leading=10)),
+    Paragraph("→ FIRES NEXT",    s("th4", fontName="Helvetica-Bold", fontSize=7.5, textColor=WHITE, leading=10)),
+]], colWidths=_CW)
+_hdr.setStyle(TableStyle([
+    ("BACKGROUND", (0,0),(-1,-1), NAVY),
+    ("TOPPADDING", (0,0),(-1,-1), 7), ("BOTTOMPADDING",(0,0),(-1,-1), 7),
+    ("LEFTPADDING",(0,0),(-1,-1), 5), ("RIGHTPADDING", (0,0),(-1,-1), 5),
+]))
+story.append(_hdr)
+
+_PINK  = colors.HexColor("#ea4b71")
+_TCOLS = {"GoHighLevel": NAVY, "n8n + Zoom API": _PINK, "Calendly + GHL": BLUE}
+
+_triggers = [
+    ("T1",  "Form Submit\n(GHL landing page)",     "GoHighLevel",
+     "Contact created → tagged 'webinar-registered' → pipeline stage 'Registered'",
+     "Zoom API: register contact\nStart Confirmation Workflow"),
+    ("T2",  "Workflow Start\n(Instant)",            "GoHighLevel",
+     "Email: confirmation + Zoom join link + lead magnet PDF\nSMS: 'You're in! Here's your link → [Zoom]'",
+     "Wait +24 hrs → T3"),
+    ("T3",  "Wait: +1 Day",                         "GoHighLevel",
+     "Email: Authority content — GovCon insight to build trust and anticipation before webinar",
+     "Wait +2 days → T4"),
+    ("T4",  "Date Trigger\n−3 days before",         "GoHighLevel",
+     "Email: Agenda preview + quick win tip to prime attendees and raise show-up intent",
+     "→ T-24hr date trigger"),
+    ("T5",  "Date Trigger\n−24 hours",              "GoHighLevel",
+     "Email: Full reminder + Zoom join link + 'Bring your top question'",
+     "→ T-3hr date trigger"),
+    ("T6",  "Date Trigger\n−3 hours",               "GoHighLevel",
+     "Email: Day-of reminder — single bold 'Join the Webinar' button, no distractions",
+     "→ T-15min SMS trigger"),
+    ("T7",  "Date Trigger\n−15 minutes",            "GoHighLevel",
+     "SMS: 'Starting in 15 min! Tap to join → [Zoom link]'",
+     "→ Live webinar runs"),
+    ("T8",  "Zoom Webhook\nwebinar.ended (POST)",   "n8n + Zoom API",
+     "n8n receives webhook → GET /past_webinars/{id}/attendees from Zoom API\nLoop all registrants: attended? → GHL PATCH tag 'attended' : PATCH tag 'no-show'",
+     "GHL tag fires T9\nor T10 branch"),
+    ("T9",  "GHL Tag Applied\n'attended'",          "GoHighLevel",
+     "+1hr: replay + Book-a-Call CTA  |  +24hr: follow-up email  |  +48hr: urgency  |  +72hr: bootcamp offer (if no booking yet)",
+     "Every email CTA\n→ Calendly link"),
+    ("T10", "GHL Tag Applied\n'no-show'",           "GoHighLevel",
+     "+1hr: replay delivery  |  Day 2: re-engagement  |  Day 5: book-a-call nudge  |  Day 7: invite to next webinar",
+     "Every email CTA\n→ Calendly link"),
+    ("T11", "Calendly Webhook\nbooking.created",    "Calendly + GHL",
+     "Tag 'call-booked' applied → pipeline stage 'Sales Call Scheduled' → confirmation + calendar invite sent to both parties",
+     "→ Sales pipeline\n(Agent 2 takes over)"),
+]
+
+for _i, (_num, _trig, _tool, _action, _fires) in enumerate(_triggers):
+    _bg   = LGRAY if _i % 2 == 0 else WHITE
+    _tc   = _TCOLS.get(_tool, BLUE)
+    _hi   = _num == "T8"
+    _nb   = ORANGE if _hi else colors.HexColor("#2c3e50") if _i % 3 == 0 else NAVY
+    _hbg  = colors.HexColor("#fff8f0") if _hi else _bg
+    _row  = Table([[
+        Paragraph(_num, s(f"rn{_i}", fontName="Helvetica-Bold", fontSize=7.5,
+                          textColor=WHITE, leading=10, alignment=TA_CENTER)),
+        Paragraph(_trig.replace("\n","<br/>"),   s(f"rt{_i}", fontName="Helvetica-Bold", fontSize=7.5,
+                          textColor=WHITE if _hi else NAVY, leading=10)),
+        Paragraph(_tool.replace("\n","<br/>"),   s(f"rl{_i}", fontName="Helvetica-Bold", fontSize=6.5,
+                          textColor=WHITE, leading=9, alignment=TA_CENTER)),
+        Paragraph(_action.replace("\n","<br/>"), s(f"ra{_i}", fontName="Helvetica",      fontSize=7,
+                          textColor=DGRAY, leading=10)),
+        Paragraph(_fires.replace("\n","<br/>"),  s(f"rf{_i}", fontName="Helvetica-Bold", fontSize=7,
+                          textColor=_tc, leading=10)),
+    ]], colWidths=_CW)
+    _row.setStyle(TableStyle([
+        ("BACKGROUND", (0,0),(0,-1), _nb),
+        ("BACKGROUND", (1,0),(1,-1), _hbg),
+        ("BACKGROUND", (2,0),(2,-1), _tc),
+        ("BACKGROUND", (3,0),(3,-1), _hbg),
+        ("BACKGROUND", (4,0),(4,-1), _hbg),
+        ("TOPPADDING",    (0,0),(-1,-1), 5), ("BOTTOMPADDING",(0,0),(-1,-1), 5),
+        ("LEFTPADDING",   (0,0),(-1,-1), 5), ("RIGHTPADDING", (0,0),(-1,-1), 5),
+        ("VALIGN",        (0,0),(-1,-1), "TOP"),
+        ("LINEBELOW",     (0,0),(-1,-1), 0.3, colors.HexColor("#cccccc")),
+    ]))
+    story.append(_row)
+
+story.append(Spacer(1, 12))
+
+# ── n8n NODE FLOW DIAGRAM ──────────────────────────────────────────────────
+story.append(banner("n8n AUTOMATION: ZOOM → GHL NODE FLOW (T8 Detail)"))
+story.append(Spacer(1, 6))
+
+def make_n8n_flow():
+    TW = 504; bw = 72; bh = 44
+    d  = Drawing(TW, 110)
+    nodes4 = [
+        ("ZOOM\nWEBHOOK",    "#ea4b71"),
+        ("GET\nATTENDEES",   "#3498db"),
+        ("LOOP\nCONTACTS",   "#8e44ad"),
+        ("IF\nATTENDED?",    "#e67e22"),
+    ]
+    unit = bw + 16
+    mid  = 44 + bh // 2   # vertical center of main row = 66
+    for i, (lbl, col) in enumerate(nodes4):
+        x = i * unit
+        c = colors.HexColor(col)
+        d.add(Rect(x, 44, bw, bh, fillColor=c, strokeWidth=0))
+        ll = lbl.split("\n")
+        cy = 44 + bh / 2
+        d.add(String(x+bw/2, cy+3,  ll[0], fontName="Helvetica-Bold", fontSize=7.5, fillColor=WHITE, textAnchor="middle"))
+        d.add(String(x+bw/2, cy-9,  ll[1], fontName="Helvetica-Bold", fontSize=7.5, fillColor=WHITE, textAnchor="middle"))
+        if i < 3:
+            ax = x + bw
+            d.add(Polygon([ax, mid+6, ax+15, mid, ax, mid-6], fillColor=c, strokeWidth=0))
+    # Fork from IF node right edge
+    fx = 3 * unit + bw
+    # Green branch (up → attended)
+    gx = fx + 18; gnx = gx + 20
+    d.add(Line(fx, mid, gx, mid+22, strokeColor=GREEN, strokeWidth=1.5))
+    d.add(Line(gx, mid+22, gnx, mid+22, strokeColor=GREEN, strokeWidth=1.5))
+    d.add(Rect(gnx, mid+22-22, bw, 44, fillColor=GREEN, strokeWidth=0))
+    d.add(String(gnx+bw/2, mid+22-6,  "TAG",        fontName="Helvetica-Bold", fontSize=7.5, fillColor=WHITE, textAnchor="middle"))
+    d.add(String(gnx+bw/2, mid+22-18, "'attended'", fontName="Helvetica-Bold", fontSize=7,   fillColor=WHITE, textAnchor="middle"))
+    d.add(String(fx+5, mid+16, "YES", fontName="Helvetica-Bold", fontSize=6, fillColor=GREEN, textAnchor="start"))
+    # Red branch (down → no-show)
+    d.add(Line(fx, mid, gx, mid-22, strokeColor=RED, strokeWidth=1.5))
+    d.add(Line(gx, mid-22, gnx, mid-22, strokeColor=RED, strokeWidth=1.5))
+    d.add(Rect(gnx, mid-22-22, bw, 44, fillColor=RED, strokeWidth=0))
+    d.add(String(gnx+bw/2, mid-22-6,  "TAG",       fontName="Helvetica-Bold", fontSize=7.5, fillColor=WHITE, textAnchor="middle"))
+    d.add(String(gnx+bw/2, mid-22-18, "'no-show'", fontName="Helvetica-Bold", fontSize=7,   fillColor=WHITE, textAnchor="middle"))
+    d.add(String(fx+5, mid-14, "NO",  fontName="Helvetica-Bold", fontSize=6, fillColor=RED,   textAnchor="start"))
+    # Arrow labels
+    d.add(String(TW/2, 4, "Both tags instantly trigger a separate GHL automation workflow",
+                 fontName="Helvetica-Oblique", fontSize=7, fillColor=GRAY, textAnchor="middle"))
+    d.add(String(TW/2, 14, "GHL Pipeline tag → GoHighLevel Automation fires within seconds of webinar end",
+                 fontName="Helvetica-Oblique", fontSize=7, fillColor=GRAY, textAnchor="middle"))
+    return d
+
+story.append(make_n8n_flow())
+story.append(Spacer(1, 10))
+
+# ── DNS DELIVERABILITY REFERENCE ───────────────────────────────────────────
+story.append(banner("DNS & EMAIL DELIVERABILITY SETUP (SiteGround / fedgovstartup.com)"))
+story.append(Spacer(1, 6))
+
+_dns = [
+    ["Record", "Type",  "Host",              "Value",                                              "Purpose"],
+    ["SPF",    "TXT",   "@",                 "v=spf1 include:sendgrid.net ~all",                   "Authorises GHL (SendGrid) to send from domain"],
+    ["DKIM",   "CNAME", "em._domainkey",     "em.domainkey.[GHL-ACCOUNT-ID].sendgrid.net",         "Cryptographic sender authentication"],
+    ["DMARC",  "TXT",   "_dmarc",            "v=DMARC1; p=quarantine; rua=mailto:postmaster@fedgovstartup.com", "Quarantine unauthenticated email"],
+    ["MX",     "MX",    "@",                 "mail.fedgovstartup.com (existing — do not change)",  "Inbound email — verify before changing"],
+]
+_dns_tbl = Table(_dns, colWidths=[0.52*inch, 0.48*inch, 1.12*inch, 2.93*inch, 1.95*inch])
+_dns_tbl.setStyle(TableStyle([
+    ("BACKGROUND",    (0,0),(-1,0),  NAVY),
+    ("FONTNAME",      (0,0),(-1,0),  "Helvetica-Bold"),
+    ("FONTNAME",      (0,1),(-1,-1), "Helvetica"),
+    ("FONTSIZE",      (0,0),(-1,-1), 7.5),
+    ("TEXTCOLOR",     (0,0),(-1,0),  WHITE),
+    ("TEXTCOLOR",     (0,1),(-1,-1), DGRAY),
+    ("ROWBACKGROUNDS",(0,1),(-1,-1), [LGRAY, WHITE]),
+    ("TOPPADDING",    (0,0),(-1,-1), 5), ("BOTTOMPADDING",(0,0),(-1,-1), 5),
+    ("LEFTPADDING",   (0,0),(-1,-1), 6), ("RIGHTPADDING", (0,0),(-1,-1), 6),
+    ("GRID",          (0,0),(-1,-1), 0.3, colors.HexColor("#cccccc")),
+]))
+story.append(_dns_tbl)
+story.append(Spacer(1, 6))
+story.append(Paragraph(
+    "⚠  BrndGuru configures all three DNS records. Randy only needs to grant SiteGround cPanel / DNS zone access.",
+    s("dns_w", fontName="Helvetica-Bold", fontSize=8, textColor=ORANGE, leading=12)))
 
 doc.build(story, onFirstPage=cover_draw, onLaterPages=later_pages)
 print("PDF generated:", OUTPUT)
