@@ -2,15 +2,15 @@
 /**
  * Plugin Name: BrndGuru Footer Dark Fix
  * Description: Lighter dark footer (#1a1a1a) with visible nav links and orange accents.
- * Version:     2.2
+ * Version:     2.3
  * Author:      BrndGuru
  */
 
 defined( 'ABSPATH' ) || exit;
 
 add_action( 'wp_head',   'brndguru_footer_css', 100 );
-add_action( 'wp_footer', 'brndguru_footer_css', 200 );
-add_action( 'wp_footer', 'brndguru_footer_js',  201 );
+add_action( 'wp_footer', 'brndguru_footer_css', 10000 );
+add_action( 'wp_footer', 'brndguru_footer_js',  10001 );
 
 function brndguru_footer_css() {
     ?>

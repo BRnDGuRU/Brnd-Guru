@@ -2,14 +2,14 @@
 /**
  * Plugin Name: BrndGuru Visual Enhancements
  * Description: Dot grids, glow orbs, photo strips and parallax banners across all pages.
- * Version:     3.0
+ * Version:     3.2
  * Author:      BrndGuru
  */
 
 defined( 'ABSPATH' ) || exit;
 
 add_action( 'wp_head',   'brndguru_visuals_css', 10 );
-add_action( 'wp_footer', 'brndguru_visuals_global_js', 20 );
+add_action( 'wp_footer', 'brndguru_visuals_global_js', 10000 );
 add_filter( 'the_content', 'brndguru_visuals_content', 20 );
 
 /* ── CSS utilities ───────────────────────────────────────────── */
