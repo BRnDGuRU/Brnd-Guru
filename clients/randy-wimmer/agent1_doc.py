@@ -23,6 +23,8 @@ LRED   = colors.HexColor("#fdecea")
 BLUE   = colors.HexColor("#2980b9")
 LBLUE  = colors.HexColor("#ebf5fb")
 GRAY   = colors.HexColor("#888888")
+MGRAY  = colors.HexColor("#cccccc")
+TEAL   = colors.HexColor("#16a085")
 
 OUTPUT = "/home/user/Brnd-Guru/clients/randy-wimmer/Agent1_Webinar_Funnel.pdf"
 
@@ -501,7 +503,198 @@ story.append(Paragraph(
     s("final", fontName="Helvetica-Bold", fontSize=10, textColor=NAVY, leading=15, alignment=TA_CENTER)))
 
 # ══════════════════════════════════════════════════════════════════════════════
-# PAGE 7 — TECHNICAL WORKFLOW & TRIGGER MAP
+# ══════════════════════════════════════════════════════════════════════════════
+# PAGE 7 — GHL LANDING PAGE AUTOMATION
+# ══════════════════════════════════════════════════════════════════════════════
+story.append(PageBreak())
+story.append(banner("THE GHL LANDING PAGE — BUILT ONCE, UPDATES AUTOMATICALLY"))
+story.append(Spacer(1, 8))
+story.append(Paragraph(
+    "Every webinar needs a registration page. Instead of rebuilding it each time, "
+    "the page is <b>built once inside GoHighLevel</b> on <b>fedgovstartup.com/webinar</b> — "
+    "the same URL forever. When Randy schedules a new webinar in Zoom, n8n automatically "
+    "updates 4 Custom Values inside GHL and the page reflects the new details instantly. "
+    "Zero design work per cycle.",
+    s("lp_intro", fontName="Helvetica", fontSize=10.5, textColor=DGRAY, leading=17, spaceAfter=10)))
+
+# Landing page sections visual
+story.append(banner("WHAT THE PAGE CONTAINS"))
+story.append(Spacer(1, 8))
+
+def make_landing_page_mockup():
+    TW = 504; H = 320
+    d  = Drawing(TW, H)
+
+    # Page background
+    d.add(Rect(0, 0, TW, H, fillColor=colors.HexColor("#f8f8f8"), strokeWidth=0))
+    d.add(Rect(0, 0, TW, H, fillColor=WHITE, strokeWidth=1, strokeColor=MGRAY))
+
+    # Browser bar
+    d.add(Rect(0, H-22, TW, 22, fillColor=colors.HexColor("#e0e0e0"), strokeWidth=0))
+    d.add(Rect(10, H-16, 280, 10, fillColor=WHITE, strokeWidth=0.5, strokeColor=MGRAY))
+    d.add(String(14, H-10, "fedgovstartup.com/webinar", fontName="Helvetica", fontSize=7, fillColor=GRAY, textAnchor="start"))
+    d.add(String(TW-8, H-10, "🔒  Secure", fontName="Helvetica", fontSize=6.5, fillColor=TEAL, textAnchor="end"))
+
+    # Hero section (left side)
+    hero_w = TW * 0.58
+    d.add(Rect(0, H-22-120, hero_w, 120, fillColor=colors.HexColor("#1e3a5f"), strokeWidth=0))
+
+    # Dynamic headline (orange tag)
+    d.add(Rect(10, H-40, 140, 14, fillColor=ORANGE, strokeWidth=0))
+    d.add(String(12, H-31, "FREE LIVE WEBINAR  •  {{webinar_date}}", fontName="Helvetica-Bold", fontSize=6.5, fillColor=WHITE, textAnchor="start"))
+
+    d.add(String(10, H-60, "Get On Contract Vehicles Without", fontName="Helvetica-Bold", fontSize=10, fillColor=WHITE, textAnchor="start"))
+    d.add(String(10, H-73, "Extensive Past Performance", fontName="Helvetica-Bold", fontSize=10, fillColor=WHITE, textAnchor="start"))
+    d.add(String(10, H-87, "{{webinar_date}}  •  {{webinar_time}}", fontName="Helvetica", fontSize=7.5, fillColor=ORANGE, textAnchor="start"))
+    d.add(String(10, H-100, "Hosted by Randy Wimmer  |  Zoom Live Session", fontName="Helvetica", fontSize=7, fillColor=colors.HexColor("#aaaaaa"), textAnchor="start"))
+    d.add(Rect(10, H-120, 110, 14, fillColor=ORANGE, strokeWidth=0))
+    d.add(String(65, H-111, "REGISTER FREE →", fontName="Helvetica-Bold", fontSize=7, fillColor=WHITE, textAnchor="middle"))
+
+    # Form section (right side)
+    form_x = hero_w + 4; form_w = TW - hero_w - 4
+    d.add(Rect(form_x, H-22-120, form_w, 120, fillColor=WHITE, strokeWidth=0.5, strokeColor=MGRAY))
+    d.add(String(form_x+form_w/2, H-36, "Reserve Your Free Seat", fontName="Helvetica-Bold", fontSize=8, fillColor=NAVY, textAnchor="middle"))
+    for fi, flbl in enumerate(["Full Name", "Email Address", "Phone Number"]):
+        fy = H - 56 - fi*22
+        d.add(Rect(form_x+6, fy-10, form_w-12, 14, fillColor=colors.HexColor("#f4f6f9"), strokeWidth=0.5, strokeColor=MGRAY))
+        d.add(String(form_x+10, fy-4, flbl, fontName="Helvetica", fontSize=6.5, fillColor=GRAY, textAnchor="start"))
+    d.add(Rect(form_x+6, H-22-108, form_w-12, 16, fillColor=ORANGE, strokeWidth=0))
+    d.add(String(form_x+form_w/2, H-22-99, "CLAIM MY FREE SEAT →", fontName="Helvetica-Bold", fontSize=6.5, fillColor=WHITE, textAnchor="middle"))
+
+    # Countdown section
+    d.add(Rect(0, H-22-152, TW, 32, fillColor=colors.HexColor("#f0f0f0"), strokeWidth=0))
+    d.add(String(TW/2, H-22-130, "⏱  Webinar starts in:", fontName="Helvetica-Bold", fontSize=8, fillColor=NAVY, textAnchor="middle"))
+    for ci, cu in enumerate(["DAYS","HRS","MIN","SEC"]):
+        cx = 80 + ci*90
+        d.add(Rect(cx-20, H-22-150, 40, 16, fillColor=NAVY, strokeWidth=0))
+        d.add(String(cx, H-22-140, "—", fontName="Helvetica-Bold", fontSize=9, fillColor=WHITE, textAnchor="middle"))
+        d.add(String(cx, H-22-156, cu, fontName="Helvetica", fontSize=5.5, fillColor=GRAY, textAnchor="middle"))
+
+    # What you'll learn section
+    d.add(Rect(0, H-22-218, TW, 66, fillColor=WHITE, strokeWidth=0))
+    d.add(String(TW/2, H-22-168, "WHAT YOU'LL LEARN IN THIS FREE WEBINAR:", fontName="Helvetica-Bold", fontSize=8, fillColor=NAVY, textAnchor="middle"))
+    bullets_lp = [
+        "How to get on contract vehicles without past performance",
+        "The fastest path to your first federal contract win",
+        "Why ISO certification multiplies your GovCon opportunities",
+    ]
+    for bi, bl in enumerate(bullets_lp):
+        d.add(String(TW/2, H-22-183-bi*13, f"✓  {bl}", fontName="Helvetica", fontSize=7.5, fillColor=DGRAY, textAnchor="middle"))
+
+    # About Randy section
+    d.add(Rect(0, H-22-260, TW, 42, fillColor=colors.HexColor("#f4f6f9"), strokeWidth=0))
+    d.add(Rect(12, H-22-256, 36, 36, fillColor=MGRAY, strokeWidth=0))
+    d.add(String(30, H-22-237, "Randy\nWimmer", fontName="Helvetica-Bold", fontSize=6, fillColor=DGRAY, textAnchor="middle"))
+    d.add(String(56, H-22-234, "Randy Wimmer — Government Contracting Academy", fontName="Helvetica-Bold", fontSize=7.5, fillColor=NAVY, textAnchor="start"))
+    d.add(String(56, H-22-246, "Founder & CEO | Helping small businesses win federal contracts", fontName="Helvetica", fontSize=7, fillColor=GRAY, textAnchor="start"))
+
+    # Footer
+    d.add(Rect(0, 0, TW, 20, fillColor=colors.HexColor("#1e3a5f"), strokeWidth=0))
+    d.add(String(TW/2, 7, "© Government Contracting Academy  |  fedgovstartup.com  |  Privacy Policy", fontName="Helvetica", fontSize=6, fillColor=colors.HexColor("#aaaaaa"), textAnchor="middle"))
+
+    # Dynamic label callouts
+    callouts = [
+        (140, H-87, "→ {{webinar_date}}", ORANGE),
+        (140, H-100, "→ {{webinar_time}}", ORANGE),
+    ]
+    for cx, cy, lbl, col in callouts:
+        d.add(String(cx+2, cy, lbl, fontName="Helvetica-Bold", fontSize=6, fillColor=col, textAnchor="start"))
+
+    return d
+
+story.append(make_landing_page_mockup())
+story.append(Spacer(1, 8))
+story.append(Paragraph("Orange tags ({{webinar_date}}, {{webinar_time}}) are GHL Custom Values — they update automatically every webinar cycle.", S_note))
+story.append(Spacer(1, 12))
+
+# Custom Values table
+story.append(banner("GHL CUSTOM VALUES — THE 4 DYNAMIC FIELDS"))
+story.append(Spacer(1, 8))
+story.append(Paragraph(
+    "These 4 fields live in GHL Settings → Custom Values. "
+    "n8n writes to them automatically the moment Randy creates a new Zoom webinar. "
+    "The landing page reads them live — no republishing needed.",
+    s("cv_intro", fontName="Helvetica", fontSize=9.5, textColor=DGRAY, leading=14, spaceAfter=8)))
+
+cv_data = [
+    ["Custom Value",           "Tag Used on Page",           "Updated By",  "Example Value"],
+    ["webinar_topic",          "{{custom.webinar_topic}}",   "n8n (auto)",  "Get On Contract Vehicles Without Extensive Past Performance"],
+    ["webinar_date",           "{{custom.webinar_date}}",    "n8n (auto)",  "Thursday, June 19, 2026"],
+    ["webinar_time",           "{{custom.webinar_time}}",    "n8n (auto)",  "2:00 PM – 3:30 PM EST"],
+    ["zoom_webinar_id",        "{{custom.zoom_webinar_id}}", "n8n (auto)",  "87654321098 (Zoom registration API)"],
+]
+cv_tbl = Table(cv_data, colWidths=[1.35*inch, 1.6*inch, 0.9*inch, 3.15*inch])
+cv_tbl.setStyle(TableStyle([
+    ("BACKGROUND",    (0,0),(-1,0),  NAVY),
+    ("FONTNAME",      (0,0),(-1,0),  "Helvetica-Bold"),
+    ("FONTNAME",      (0,1),(-1,-1), "Helvetica"),
+    ("FONTSIZE",      (0,0),(-1,-1), 8),
+    ("TEXTCOLOR",     (0,0),(-1,0),  WHITE),
+    ("TEXTCOLOR",     (0,1),(-1,-1), DGRAY),
+    ("FONTNAME",      (1,1),(1,-1),  "Helvetica-Bold"),
+    ("TEXTCOLOR",     (1,1),(1,-1),  ORANGE),
+    ("FONTNAME",      (2,1),(2,-1),  "Helvetica-Bold"),
+    ("TEXTCOLOR",     (2,1),(2,-1),  GREEN),
+    ("ROWBACKGROUNDS",(0,1),(-1,-1), [LGRAY, WHITE]),
+    ("TOPPADDING",    (0,0),(-1,-1), 6), ("BOTTOMPADDING",(0,0),(-1,-1), 6),
+    ("LEFTPADDING",   (0,0),(-1,-1), 7), ("RIGHTPADDING", (0,0),(-1,-1), 7),
+    ("GRID",          (0,0),(-1,-1), 0.3, colors.HexColor("#cccccc")),
+    ("VALIGN",        (0,0),(-1,-1), "MIDDLE"),
+]))
+story.append(cv_tbl)
+story.append(Spacer(1, 10))
+
+# Auto-update flow
+def make_lp_update_flow():
+    TW = 504; H = 62
+    d  = Drawing(TW, H)
+    nodes = [
+        ("Randy creates\nZoom Webinar",  "#e67e22"),
+        ("Zoom Webhook\n→ n8n (VPS)",   "#2c3e50"),
+        ("n8n PATCH\nGHL Custom Values", "#FF6600"),
+        ("Landing Page\nlive instantly", "#27ae60"),
+        ("All emails use\nsame variables", "#1e3a5f"),
+    ]
+    bw = 84; bh = 48; unit = bw + 12; TW2 = len(nodes)*unit - 12
+    ox = (TW - TW2) / 2
+    for i, (lbl, col) in enumerate(nodes):
+        x = ox + i*unit
+        c = colors.HexColor(col)
+        d.add(Rect(x, 8, bw, bh, fillColor=c, strokeWidth=0))
+        ll = lbl.split("\n")
+        cy = 8 + bh/2
+        d.add(String(x+bw/2, cy+3,  ll[0], fontName="Helvetica-Bold", fontSize=6.5, fillColor=WHITE, textAnchor="middle"))
+        d.add(String(x+bw/2, cy-8,  ll[1], fontName="Helvetica",      fontSize=6.5, fillColor=WHITE, textAnchor="middle"))
+        if i < len(nodes)-1:
+            ax = x+bw; ay = 8+bh/2
+            d.add(Polygon([ax,ay+5, ax+11,ay, ax,ay-5], fillColor=c, strokeWidth=0))
+    d.add(String(TW/2, 1, "Total time from Zoom webinar creation to live landing page: under 60 seconds", fontName="Helvetica-Oblique", fontSize=7, fillColor=GRAY, textAnchor="middle"))
+    return d
+
+story.append(make_lp_update_flow())
+story.append(Spacer(1, 8))
+
+lp_note = Table([[
+    Paragraph("💡", s("lpn", fontName="Helvetica-Bold", fontSize=16, textColor=ORANGE, leading=20)),
+    Paragraph(
+        "<b>Same URL. Always.</b>  fedgovstartup.com/webinar never changes. "
+        "Randy can share it in emails, LinkedIn posts, ads, and DMs — permanently. "
+        "No redirects, no broken links, no 'old webinar' page confusion. "
+        "Every piece of content across all 6 agents points to one URL that always shows the next live event.",
+        s("lpnt", fontName="Helvetica", fontSize=10, textColor=DGRAY, leading=15)),
+]], colWidths=[0.45*inch, 6.55*inch])
+lp_note.setStyle(TableStyle([
+    ("BACKGROUND", (0,0),(-1,-1), colors.HexColor("#fff5ee")),
+    ("BOX",        (0,0),(-1,-1), 1.5, ORANGE),
+    ("TOPPADDING", (0,0),(-1,-1), 10), ("BOTTOMPADDING",(0,0),(-1,-1), 10),
+    ("LEFTPADDING",(0,0),(-1,-1), 10), ("RIGHTPADDING", (0,0),(-1,-1), 10),
+    ("VALIGN",     (0,0),(-1,-1), "MIDDLE"),
+]))
+story.append(lp_note)
+
+# PAGE 8 — TECHNICAL WORKFLOW & TRIGGER MAP (was PAGE 7)
+# ══════════════════════════════════════════════════════════════════════════════
+# PAGE 8 — TECHNICAL WORKFLOW & TRIGGER MAP
 # ══════════════════════════════════════════════════════════════════════════════
 story.append(PageBreak())
 story.append(banner("AGENT 1 — TECHNICAL WORKFLOW & TRIGGER MAP"))
