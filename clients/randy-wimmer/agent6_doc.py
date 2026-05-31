@@ -676,5 +676,208 @@ story.append(Paragraph(
     "By Month 3, Randy has full visibility across every channel, every dollar, and every lead — in one URL.",
     s("final", fontName="Helvetica-Bold", fontSize=10, textColor=NAVY, leading=15, alignment=TA_CENTER)))
 
+# ══════════════════════════════════════════════════════════════════════════════
+# PAGE 8 — EMAIL MARKETING + BUYING INTENT PANELS
+# ══════════════════════════════════════════════════════════════════════════════
+story.append(PageBreak())
+story.append(banner("EMAIL MARKETING DASHBOARD — DEEP DIVE"))
+story.append(Spacer(1, 6))
+story.append(cs_bar())
+story.append(Spacer(1, 8))
+story.append(Paragraph(
+    "Beyond open rates — this panel tracks the full health of Randy's email list, "
+    "every active sequence, deliverability, and exactly how much revenue email is generating.",
+    s("em_intro", fontName="Helvetica-Oblique", fontSize=9, textColor=GRAY, leading=13)))
+story.append(Spacer(1, 8))
+
+# Top 4 email metrics
+_em_metrics = ["Total List Size", "Weekly Growth", "Avg Open Rate", "Revenue from Email"]
+_em_r1 = [Paragraph(m, s(f"em1{i}", fontName="Helvetica-Bold", fontSize=7, textColor=GRAY, leading=9, alignment=TA_CENTER)) for i,m in enumerate(_em_metrics)]
+_em_r2 = [Paragraph("— —", s(f"em2{i}", fontName="Helvetica-Bold", fontSize=18, textColor=MGRAY, leading=22, alignment=TA_CENTER)) for i in range(4)]
+_em_r3 = [Paragraph("coming soon", s(f"em3{i}", fontName="Helvetica-Oblique", fontSize=6.5, textColor=CS_TEXT, leading=9, alignment=TA_CENTER)) for i in range(4)]
+_em_top = Table([_em_r1, _em_r2, _em_r3], colWidths=[1.75*inch]*4)
+_em_top.setStyle(TableStyle([
+    ("BACKGROUND",    (0,0),(-1,-1), CS_BG),
+    ("GRID",          (0,0),(-1,-1), 0.5, colors.HexColor("#eeeeee")),
+    ("TOPPADDING",    (0,0),(-1,0), 8), ("BOTTOMPADDING",(0,0),(-1,0), 2),
+    ("TOPPADDING",    (0,1),(-1,1), 2), ("BOTTOMPADDING",(0,1),(-1,1), 2),
+    ("TOPPADDING",    (0,2),(-1,2), 0), ("BOTTOMPADDING",(0,2),(-1,2), 8),
+]))
+story.append(_em_top)
+story.append(Spacer(1, 8))
+
+_email_rows = [
+    ("Total List Size",        TEAL,   "All active contacts enrolled in at least one GHL email sequence"),
+    ("Weekly List Growth",     TEAL,   "New contacts added to email sequences this week from all sources"),
+    ("Active Sequences",       TEAL,   "Number of email sequences currently running (confirmation, nurture, reactivation, post-webinar)"),
+    ("Best Sequence",          TEAL,   "Highest open-rate sequence this cycle — name + open rate %"),
+    ("Confirmation Seq.",      NAVY,   "Open rate for Agent 1 confirmation + reminder emails — benchmark: 55%+"),
+    ("Nurture Seq.",           NAVY,   "Open rate for pre-webinar authority emails — benchmark: 35%+"),
+    ("Post-Webinar Seq.",      NAVY,   "Open rate for attended + no-show follow-up emails — benchmark: 40%+"),
+    ("Reactivation Seq.",      NAVY,   "Open rate for cold lead re-engagement — benchmark: 22%+"),
+    ("Deliverability Score",   ORANGE, "% of emails landing in inbox vs spam — target: 98%+ (SPF/DKIM/DMARC health)"),
+    ("Bounce Rate",            ORANGE, "Hard + soft bounces — healthy: < 2%. High bounce = list hygiene needed"),
+    ("Unsubscribe Rate",       ORANGE, "% opting out — healthy: < 0.5%. Spike = messaging or frequency issue"),
+    ("Revenue Attributed",     GREEN,  "Closed deal value where email was the last touch before call booking"),
+    ("A/B Tests Running",      GREEN,  "Current subject line or CTA split tests and which variant is winning"),
+    ("List Health Score",      GREEN,  "Combined score: engagement + deliverability + bounce + unsubscribe rate"),
+]
+
+for _label, _col, _desc in _email_rows:
+    _row = Table([[
+        Paragraph(_label, s(f"eml{_label}", fontName="Helvetica-Bold", fontSize=8.5, textColor=_col, leading=12)),
+        Paragraph(_desc,  s(f"emd{_label}", fontName="Helvetica", fontSize=8.5, textColor=DGRAY, leading=12)),
+        Paragraph("— coming soon —", s(f"emv{_label}", fontName="Helvetica-Oblique", fontSize=8, textColor=MGRAY, leading=12, alignment=TA_RIGHT)),
+    ]], colWidths=[1.65*inch, 3.65*inch, 1.7*inch])
+    _row.setStyle(TableStyle([
+        ("BACKGROUND",    (0,0),(-1,-1), CS_BG),
+        ("TOPPADDING",    (0,0),(-1,-1), 5), ("BOTTOMPADDING",(0,0),(-1,-1), 5),
+        ("LEFTPADDING",   (0,0),(-1,-1), 8), ("RIGHTPADDING", (0,0),(-1,-1), 8),
+        ("LINEBELOW",     (0,0),(-1,-1), 0.4, colors.HexColor("#dddddd")),
+        ("VALIGN",        (0,0),(-1,-1), "MIDDLE"),
+    ]))
+    story.append(_row)
+
+# ══════════════════════════════════════════════════════════════════════════════
+# PAGE 9 — BUYING INTENT DASHBOARD
+# ══════════════════════════════════════════════════════════════════════════════
+story.append(PageBreak())
+story.append(banner("BUYING INTENT DASHBOARD — WHO IS READY TO BUY?"))
+story.append(Spacer(1, 6))
+story.append(cs_bar())
+story.append(Spacer(1, 8))
+story.append(Paragraph(
+    "<b>The most powerful panel in the dashboard.</b> n8n tracks every behavioral signal across all agents — "
+    "email opens, webinar attendance, link clicks, page visits, DM replies — and assigns each lead "
+    "an Intent Score from 0–100. Randy sees exactly who is ready to buy right now, without lifting a finger.",
+    s("bi_intro", fontName="Helvetica", fontSize=10, textColor=DGRAY, leading=15, spaceAfter=8)))
+
+# Intent tier visual
+def make_intent_tiers():
+    TW = 504; H = 72
+    d  = Drawing(TW, H)
+    tiers = [
+        ("🔥  HOT",        "Score 80–100",  "Ready to buy — call today",   "#e74c3c", 0),
+        ("🟠  WARM",       "Score 50–79",   "Prioritise for outreach",     "#e67e22", 1),
+        ("🟡  INTERESTED", "Score 25–49",   "Keep in sequence",            "#f1c40f", 2),
+        ("🔵  COLD",       "Score 0–24",    "Long-term nurture",           "#95a5a6", 3),
+    ]
+    bw = TW / 4; bh = 58
+    for i, (label, score, desc, col, _) in enumerate(tiers):
+        x = i * bw
+        c = colors.HexColor(col)
+        d.add(Rect(x, 14, bw-4, bh, fillColor=c, strokeWidth=0))
+        d.add(String(x+bw/2-2, 14+bh-14, label, fontName="Helvetica-Bold", fontSize=9,  fillColor=WHITE, textAnchor="middle"))
+        d.add(String(x+bw/2-2, 14+bh-28, score, fontName="Helvetica-Bold", fontSize=8,  fillColor=WHITE, textAnchor="middle"))
+        d.add(String(x+bw/2-2, 14+bh-42, desc,  fontName="Helvetica",      fontSize=7,  fillColor=WHITE, textAnchor="middle"))
+        d.add(String(x+bw/2-2, 4,         "— —", fontName="Helvetica-Bold", fontSize=10, fillColor=colors.HexColor(col), textAnchor="middle"))
+    return d
+
+story.append(make_intent_tiers())
+story.append(Spacer(1, 6))
+story.append(Paragraph("Each tier count updates automatically as leads cross scoring thresholds throughout the day.", S_note))
+story.append(Spacer(1, 10))
+
+# How intent is scored
+story.append(banner("HOW INTENT SCORE IS CALCULATED"))
+story.append(Spacer(1, 8))
+
+def make_scoring_visual():
+    TW = 504; H = 180
+    d  = Drawing(TW, H)
+    signals = [
+        ("Clicked Calendly link (didn't book)",  "+50 pts", "#e74c3c"),
+        ("Booked call + cancelled",              "+45 pts", "#e74c3c"),
+        ("Attended live webinar",                "+40 pts", "#e67e22"),
+        ("Replied to DM / email",                "+35 pts", "#e67e22"),
+        ("Clicked call-to-action in email",      "+30 pts", "#f39c12"),
+        ("Visited landing page 2+ times",        "+25 pts", "#f39c12"),
+        ("Opened 3+ emails in 7 days",           "+20 pts", "#27ae60"),
+        ("Watched webinar replay",               "+20 pts", "#27ae60"),
+        ("Clicked any email link",               "+15 pts", "#2980b9"),
+        ("Opened single email",                  "+10 pts", "#2980b9"),
+    ]
+    row_h = 16; col1_w = 340; col2_w = 70
+    for i, (signal, pts, col) in enumerate(signals):
+        y = H - 10 - i * row_h
+        bg = colors.HexColor("#f8f8f8") if i % 2 == 0 else WHITE
+        d.add(Rect(0, y-12, TW, row_h-1, fillColor=bg, strokeWidth=0))
+        d.add(Rect(0, y-12, 6, row_h-1, fillColor=colors.HexColor(col), strokeWidth=0))
+        d.add(String(14, y-4, signal, fontName="Helvetica", fontSize=8, fillColor=DGRAY, textAnchor="start"))
+        d.add(Rect(col1_w+10, y-11, col2_w, row_h-2, fillColor=colors.HexColor(col), strokeWidth=0))
+        d.add(String(col1_w+10+col2_w/2, y-4, pts, fontName="Helvetica-Bold", fontSize=8, fillColor=WHITE, textAnchor="middle"))
+        d.add(String(TW-5, y-4, "n8n tracks automatically", fontName="Helvetica-Oblique", fontSize=6.5, fillColor=GRAY, textAnchor="end"))
+    return d
+
+story.append(make_scoring_visual())
+story.append(Spacer(1, 10))
+
+# Intent dashboard detail rows
+story.append(banner("INTENT DASHBOARD — METRIC DETAIL"))
+story.append(Spacer(1, 8))
+
+_intent_rows = [
+    ("Hot Leads (80–100)",    colors.HexColor("#e74c3c"),
+     "Leads with score 80+ — n8n alerts BrndGuru + Randy via email/Slack the moment a lead crosses this threshold"),
+    ("Warm Leads (50–79)",    colors.HexColor("#e67e22"),
+     "High-priority nurture targets — these leads need one more touchpoint to push them to Hot"),
+    ("Interested (25–49)",    colors.HexColor("#f39c12"),
+     "Engaged but not urgent — keep in email + LinkedIn sequence, monitor for score jumps"),
+    ("Cold Leads (0–24)",     colors.HexColor("#95a5a6"),
+     "Low engagement — in long-term nurture sequence, retargeted via Agent 2 LinkedIn ads"),
+    ("Avg. Intent Score",     NAVY,
+     "Average score across all active leads — rising average = messaging is working"),
+    ("Score Velocity",        NAVY,
+     "How fast leads are moving up the scoring tiers week over week — measures funnel momentum"),
+    ("Top Signal This Week",  PURPLE,
+     "The intent signal that fired most frequently — tells you which touchpoint is driving the most engagement"),
+    ("Intent → Booked Rate",  GREEN,
+     "% of Hot leads (80+) who go on to book a Calendly call — target: 60%+"),
+    ("Avg. Days to Intent",   GREEN,
+     "Average days from registration to reaching score 80+ — shorter = better funnel efficiency"),
+    ("Re-Engaged This Week",  GREEN,
+     "Cold leads who were inactive and suddenly triggered an intent signal — flag for personal outreach"),
+    ("Top 5 Hottest Leads",   ORANGE,
+     "Ranked list of the 5 contacts with the highest intent scores right now — their name, score, and last action"),
+]
+
+for _label, _col, _desc in _intent_rows:
+    _row = Table([[
+        Paragraph(_label, s(f"il{_label}", fontName="Helvetica-Bold", fontSize=8.5, textColor=_col, leading=12)),
+        Paragraph(_desc,  s(f"id{_label}", fontName="Helvetica",      fontSize=8.5, textColor=DGRAY, leading=12)),
+        Paragraph("— coming soon —", s(f"iv{_label}", fontName="Helvetica-Oblique", fontSize=8, textColor=MGRAY, leading=12, alignment=TA_RIGHT)),
+    ]], colWidths=[1.65*inch, 3.65*inch, 1.7*inch])
+    _row.setStyle(TableStyle([
+        ("BACKGROUND",    (0,0),(-1,-1), CS_BG),
+        ("TOPPADDING",    (0,0),(-1,-1), 5), ("BOTTOMPADDING",(0,0),(-1,-1), 5),
+        ("LEFTPADDING",   (0,0),(-1,-1), 8), ("RIGHTPADDING", (0,0),(-1,-1), 8),
+        ("LINEBELOW",     (0,0),(-1,-1), 0.4, colors.HexColor("#dddddd")),
+        ("VALIGN",        (0,0),(-1,-1), "MIDDLE"),
+    ]))
+    story.append(_row)
+
+story.append(Spacer(1, 10))
+
+# How intent data flows
+_flow = Table([[
+    Paragraph("HOW IT WORKS", s("hw", fontName="Helvetica-Bold", fontSize=9, textColor=NAVY, leading=13)),
+    Paragraph(
+        "Every time a lead opens an email, clicks a link, visits the landing page, attends the webinar, "
+        "or replies to a DM — n8n detects that signal via GHL webhooks, LinkedIn API, or Zoom API, "
+        "adds the points to a custom field in GHL, and updates the Intent Score. "
+        "When a lead crosses 80 points, n8n sends an instant alert. "
+        "The 'Top 5 Hottest Leads' list refreshes every hour. "
+        "Randy always knows exactly who to call — without checking anything manually.",
+        s("hwt", fontName="Helvetica", fontSize=9, textColor=DGRAY, leading=14)),
+]], colWidths=[1.3*inch, 5.7*inch])
+_flow.setStyle(TableStyle([
+    ("BACKGROUND",    (0,0),(-1,-1), colors.HexColor("#fff5ee")),
+    ("BOX",           (0,0),(-1,-1), 1.5, ORANGE),
+    ("TOPPADDING",    (0,0),(-1,-1), 10), ("BOTTOMPADDING",(0,0),(-1,-1), 10),
+    ("LEFTPADDING",   (0,0),(-1,-1), 10), ("RIGHTPADDING", (0,0),(-1,-1), 10),
+    ("VALIGN",        (0,0),(-1,-1), "TOP"),
+]))
+story.append(_flow)
+
 doc.build(story, onFirstPage=cover_draw, onLaterPages=later_pages)
 print("PDF generated:", OUTPUT)
