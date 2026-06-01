@@ -156,6 +156,71 @@ a.elementor-button {
 [class*="testimonial"] { background:#141414 !important; border:1px solid #222 !important; border-radius:12px !important; }
 .elementor-testimonial-name { color:#fff !important; }
 .elementor-testimonial-job { color:#888 !important; }
+
+/* ── Footer: lighter background so it stands out ── */
+#colophon, .site-footer, .ast-footer-widget-area,
+.ast-footer-below-section, .ast-footer-bottom-bar,
+.footer-widget-area {
+    background-color: #1a1a1a !important;
+    border-top: 2px solid rgba(228,82,43,0.35) !important;
+}
+#colophon *:not(img):not(svg):not(path):not(video):not(iframe):not(input):not(button),
+.ast-footer-widget-area *:not(img):not(svg):not(path) {
+    background-color: #1a1a1a !important;
+}
+
+/* ── Footer headings ── */
+#colophon h1,#colophon h2,#colophon h3,#colophon h4,#colophon h5,#colophon h6,
+#colophon .elementor-heading-title,
+.site-footer h1,.site-footer h2,.site-footer h3,.site-footer h4 {
+    color: #ffffff !important;
+}
+
+/* ── Footer nav links & ALL anchors — the critical fix ── */
+#colophon a, #colophon a:link, #colophon a:visited,
+#colophon ul li a, #colophon nav a,
+#colophon .menu-item a, #colophon .menu-item > a,
+#colophon .widget_nav_menu a, #colophon .widget_nav_menu ul li a,
+#colophon .elementor-nav-menu a,
+#colophon .elementor-nav-menu--main .elementor-item,
+#colophon .elementor-nav-menu .elementor-item,
+#colophon .elementor-icon-list-item a,
+.site-footer a, .site-footer ul li a,
+.site-footer .menu-item a,
+.site-footer .widget_nav_menu a,
+.site-footer .elementor-nav-menu a,
+.site-footer .elementor-nav-menu--main .elementor-item,
+.ast-footer-widget-area a, .ast-footer-widget-area ul li a {
+    color: #cccccc !important;
+    opacity: 1 !important;
+    visibility: visible !important;
+    text-decoration: none !important;
+}
+#colophon a:hover, .site-footer a:hover,
+#colophon .menu-item a:hover, #colophon .elementor-nav-menu a:hover {
+    color: #e4522b !important;
+}
+
+/* ── Footer body text ── */
+#colophon p, #colophon li, #colophon span, #colophon small,
+.site-footer p, .site-footer li, .site-footer span,
+.ast-footer-widget-area p, .ast-footer-widget-area li {
+    color: #aaaaaa !important;
+}
+
+/* ── Footer inputs ── */
+#colophon input[type="email"], #colophon input[type="text"],
+.site-footer input[type="email"], .site-footer input[type="text"] {
+    background: #242424 !important;
+    border: 1px solid #444 !important;
+    color: #cccccc !important;
+}
+#colophon input[type="submit"], #colophon button[type="submit"],
+.site-footer input[type="submit"] {
+    background: #e4522b !important;
+    color: #fff !important;
+    border: none !important;
+}
 </style>
 
 <script id="bg-dark-nuclear-js">
@@ -175,37 +240,74 @@ a.elementor-button {
       var el = all[i];
       var tag = el.tagName;
       if(tag==='IMG' || tag==='SVG' || tag==='PATH' || tag==='VIDEO' || tag==='IFRAME') continue;
-      // Skip buttons (keep orange) and elements we explicitly themed
       if(el.classList && (el.classList.contains('elementor-button') || el.classList.contains('bg-btn'))) continue;
-
       var cs = getComputedStyle(el);
       var bg = parseColor(cs.backgroundColor);
-      // Recolor LIGHT solid backgrounds → dark
       if(bg && bg.a > 0.15 && luminance(bg.r,bg.g,bg.b) > 0.62){
         el.style.setProperty('background-color', '#0d0d0d', 'important');
-        // if it had a light gradient image too, neutralize
         if(cs.backgroundImage && cs.backgroundImage.indexOf('gradient')>-1 && cs.backgroundImage.indexOf('url(')===-1){
           el.style.setProperty('background-image', 'none', 'important');
         }
       }
-      // Recolor DARK text → light (for readability on dark bg)
       var col = parseColor(cs.color);
       if(col && col.a > 0.3 && luminance(col.r,col.g,col.b) < 0.30){
-        // keep orange-ish text as-is (high red, low green/blue)
         var isOrange = col.r>150 && col.g<140 && col.b<110;
         if(!isOrange){
-          // headings brighter than body
           var isHeading = /^H[1-6]$/.test(tag) || (el.className+'').match(/title|heading/i);
           el.style.setProperty('color', isHeading ? '#ffffff' : '#b5b5b5', 'important');
         }
       }
     }
   }
-  if(document.readyState==='loading'){ document.addEventListener('DOMContentLoaded', fix); }
-  else { fix(); }
-  // Re-run after a tick in case Elementor lazy-loads styles
-  setTimeout(fix, 600);
-  window.addEventListener('load', fix);
+
+  function fixFooter(){
+    var footer = document.querySelector('#colophon, .site-footer, footer');
+    if(!footer) return;
+    /* Fix ALL backgrounds in footer to #1a1a1a */
+    footer.querySelectorAll('*').forEach(function(el){
+      var tag = el.tagName;
+      if(/^(IMG|SVG|PATH|VIDEO|IFRAME|CANVAS|SCRIPT|STYLE)$/.test(tag)) return;
+      var cls = (el.className||'').toString();
+      var isBtn = /elementor-button/.test(cls) || tag==='BUTTON'||(tag==='INPUT'&&(el.type==='submit'||el.type==='button'));
+      var cs = getComputedStyle(el);
+      var bg = parseColor(cs.backgroundColor);
+      if(bg && bg.a > 0.05 && !isBtn){
+        var bl = luminance(bg.r,bg.g,bg.b);
+        if(bl > 0.4 || bl < 0.015) el.style.setProperty('background-color','#1a1a1a','important');
+      }
+      /* Fix ALL text including transparent — catch color:rgba(0,0,0,0) */
+      if(!isBtn){
+        var col = parseColor(cs.color);
+        /* transparent OR too dark → make visible */
+        if(!col || col.a < 0.4 || luminance(col.r,col.g,col.b) < 0.35){
+          var isOrg = col && col.r>150 && col.g<130 && col.b<100;
+          if(!isOrg){
+            var isHd = /^H[1-6]$/.test(tag)||(cls).match(/heading|title/i);
+            el.style.setProperty('color', isHd?'#ffffff':'#cccccc','important');
+            el.style.setProperty('opacity','1','important');
+            el.style.setProperty('visibility','visible','important');
+          }
+        }
+      }
+    });
+    /* Second pass: force every anchor in footer */
+    footer.querySelectorAll('a').forEach(function(a){
+      var isBtn = /elementor-button/.test((a.className||'').toString());
+      if(isBtn) return;
+      var col = parseColor(getComputedStyle(a).color);
+      if(!col || col.a < 0.5 || luminance(col.r,col.g,col.b) < 0.25){
+        a.style.setProperty('color','#cccccc','important');
+        a.style.setProperty('opacity','1','important');
+      }
+    });
+  }
+
+  if(document.readyState==='loading'){
+    document.addEventListener('DOMContentLoaded', function(){ fix(); fixFooter(); });
+  } else { fix(); fixFooter(); }
+  setTimeout(function(){ fix(); fixFooter(); }, 600);
+  setTimeout(fixFooter, 1500);
+  window.addEventListener('load', function(){ fix(); fixFooter(); });
 })();
 </script>
 <?php }, 9999);
