@@ -67,7 +67,7 @@ def banner(title):
 def cs_bar():
     """Coming Soon badge bar."""
     tbl = Table([[
-        Paragraph("🔜  COMING SOON — Data will populate automatically once agents are live",
+        Paragraph("COMING SOON — Data will populate automatically once agents are live",
                   s("csb", fontName="Helvetica-Bold", fontSize=8.5, textColor=WHITE, leading=12, alignment=TA_CENTER))
     ]], colWidths=[7*inch])
     tbl.setStyle(TableStyle([
@@ -352,7 +352,7 @@ def make_agent_mini_card(num, name, col, metrics):
     hdr = Table([[
         Paragraph(num,  s(f"mn{num}", fontName="Helvetica-Bold", fontSize=13, textColor=WHITE, leading=18, alignment=TA_CENTER)),
         Paragraph(f"AGENT {num}<br/>{name}", s(f"mh{num}", fontName="Helvetica-Bold", fontSize=8, textColor=WHITE, leading=11)),
-        Paragraph("🔜 COMING SOON", s(f"mc{num}", fontName="Helvetica-Bold", fontSize=7, textColor=WHITE, leading=10, alignment=TA_RIGHT)),
+        Paragraph("COMING SOON", s(f"mc{num}", fontName="Helvetica-Bold", fontSize=7, textColor=WHITE, leading=10, alignment=TA_RIGHT)),
     ]], colWidths=[0.35*inch, 1.9*inch, 1.0*inch])
     hdr.setStyle(TableStyle([
         ("BACKGROUND", (0,0),(-1,-1), c),
@@ -652,14 +652,14 @@ story.append(Spacer(1, 8))
 
 golive = [
     ["Section",           "Goes Live",      "Depends On",            "Status"],
-    ["Agent 1 Panel",     "Month 1",        "Agent 1 built",         "🔜 Coming Soon"],
-    ["Agent 2 Panel",     "Month 1",        "Agent 2 built",         "🔜 Coming Soon"],
-    ["Full Funnel View",  "Month 1",        "Agents 1 + 2 + GHL",   "🔜 Coming Soon"],
-    ["Revenue Pipeline",  "Month 1",        "GHL pipeline setup",   "🔜 Coming Soon"],
-    ["Agent 3 Panel",     "Month 2",        "Agent 3 built",         "🔜 Scheduled"],
-    ["Agent 4 Panel",     "Month 2",        "Agent 4 + HeyReach",   "🔜 Scheduled"],
-    ["Agent 5 Panel",     "Month 3",        "Agent 5 built",         "🔜 Scheduled"],
-    ["Attribution Split", "Month 3",        "All agents live",       "🔜 Scheduled"],
+    ["Agent 1 Panel",     "Month 1",        "Agent 1 built",         "Coming Soon"],
+    ["Agent 2 Panel",     "Month 1",        "Agent 2 built",         "Coming Soon"],
+    ["Full Funnel View",  "Month 1",        "Agents 1 + 2 + GHL",   "Coming Soon"],
+    ["Revenue Pipeline",  "Month 1",        "GHL pipeline setup",   "Coming Soon"],
+    ["Agent 3 Panel",     "Month 2",        "Agent 3 built",         "Scheduled"],
+    ["Agent 4 Panel",     "Month 2",        "Agent 4 + HeyReach",   "Scheduled"],
+    ["Agent 5 Panel",     "Month 3",        "Agent 5 built",         "Scheduled"],
+    ["Attribution Split", "Month 3",        "All agents live",       "Scheduled"],
 ]
 gl_tbl = Table(golive, colWidths=[1.8*inch, 1.0*inch, 2.0*inch, 2.2*inch])
 gl_tbl.setStyle(TableStyle([
