@@ -173,14 +173,14 @@ function brndguru_visuals_global_js() {
         100% { opacity: 1;   transform: scale(1.2); }
     }
 
-    /* ── Alternating section shades so each section stands out ── */
+    /* ── Alternating section shades — lighter palette ── */
     .elementor-top-section:nth-child(odd),
     .elementor-section:nth-child(odd) {
-        background-color: #111111 !important;
+        background-color: #1e1e1e !important;
     }
     .elementor-top-section:nth-child(even),
     .elementor-section:nth-child(even) {
-        background-color: #181818 !important;
+        background-color: #272727 !important;
     }
 
     /* ── Dot grid on all sections ── */
@@ -188,20 +188,20 @@ function brndguru_visuals_global_js() {
     .elementor-top-section,
     .e-con {
         background-image:
-            radial-gradient(circle, rgba(255,255,255,0.035) 1px, transparent 1px) !important;
+            radial-gradient(circle, rgba(255,255,255,0.05) 1px, transparent 1px) !important;
         background-size: 30px 30px !important;
     }
 
     /* ── Subtle bottom border between sections ── */
     .elementor-section,
     .elementor-top-section {
-        border-bottom: 1px solid rgba(255,255,255,0.04) !important;
+        border-bottom: 1px solid rgba(255,255,255,0.06) !important;
     }
 
     /* ── Orange accent on alternating sections left edge ── */
     .elementor-top-section:nth-child(even),
     .elementor-section:nth-child(even) {
-        border-left: 3px solid rgba(228,82,43,0.15) !important;
+        border-left: 3px solid rgba(228,82,43,0.2) !important;
     }
     </style>
     <?php
