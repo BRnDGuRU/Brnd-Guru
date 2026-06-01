@@ -1,7 +1,7 @@
 <?php
 /**
  * Plugin Name: BrndGuru Footer Dark Fix
- * Description: Lighter dark footer (#1a1a1a) with visible nav links and orange accents.
+ * Description: Lighter dark footer (#2a2a2a) with visible nav links and orange accents.
  * Version:     2.3
  * Author:      BrndGuru
  */
@@ -23,13 +23,13 @@ function brndguru_footer_css() {
     .ast-footer-below-section,
     .footer-widget-area,
     .ast-footer-bottom-bar {
-        background-color: #1a1a1a !important;
+        background-color: #2a2a2a !important;
     }
 
     /* also cover every child element */
     #colophon *:not(img):not(svg):not(path):not(video):not(iframe):not(input):not(button):not(select),
     .ast-footer-widget-area *:not(img):not(svg):not(path) {
-        background-color: #1a1a1a !important;
+        background-color: #2a2a2a !important;
     }
 
     /* ── Headings ── */
@@ -166,8 +166,8 @@ function brndguru_footer_js() {
                 var bg = toRgb(cs.backgroundColor);
                 if (bg && bg.a > 0.05 && !isBtn) {
                     var bl = lum(bg.r, bg.g, bg.b);
-                    if (bl > 0.5) el.style.setProperty('background-color', '#1a1a1a', 'important');
-                    if (bl < 0.02) el.style.setProperty('background-color', '#1a1a1a', 'important');
+                    if (bl > 0.5) el.style.setProperty('background-color', '#2a2a2a', 'important');
+                    if (bl < 0.02) el.style.setProperty('background-color', '#2a2a2a', 'important');
                 }
 
                 /* Fix invisible or dark text */
@@ -185,15 +185,20 @@ function brndguru_footer_js() {
                 }
             });
 
-            /* Force all anchors visible */
+            /* Unconditional anchor pass */
             footer.querySelectorAll('a').forEach(function(a) {
-                var cs = window.getComputedStyle(a);
-                var col = toRgb(cs.color);
                 var isBtn = /elementor-button/.test((a.className||'').toString());
-                if (!isBtn && (!col || col.a < 0.5 || lum(col.r,col.g,col.b) < 0.25)) {
-                    a.style.setProperty('color', '#cccccc', 'important');
-                    a.style.setProperty('opacity', '1', 'important');
-                }
+                if (isBtn) return;
+                a.style.setProperty('color', '#cccccc', 'important');
+                a.style.setProperty('opacity', '1', 'important');
+                a.style.setProperty('visibility', 'visible', 'important');
+                a.style.setProperty('display', 'block', 'important');
+            });
+            /* Force li items visible */
+            footer.querySelectorAll('li').forEach(function(li) {
+                li.style.setProperty('display', 'block', 'important');
+                li.style.setProperty('visibility', 'visible', 'important');
+                li.style.setProperty('opacity', '1', 'important');
             });
         }
 

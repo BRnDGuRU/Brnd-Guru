@@ -161,12 +161,12 @@ a.elementor-button {
 #colophon, .site-footer, .ast-footer-widget-area,
 .ast-footer-below-section, .ast-footer-bottom-bar,
 .footer-widget-area {
-    background-color: #1a1a1a !important;
+    background-color: #2a2a2a !important;
     border-top: 2px solid rgba(228,82,43,0.35) !important;
 }
 #colophon *:not(img):not(svg):not(path):not(video):not(iframe):not(input):not(button),
 .ast-footer-widget-area *:not(img):not(svg):not(path) {
-    background-color: #1a1a1a !important;
+    background-color: #2a2a2a !important;
 }
 
 /* ── Footer headings ── */
@@ -208,11 +208,36 @@ a.elementor-button {
     color: #aaaaaa !important;
 }
 
+/* ── Footer nav links — force display so Elementor can't hide them ── */
+#colophon .elementor-nav-menu li,
+#colophon .elementor-nav-menu--main li,
+#colophon .menu-item,
+.site-footer .elementor-nav-menu li,
+.site-footer .menu-item {
+    display: block !important;
+    visibility: visible !important;
+    opacity: 1 !important;
+}
+#colophon .elementor-nav-menu a,
+#colophon .elementor-nav-menu--main a,
+#colophon .elementor-item,
+#colophon .elementor-nav-menu .elementor-item,
+#colophon .elementor-nav-menu--main .elementor-item,
+html body #colophon a,
+html body .site-footer a,
+html body .ast-footer-widget-area a {
+    color: #cccccc !important;
+    display: block !important;
+    visibility: visible !important;
+    opacity: 1 !important;
+    text-decoration: none !important;
+}
+
 /* ── Footer inputs ── */
 #colophon input[type="email"], #colophon input[type="text"],
 .site-footer input[type="email"], .site-footer input[type="text"] {
-    background: #242424 !important;
-    border: 1px solid #444 !important;
+    background: #333333 !important;
+    border: 1px solid #555 !important;
     color: #cccccc !important;
 }
 #colophon input[type="submit"], #colophon button[type="submit"],
@@ -263,7 +288,7 @@ a.elementor-button {
   function fixFooter(){
     var footer = document.querySelector('#colophon, .site-footer, footer');
     if(!footer) return;
-    /* Fix ALL backgrounds in footer to #1a1a1a */
+    /* Fix ALL backgrounds in footer */
     footer.querySelectorAll('*').forEach(function(el){
       var tag = el.tagName;
       if(/^(IMG|SVG|PATH|VIDEO|IFRAME|CANVAS|SCRIPT|STYLE)$/.test(tag)) return;
@@ -273,12 +298,10 @@ a.elementor-button {
       var bg = parseColor(cs.backgroundColor);
       if(bg && bg.a > 0.05 && !isBtn){
         var bl = luminance(bg.r,bg.g,bg.b);
-        if(bl > 0.4 || bl < 0.015) el.style.setProperty('background-color','#1a1a1a','important');
+        if(bl > 0.35 || bl < 0.012) el.style.setProperty('background-color','#2a2a2a','important');
       }
-      /* Fix ALL text including transparent — catch color:rgba(0,0,0,0) */
       if(!isBtn){
         var col = parseColor(cs.color);
-        /* transparent OR too dark → make visible */
         if(!col || col.a < 0.4 || luminance(col.r,col.g,col.b) < 0.35){
           var isOrg = col && col.r>150 && col.g<130 && col.b<100;
           if(!isOrg){
@@ -290,24 +313,45 @@ a.elementor-button {
         }
       }
     });
-    /* Second pass: force every anchor in footer */
+    /* Unconditional anchor pass — always force links visible */
     footer.querySelectorAll('a').forEach(function(a){
       var isBtn = /elementor-button/.test((a.className||'').toString());
       if(isBtn) return;
-      var col = parseColor(getComputedStyle(a).color);
-      if(!col || col.a < 0.5 || luminance(col.r,col.g,col.b) < 0.25){
-        a.style.setProperty('color','#cccccc','important');
-        a.style.setProperty('opacity','1','important');
-      }
+      a.style.setProperty('color','#cccccc','important');
+      a.style.setProperty('opacity','1','important');
+      a.style.setProperty('visibility','visible','important');
+      a.style.setProperty('display','block','important');
     });
+    /* Force all nav list items to be visible */
+    footer.querySelectorAll('li').forEach(function(li){
+      li.style.setProperty('display','block','important');
+      li.style.setProperty('visibility','visible','important');
+      li.style.setProperty('opacity','1','important');
+    });
+    /* Force footer background */
+    footer.style.setProperty('background-color','#2a2a2a','important');
   }
 
+  var _footerObserver = null;
+  function startFooterObserver(){
+    if(_footerObserver) return;
+    var footer = document.querySelector('#colophon, .site-footer, footer');
+    if(!footer) return;
+    _footerObserver = new MutationObserver(function(){ fixFooter(); });
+    _footerObserver.observe(footer, {childList:true, subtree:true, attributes:true, attributeFilter:['style','class']});
+  }
+
+  function runAll(){ fix(); fixFooter(); startFooterObserver(); }
+
   if(document.readyState==='loading'){
-    document.addEventListener('DOMContentLoaded', function(){ fix(); fixFooter(); });
-  } else { fix(); fixFooter(); }
-  setTimeout(function(){ fix(); fixFooter(); }, 600);
-  setTimeout(fixFooter, 1500);
-  window.addEventListener('load', function(){ fix(); fixFooter(); });
+    document.addEventListener('DOMContentLoaded', runAll);
+  } else { runAll(); }
+  setTimeout(runAll, 100);
+  setTimeout(runAll, 500);
+  setTimeout(runAll, 1500);
+  setTimeout(fixFooter, 3000);
+  setTimeout(fixFooter, 6000);
+  window.addEventListener('load', runAll);
 })();
 </script>
 <?php }, 9999);
