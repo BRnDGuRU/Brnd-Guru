@@ -173,14 +173,16 @@ function brndguru_visuals_global_js() {
         100% { opacity: 1;   transform: scale(1.2); }
     }
 
-    /* ── Alternating section shades — lighter palette ── */
+    /* ── Alternating section shades — clearly visible lighter palette ── */
     .elementor-top-section:nth-child(odd),
-    .elementor-section:nth-child(odd) {
-        background-color: #1e1e1e !important;
+    .elementor-section:nth-child(odd),
+    .e-con:nth-child(odd) {
+        background-color: #2a2a2a !important;
     }
     .elementor-top-section:nth-child(even),
-    .elementor-section:nth-child(even) {
-        background-color: #272727 !important;
+    .elementor-section:nth-child(even),
+    .e-con:nth-child(even) {
+        background-color: #363636 !important;
     }
 
     /* ── Dot grid on all sections ── */
