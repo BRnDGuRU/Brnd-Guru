@@ -94,7 +94,7 @@ add_action('wp_footer', function () {
 .elementor-column,
 .elementor-widget-wrap,
 .elementor-element-populated {
-    background-color: #1e1008 !important;
+    background-color: #111111 !important;
 }
 
 /* ── Light overlays → transparent (kills peach overlay tints) ── */
@@ -269,7 +269,7 @@ html body .ast-footer-widget-area a {
       var cs = getComputedStyle(el);
       var bg = parseColor(cs.backgroundColor);
       if(bg && bg.a > 0.15 && luminance(bg.r,bg.g,bg.b) > 0.70){
-        el.style.setProperty('background-color', '#1e1008', 'important');
+        el.style.setProperty('background-color', '#111111', 'important');
         if(cs.backgroundImage && cs.backgroundImage.indexOf('gradient')>-1 && cs.backgroundImage.indexOf('url(')===-1){
           el.style.setProperty('background-image', 'none', 'important');
         }
