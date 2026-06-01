@@ -4,11 +4,13 @@ from reportlab.lib.units import inch
 from reportlab.lib import colors
 from reportlab.platypus import (
     SimpleDocTemplate, Paragraph, Spacer, Table, TableStyle,
-    KeepTogether, PageBreak
+    KeepTogether, PageBreak, Image as RLImage
 )
 from reportlab.lib.enums import TA_CENTER, TA_LEFT
 from reportlab.graphics.shapes import Drawing, Rect, String, Line, Polygon
 from reportlab.graphics import renderPDF
+
+INFOGRAPHIC = "/home/user/Brnd-Guru/clients/randy-wimmer/Agent_1_info.png"
 
 ORANGE = colors.HexColor("#FF6600")
 NAVY   = colors.HexColor("#1e3a5f")
@@ -183,7 +185,13 @@ story = []
 story.append(PageBreak())
 
 # ══════════════════════════════════════════════════════════════════════════════
-# PAGE 2 — WHAT IS AGENT 1
+# PAGE 2 — INFOGRAPHIC OVERVIEW
+# ══════════════════════════════════════════════════════════════════════════════
+story.append(RLImage(INFOGRAPHIC, width=7*inch, height=9*inch, kind="proportional"))
+story.append(PageBreak())
+
+# ══════════════════════════════════════════════════════════════════════════════
+# PAGE 3 — WHAT IS AGENT 1
 # ══════════════════════════════════════════════════════════════════════════════
 story.append(banner("WHAT IS AGENT 1?"))
 story.append(Spacer(1, 10))
