@@ -173,16 +173,16 @@ function brndguru_visuals_global_js() {
         100% { opacity: 1;   transform: scale(1.2); }
     }
 
-    /* ── Alternating section shades — clearly visible lighter palette ── */
+    /* ── Alternating section shades — warm orange-tinted dark ── */
     .elementor-top-section:nth-child(odd),
     .elementor-section:nth-child(odd),
     .e-con:nth-child(odd) {
-        background-color: #2a2a2a !important;
+        background-color: #2c1508 !important;
     }
     .elementor-top-section:nth-child(even),
     .elementor-section:nth-child(even),
     .e-con:nth-child(even) {
-        background-color: #363636 !important;
+        background-color: #3a1e0a !important;
     }
 
     /* ── Dot grid on all sections ── */
