@@ -214,7 +214,7 @@ story.append(PageBreak())
 # ══════════════════════════════════════════════════════════════════════════════
 # PAGE 2 — INFOGRAPHIC OVERVIEW
 # ══════════════════════════════════════════════════════════════════════════════
-story.append(RLImage(INFOGRAPHIC6, width=7*inch, height=9*inch, kind="proportional"))
+story.append(RLImage(INFOGRAPHIC6, width=7*inch, height=4.667*inch))
 story.append(PageBreak())
 
 # ══════════════════════════════════════════════════════════════════════════════
