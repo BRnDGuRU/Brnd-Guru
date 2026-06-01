@@ -67,7 +67,7 @@ def banner(title):
 def cs_bar():
     """Coming Soon badge bar."""
     tbl = Table([[
-        Paragraph("COMING SOON — Data will populate automatically once agents are live",
+        Paragraph("COMING SOON - Data will populate automatically once agents are live",
                   s("csb", fontName="Helvetica-Bold", fontSize=8.5, textColor=WHITE, leading=12, alignment=TA_CENTER))
     ]], colWidths=[7*inch])
     tbl.setStyle(TableStyle([
@@ -81,7 +81,7 @@ def cs_metric(label, unit=""):
     """A single grayed-out coming-soon metric block."""
     return [
         Paragraph(label, s(f"csl{label}", fontName="Helvetica-Bold", fontSize=7, textColor=GRAY, leading=9)),
-        Paragraph("— —", s(f"csv{label}", fontName="Helvetica-Bold", fontSize=18, textColor=MGRAY, leading=22)),
+        Paragraph("- -", s(f"csv{label}", fontName="Helvetica-Bold", fontSize=18, textColor=MGRAY, leading=22)),
         Paragraph("coming soon", s(f"css{label}", fontName="Helvetica-Oblique", fontSize=6.5, textColor=CS_TEXT, leading=9)),
     ]
 
@@ -119,7 +119,7 @@ def cover_draw(canvas, doc):
 
     canvas.setFont("Helvetica-Bold", 9)
     canvas.setFillColor(ORANGE)
-    canvas.drawString(bx, H - 165, "A G E N T   6   —   C O N T R O L   T O W E R")
+    canvas.drawString(bx, H - 165, "A G E N T   6   -   C O N T R O L   T O W E R")
 
     canvas.setFont("Helvetica-Bold", 38)
     canvas.setFillColor(WHITE)
@@ -148,7 +148,7 @@ def cover_draw(canvas, doc):
     canvas.setFont("Helvetica", 11)
     canvas.setFillColor(WHITE)
     for i, line in enumerate([
-        "Pulls data from all 6 agents into one live dashboard —",
+        "Pulls data from all 6 agents into one live dashboard -",
         "so Randy sees exactly what's working, what's not,",
         "and where to scale. Updates automatically, 24/7.",
     ]):
@@ -186,7 +186,7 @@ def cover_draw(canvas, doc):
     canvas.setFont("Helvetica-Bold", 9); canvas.setFillColor(ORANGE)
     canvas.drawString(50, 16, "brndguruofficial@gmail.com")
     canvas.setFont("Helvetica", 8); canvas.setFillColor(colors.HexColor("#666666"))
-    canvas.drawRightString(W - 50, 16, "Government Contracting Academy — Agent 6 Breakdown")
+    canvas.drawRightString(W - 50, 16, "Government Contracting Academy - Agent 6 Breakdown")
     canvas.restoreState()
 
 def later_pages(canvas, doc):
@@ -198,13 +198,13 @@ def later_pages(canvas, doc):
     canvas.setFont("Helvetica-Bold", 8); canvas.setFillColor(ORANGE)
     canvas.drawString(0.75*inch, H - 18, "BRNDGURU")
     canvas.setFont("Helvetica", 8); canvas.setFillColor(GRAY)
-    canvas.drawString(0.75*inch + 58, H - 18, "Agent 6 — Revenue Control Tower Dashboard")
+    canvas.drawString(0.75*inch + 58, H - 18, "Agent 6 - Revenue Control Tower Dashboard")
     canvas.drawRightString(W - 0.75*inch, H - 18, f"Page {doc.page}")
     canvas.setFillColor(colors.HexColor("#f0f0f0"))
     canvas.rect(0, 0, W, 26, fill=1, stroke=0)
     canvas.setFillColor(ORANGE); canvas.rect(0, 26, W, 1.5, fill=1, stroke=0)
     canvas.setFont("Helvetica", 7.5); canvas.setFillColor(GRAY)
-    canvas.drawCentredString(W/2, 8, "Confidential — Prepared for Randy Wimmer | Government Contracting Academy | BrndGuru")
+    canvas.drawCentredString(W/2, 8, "Confidential - Prepared for Randy Wimmer | Government Contracting Academy | BrndGuru")
     canvas.restoreState()
 
 # ── STORY ─────────────────────────────────────────────────────────────────────
@@ -212,26 +212,26 @@ story = []
 story.append(PageBreak())
 
 # ══════════════════════════════════════════════════════════════════════════════
-# PAGE 2 — INFOGRAPHIC OVERVIEW
+# PAGE 2 - INFOGRAPHIC OVERVIEW
 # ══════════════════════════════════════════════════════════════════════════════
 story.append(RLImage(INFOGRAPHIC6, width=7*inch, height=4.667*inch))
 story.append(PageBreak())
 
 # ══════════════════════════════════════════════════════════════════════════════
-# PAGE 3 — WHAT IS AGENT 6 + ARCHITECTURE
+# PAGE 3 - WHAT IS AGENT 6 + ARCHITECTURE
 # ══════════════════════════════════════════════════════════════════════════════
 story.append(banner("WHAT IS AGENT 6?"))
 story.append(Spacer(1, 10))
 story.append(Paragraph(
     "<b>Agent 6 is your command center.</b><br/><br/>"
-    "Every other agent — webinar funnel, paid ads, content, outreach, email nurture — generates data. "
+    "Every other agent - webinar funnel, paid ads, content, outreach, email nurture - generates data. "
     "Agent 6 collects all of it, formats it, and displays it in one live dashboard so Randy "
     "can see the health of his entire revenue system at a glance. "
     "No switching between 6 platforms. No manual number-pulling. No guessing.",
     s("intro", fontName="Helvetica", fontSize=10.5, textColor=DGRAY, leading=17, spaceAfter=10)))
 
 # Architecture diagram
-story.append(banner("HOW IT WORKS — DATA FLOW"))
+story.append(banner("HOW IT WORKS - DATA FLOW"))
 story.append(Spacer(1, 10))
 
 def make_arch():
@@ -274,7 +274,7 @@ def make_arch():
     # Dashboard box
     d.add(Rect(TW/2-100, 0, 200, 28, fillColor=ORANGE, strokeWidth=0))
     d.add(String(TW/2, 18, "GOOGLE LOOKER STUDIO  +  GHL DASHBOARD", fontName="Helvetica-Bold", fontSize=8, fillColor=WHITE, textAnchor="middle"))
-    d.add(String(TW/2, 6,  "Randy's live URL — always updated", fontName="Helvetica", fontSize=7, fillColor=WHITE, textAnchor="middle"))
+    d.add(String(TW/2, 6,  "Randy's live URL - always updated", fontName="Helvetica", fontSize=7, fillColor=WHITE, textAnchor="middle"))
 
     return d
 
@@ -304,19 +304,19 @@ tr.setStyle(TableStyle([
 ]))
 story.append(tr)
 story.append(Spacer(1, 6))
-story.append(Paragraph("Total additional cost for Agent 6: $0 — built on GHL (already paid) + Google Looker Studio (free) + n8n (already on VPS).", S_note))
+story.append(Paragraph("Total additional cost for Agent 6: $0 - built on GHL (already paid) + Google Looker Studio (free) + n8n (already on VPS).", S_note))
 
 # ══════════════════════════════════════════════════════════════════════════════
-# PAGE 3 — COMMAND CENTER (MASTER VIEW)
+# PAGE 3 - COMMAND CENTER (MASTER VIEW)
 # ══════════════════════════════════════════════════════════════════════════════
 story.append(PageBreak())
-story.append(banner("COMMAND CENTER — ALL 6 AGENTS AT A GLANCE"))
+story.append(banner("COMMAND CENTER - ALL 6 AGENTS AT A GLANCE"))
 story.append(Spacer(1, 6))
 story.append(cs_bar())
 story.append(Spacer(1, 8))
 story.append(Paragraph(
     "This is the first screen Randy sees when he opens his dashboard URL. "
-    "Every agent's health status + top 3 KPIs — all in one view. "
+    "Every agent's health status + top 3 KPIs - all in one view. "
     "Grayed sections below will populate with live data once each agent goes live.",
     s("p3i", fontName="Helvetica-Oblique", fontSize=9, textColor=GRAY, leading=13)))
 story.append(Spacer(1, 10))
@@ -324,7 +324,7 @@ story.append(Spacer(1, 10))
 # Top-level summary bar (Coming Soon)
 top_metrics = ["Total Pipeline Value", "Calls Booked (Week)", "Closed Revenue (Month)", "Active Leads"]
 tm_row1 = [Paragraph(m, s(f"tm{i}", fontName="Helvetica-Bold", fontSize=7.5, textColor=GRAY, leading=10, alignment=TA_CENTER)) for i,m in enumerate(top_metrics)]
-tm_row2 = [Paragraph("— —", s(f"tmv{i}", fontName="Helvetica-Bold", fontSize=20, textColor=MGRAY, leading=26, alignment=TA_CENTER)) for i in range(4)]
+tm_row2 = [Paragraph("- -", s(f"tmv{i}", fontName="Helvetica-Bold", fontSize=20, textColor=MGRAY, leading=26, alignment=TA_CENTER)) for i in range(4)]
 tm_row3 = [Paragraph("coming soon", s(f"tms{i}", fontName="Helvetica-Oblique", fontSize=7, textColor=CS_TEXT, leading=9, alignment=TA_CENTER)) for i in range(4)]
 tm_tbl = Table([tm_row1, tm_row2, tm_row3], colWidths=[1.75*inch]*4)
 tm_tbl.setStyle(TableStyle([
@@ -362,7 +362,7 @@ def make_agent_mini_card(num, name, col, metrics):
         ("VALIGN",        (0,0),(-1,-1), "MIDDLE"),
     ]))
     m_row1 = [Paragraph(m, s(f"ml{num}{i}", fontName="Helvetica-Bold", fontSize=6.5, textColor=GRAY, leading=9, alignment=TA_CENTER)) for i,m in enumerate(metrics)]
-    m_row2 = [Paragraph("—", s(f"mv{num}{i}", fontName="Helvetica-Bold", fontSize=16, textColor=MGRAY, leading=20, alignment=TA_CENTER)) for i in range(3)]
+    m_row2 = [Paragraph("-", s(f"mv{num}{i}", fontName="Helvetica-Bold", fontSize=16, textColor=MGRAY, leading=20, alignment=TA_CENTER)) for i in range(3)]
     body = Table([m_row1, m_row2], colWidths=[1.083*inch]*3)
     body.setStyle(TableStyle([
         ("BACKGROUND",    (0,0),(-1,-1), CS_BG),
@@ -397,10 +397,10 @@ grid.setStyle(TableStyle([
 story.append(grid)
 
 # ══════════════════════════════════════════════════════════════════════════════
-# PAGE 4 — AGENT 1 + AGENT 2 DETAIL PANELS
+# PAGE 4 - AGENT 1 + AGENT 2 DETAIL PANELS
 # ══════════════════════════════════════════════════════════════════════════════
 story.append(PageBreak())
-story.append(banner("AGENT 1 PANEL — WEBINAR FUNNEL DASHBOARD"))
+story.append(banner("AGENT 1 PANEL - WEBINAR FUNNEL DASHBOARD"))
 story.append(Spacer(1, 6))
 story.append(cs_bar())
 story.append(Spacer(1, 8))
@@ -408,7 +408,7 @@ story.append(Spacer(1, 8))
 def make_detail_panel(metrics_4, rows, col):
     c = colors.HexColor(col)
     r1 = [Paragraph(m, s(f"dp{m}", fontName="Helvetica-Bold", fontSize=7, textColor=GRAY, leading=9, alignment=TA_CENTER)) for m in metrics_4]
-    r2 = [Paragraph("— —", s(f"dpv{m}", fontName="Helvetica-Bold", fontSize=18, textColor=MGRAY, leading=22, alignment=TA_CENTER)) for m in metrics_4]
+    r2 = [Paragraph("- -", s(f"dpv{m}", fontName="Helvetica-Bold", fontSize=18, textColor=MGRAY, leading=22, alignment=TA_CENTER)) for m in metrics_4]
     r3 = [Paragraph("coming soon", s(f"dps{m}", fontName="Helvetica-Oblique", fontSize=6.5, textColor=CS_TEXT, leading=9, alignment=TA_CENTER)) for m in metrics_4]
     top = Table([r1,r2,r3], colWidths=[1.75*inch]*4)
     top.setStyle(TableStyle([
@@ -425,7 +425,7 @@ def make_detail_panel(metrics_4, rows, col):
         row = Table([[
             Paragraph(label, s(f"rl{label}", fontName="Helvetica-Bold", fontSize=8.5, textColor=c, leading=12)),
             Paragraph(desc,  s(f"rd{label}", fontName="Helvetica", fontSize=8.5, textColor=DGRAY, leading=12)),
-            Paragraph("— coming soon —", s(f"rv{label}", fontName="Helvetica-Oblique", fontSize=8, textColor=MGRAY, leading=12, alignment=TA_RIGHT)),
+            Paragraph("- coming soon -", s(f"rv{label}", fontName="Helvetica-Oblique", fontSize=8, textColor=MGRAY, leading=12, alignment=TA_RIGHT)),
         ]], colWidths=[1.8*inch, 3.5*inch, 1.7*inch])
         row.setStyle(TableStyle([
             ("BACKGROUND",    (0,0),(-1,-1), CS_BG),
@@ -441,7 +441,7 @@ make_detail_panel(
     [
         ("Registrations",    "Total people registered for the current webinar cycle"),
         ("Show-Up Rate",     "% of registrants who attended the live session"),
-        ("No-Show Rate",     "% who missed — automatically enter replay sequence"),
+        ("No-Show Rate",     "% who missed - automatically enter replay sequence"),
         ("Calls Booked",     "Total Calendly bookings attributed to webinar funnel"),
         ("Replay Opens",     "No-shows who opened the replay email and watched"),
         ("Emails Sent",      "Total automated emails fired in current cycle"),
@@ -453,7 +453,7 @@ make_detail_panel(
 )
 
 story.append(Spacer(1, 14))
-story.append(banner("AGENT 2 PANEL — PAID ACQUISITION DASHBOARD"))
+story.append(banner("AGENT 2 PANEL - PAID ACQUISITION DASHBOARD"))
 story.append(Spacer(1, 6))
 story.append(cs_bar())
 story.append(Spacer(1, 8))
@@ -464,10 +464,10 @@ make_detail_panel(
         ("Ad Spend",          "Total LinkedIn ad spend this cycle"),
         ("Impressions",       "Total times Randy's ads were shown on LinkedIn"),
         ("Clicks",            "Total link clicks to the GHL landing page"),
-        ("Click-Through Rate","Clicks ÷ Impressions — benchmark: 0.4%+"),
+        ("Click-Through Rate","Clicks / Impressions - benchmark: 0.4%+"),
         ("Registrations",     "People who registered after clicking an ad"),
-        ("Cost Per Registrant","Ad spend ÷ registrations — target: < $15"),
-        ("Cost Per Call",     "Ad spend ÷ calls booked — target: < $150"),
+        ("Cost Per Registrant","Ad spend / registrations - target: < $15"),
+        ("Cost Per Call",     "Ad spend / calls booked - target: < $150"),
         ("Active Campaigns",  "Number of live LinkedIn campaigns running"),
         ("Best Creative",     "Top performing ad by CTR this cycle"),
         ("Retargeting Size",  "No-show + website visitor audience size"),
@@ -476,10 +476,10 @@ make_detail_panel(
 )
 
 # ══════════════════════════════════════════════════════════════════════════════
-# PAGE 5 — AGENT 3 + AGENT 4 DETAIL PANELS
+# PAGE 5 - AGENT 3 + AGENT 4 DETAIL PANELS
 # ══════════════════════════════════════════════════════════════════════════════
 story.append(PageBreak())
-story.append(banner("AGENT 3 PANEL — LINKEDIN CONTENT DASHBOARD"))
+story.append(banner("AGENT 3 PANEL - LINKEDIN CONTENT DASHBOARD"))
 story.append(Spacer(1, 6))
 story.append(cs_bar())
 story.append(Spacer(1, 8))
@@ -489,9 +489,9 @@ make_detail_panel(
     [
         ("Posts Published",   "Total LinkedIn posts published this week"),
         ("Total Impressions", "Combined reach across all posts this cycle"),
-        ("Avg. Eng. Rate",    "Likes + comments + shares ÷ impressions — target: 3%+"),
+        ("Avg. Eng. Rate",    "Likes + comments + shares / impressions - target: 3%+"),
         ("Top Post",          "Best performing post by impressions this cycle"),
-        ("Comments Received", "Total comments across all posts — engagement signal"),
+        ("Comments Received", "Total comments across all posts - engagement signal"),
         ("Profile Views",     "Views on Randy's LinkedIn profile this week"),
         ("Followers Gained",  "Net new followers added to Randy's profile"),
         ("Organic Sign-Ups",  "Webinar registrations attributed to organic content"),
@@ -501,7 +501,7 @@ make_detail_panel(
 )
 
 story.append(Spacer(1, 14))
-story.append(banner("AGENT 4 PANEL — LINKEDIN OUTREACH DASHBOARD"))
+story.append(banner("AGENT 4 PANEL - LINKEDIN OUTREACH DASHBOARD"))
 story.append(Spacer(1, 6))
 story.append(cs_bar())
 story.append(Spacer(1, 8))
@@ -510,10 +510,10 @@ make_detail_panel(
     ["Requests Sent", "Accept Rate", "DM Replies", "Calls Booked"],
     [
         ("Requests Sent",     "LinkedIn connection requests sent via HeyReach this week"),
-        ("Acceptance Rate",   "% accepted — target: 25–40% for GovCon ICP audience"),
+        ("Acceptance Rate",   "% accepted - target: 25-40% for GovCon ICP audience"),
         ("Connections Made",  "Total new connections added to Randy's network"),
         ("DM Sequence Sent",  "Follow-up DMs sent to accepted connections"),
-        ("DM Reply Rate",     "% of DMs that received a reply — target: 15%+"),
+        ("DM Reply Rate",     "% of DMs that received a reply - target: 15%+"),
         ("Active Convos",     "Ongoing conversations in LinkedIn inbox"),
         ("Calls Booked",      "Calendly bookings directly from LinkedIn DM conversations"),
         ("HeyReach Status",   "Current campaign running status and daily send count"),
@@ -523,10 +523,10 @@ make_detail_panel(
 )
 
 # ══════════════════════════════════════════════════════════════════════════════
-# PAGE 6 — AGENT 5 + AGENT 6 FULL FUNNEL
+# PAGE 6 - AGENT 5 + AGENT 6 FULL FUNNEL
 # ══════════════════════════════════════════════════════════════════════════════
 story.append(PageBreak())
-story.append(banner("AGENT 5 PANEL — EMAIL NURTURE DASHBOARD"))
+story.append(banner("AGENT 5 PANEL - EMAIL NURTURE DASHBOARD"))
 story.append(Spacer(1, 6))
 story.append(cs_bar())
 story.append(Spacer(1, 8))
@@ -536,19 +536,19 @@ make_detail_panel(
     [
         ("Emails Sent",       "Total emails sent across all active sequences this week"),
         ("Unique Opens",      "Individual contacts who opened at least one email"),
-        ("Open Rate",         "Opens ÷ delivered — target: 30–45% for GovCon niche"),
-        ("Click Rate",        "Clicks ÷ opens — measures CTA effectiveness"),
+        ("Open Rate",         "Opens / delivered - target: 30-45% for GovCon niche"),
+        ("Click Rate",        "Clicks / opens - measures CTA effectiveness"),
         ("Replies Received",  "Contacts who replied to nurture emails directly"),
-        ("Unsubscribes",      "Contacts who opted out — healthy rate: < 0.5%"),
+        ("Unsubscribes",      "Contacts who opted out - healthy rate: < 0.5%"),
         ("Leads Reactivated", "Cold leads who re-engaged after a reactivation sequence"),
         ("Calls Booked",      "Calendly bookings directly attributed to email sequences"),
-        ("Deliverability",    "% of emails landing in inbox vs spam — target: 98%+"),
+        ("Deliverability",    "% of emails landing in inbox vs spam - target: 98%+"),
     ],
     "#16a085"
 )
 
 story.append(Spacer(1, 14))
-story.append(banner("AGENT 6 PANEL — FULL FUNNEL + REVENUE PIPELINE"))
+story.append(banner("AGENT 6 PANEL - FULL FUNNEL + REVENUE PIPELINE"))
 story.append(Spacer(1, 6))
 story.append(cs_bar())
 story.append(Spacer(1, 8))
@@ -574,7 +574,7 @@ def make_funnel_cs():
         bx   = (max_w - bw) / 2
         d.add(Rect(bx, y-bh, bw, bh, fillColor=colors.HexColor("#e8e8e8"), strokeWidth=0))
         d.add(String(TW/2, y-bh+3, lbl, fontName="Helvetica", fontSize=7, fillColor=CS_TEXT, textAnchor="middle"))
-        d.add(String(TW-35, y-bh+3, "—", fontName="Helvetica-Bold", fontSize=8, fillColor=MGRAY, textAnchor="middle"))
+        d.add(String(TW-35, y-bh+3, "-", fontName="Helvetica-Bold", fontSize=8, fillColor=MGRAY, textAnchor="middle"))
     d.add(String(TW/2, 4, "Funnel data populates automatically after first webinar cycle", fontName="Helvetica-Oblique", fontSize=7, fillColor=CS_TEXT, textAnchor="middle"))
     return d
 
@@ -587,30 +587,30 @@ make_detail_panel(
         ("Pipeline Value",    "Total estimated value of all active deals in GHL pipeline"),
         ("Active Prospects",  "Leads who have booked a call and are in active follow-up"),
         ("Proposals Sent",    "Number of ISO certification proposals sent this month"),
-        ("Deals Won",         "Closed deals — new ISO certification clients signed"),
+        ("Deals Won",         "Closed deals - new ISO certification clients signed"),
         ("Revenue Closed",    "Total revenue collected from closed deals this month"),
         ("Attribution Split", "Revenue broken down by source: Ads / Organic / Email / DMs"),
         ("Avg. Deal Value",   "Average contract value per closed ISO certification client"),
-        ("Close Rate",        "Proposals sent ÷ deals closed — benchmark: 20–35%"),
+        ("Close Rate",        "Proposals sent / deals closed - benchmark: 20-35%"),
         ("Revenue Forecast",  "Projected monthly revenue based on current pipeline"),
     ],
     "#1e3a5f"
 )
 
 # ══════════════════════════════════════════════════════════════════════════════
-# PAGE 7 — HOW DATA FLOWS + GO-LIVE PLAN
+# PAGE 7 - HOW DATA FLOWS + GO-LIVE PLAN
 # ══════════════════════════════════════════════════════════════════════════════
 story.append(PageBreak())
 story.append(banner("HOW EACH AGENT FEEDS THE DASHBOARD"))
 story.append(Spacer(1, 8))
 
 feed_rows = [
-    ("Agent 1", "Webinar Funnel",      "#FF6600", "n8n (VPS)",         "Registrations, show-up, no-show, calls booked → GHL tags → Looker Sheet"),
-    ("Agent 2", "Paid Acquisition",    "#2980b9", "LinkedIn Ads API",   "Spend, impressions, clicks, CPL, CPA, creative CTR → pulled weekly by n8n"),
-    ("Agent 3", "Content Authority",   "#8e44ad", "LinkedIn API",       "Post impressions, engagement, follower growth, organic sign-ups → n8n"),
-    ("Agent 4", "LinkedIn Outreach",   "#ea4b71", "HeyReach API",       "Requests sent, acceptance rate, DM replies, calls booked → n8n"),
-    ("Agent 5", "Email Nurture",       "#16a085", "GHL Native",         "Open rate, click rate, replies, deliverability, calls from email → GHL reporting"),
-    ("Agent 6", "Revenue Pipeline",    "#1e3a5f", "GHL Pipeline",       "Pipeline stages, deal values, proposals, closed revenue → GHL + Looker Studio"),
+    ("Agent 1", "Webinar Funnel",      "#FF6600", "n8n (VPS)",         "Registrations, show-up, no-show, calls booked -> GHL tags -> Looker Sheet"),
+    ("Agent 2", "Paid Acquisition",    "#2980b9", "LinkedIn Ads API",   "Spend, impressions, clicks, CPL, CPA, creative CTR -> pulled weekly by n8n"),
+    ("Agent 3", "Content Authority",   "#8e44ad", "LinkedIn API",       "Post impressions, engagement, follower growth, organic sign-ups -> n8n"),
+    ("Agent 4", "LinkedIn Outreach",   "#ea4b71", "HeyReach API",       "Requests sent, acceptance rate, DM replies, calls booked -> n8n"),
+    ("Agent 5", "Email Nurture",       "#16a085", "GHL Native",         "Open rate, click rate, replies, deliverability, calls from email -> GHL reporting"),
+    ("Agent 6", "Revenue Pipeline",    "#1e3a5f", "GHL Pipeline",       "Pipeline stages, deal values, proposals, closed revenue -> GHL + Looker Studio"),
 ]
 
 _hdr2 = Table([[
@@ -647,7 +647,7 @@ for _i, (agt, name, col, src, data) in enumerate(feed_rows):
     story.append(_row)
 
 story.append(Spacer(1, 14))
-story.append(banner("DASHBOARD GO-LIVE PLAN — SECTION BY SECTION"))
+story.append(banner("DASHBOARD GO-LIVE PLAN - SECTION BY SECTION"))
 story.append(Spacer(1, 8))
 
 golive = [
@@ -681,19 +681,19 @@ story.append(gl_tbl)
 story.append(Spacer(1, 10))
 story.append(Paragraph(
     "The dashboard is built once and expands automatically as each agent goes live. "
-    "By Month 3, Randy has full visibility across every channel, every dollar, and every lead — in one URL.",
+    "By Month 3, Randy has full visibility across every channel, every dollar, and every lead - in one URL.",
     s("final", fontName="Helvetica-Bold", fontSize=10, textColor=NAVY, leading=15, alignment=TA_CENTER)))
 
 # ══════════════════════════════════════════════════════════════════════════════
-# PAGE 8 — EMAIL MARKETING + BUYING INTENT PANELS
+# PAGE 8 - EMAIL MARKETING + BUYING INTENT PANELS
 # ══════════════════════════════════════════════════════════════════════════════
 story.append(PageBreak())
-story.append(banner("EMAIL MARKETING DASHBOARD — DEEP DIVE"))
+story.append(banner("EMAIL MARKETING DASHBOARD - DEEP DIVE"))
 story.append(Spacer(1, 6))
 story.append(cs_bar())
 story.append(Spacer(1, 8))
 story.append(Paragraph(
-    "Beyond open rates — this panel tracks the full health of Randy's email list, "
+    "Beyond open rates - this panel tracks the full health of Randy's email list, "
     "every active sequence, deliverability, and exactly how much revenue email is generating.",
     s("em_intro", fontName="Helvetica-Oblique", fontSize=9, textColor=GRAY, leading=13)))
 story.append(Spacer(1, 8))
@@ -701,7 +701,7 @@ story.append(Spacer(1, 8))
 # Top 4 email metrics
 _em_metrics = ["Total List Size", "Weekly Growth", "Avg Open Rate", "Revenue from Email"]
 _em_r1 = [Paragraph(m, s(f"em1{i}", fontName="Helvetica-Bold", fontSize=7, textColor=GRAY, leading=9, alignment=TA_CENTER)) for i,m in enumerate(_em_metrics)]
-_em_r2 = [Paragraph("— —", s(f"em2{i}", fontName="Helvetica-Bold", fontSize=18, textColor=MGRAY, leading=22, alignment=TA_CENTER)) for i in range(4)]
+_em_r2 = [Paragraph("- -", s(f"em2{i}", fontName="Helvetica-Bold", fontSize=18, textColor=MGRAY, leading=22, alignment=TA_CENTER)) for i in range(4)]
 _em_r3 = [Paragraph("coming soon", s(f"em3{i}", fontName="Helvetica-Oblique", fontSize=6.5, textColor=CS_TEXT, leading=9, alignment=TA_CENTER)) for i in range(4)]
 _em_top = Table([_em_r1, _em_r2, _em_r3], colWidths=[1.75*inch]*4)
 _em_top.setStyle(TableStyle([
@@ -718,14 +718,14 @@ _email_rows = [
     ("Total List Size",        TEAL,   "All active contacts enrolled in at least one GHL email sequence"),
     ("Weekly List Growth",     TEAL,   "New contacts added to email sequences this week from all sources"),
     ("Active Sequences",       TEAL,   "Number of email sequences currently running (confirmation, nurture, reactivation, post-webinar)"),
-    ("Best Sequence",          TEAL,   "Highest open-rate sequence this cycle — name + open rate %"),
-    ("Confirmation Seq.",      NAVY,   "Open rate for Agent 1 confirmation + reminder emails — benchmark: 55%+"),
-    ("Nurture Seq.",           NAVY,   "Open rate for pre-webinar authority emails — benchmark: 35%+"),
-    ("Post-Webinar Seq.",      NAVY,   "Open rate for attended + no-show follow-up emails — benchmark: 40%+"),
-    ("Reactivation Seq.",      NAVY,   "Open rate for cold lead re-engagement — benchmark: 22%+"),
-    ("Deliverability Score",   ORANGE, "% of emails landing in inbox vs spam — target: 98%+ (SPF/DKIM/DMARC health)"),
-    ("Bounce Rate",            ORANGE, "Hard + soft bounces — healthy: < 2%. High bounce = list hygiene needed"),
-    ("Unsubscribe Rate",       ORANGE, "% opting out — healthy: < 0.5%. Spike = messaging or frequency issue"),
+    ("Best Sequence",          TEAL,   "Highest open-rate sequence this cycle - name + open rate %"),
+    ("Confirmation Seq.",      NAVY,   "Open rate for Agent 1 confirmation + reminder emails - benchmark: 55%+"),
+    ("Nurture Seq.",           NAVY,   "Open rate for pre-webinar authority emails - benchmark: 35%+"),
+    ("Post-Webinar Seq.",      NAVY,   "Open rate for attended + no-show follow-up emails - benchmark: 40%+"),
+    ("Reactivation Seq.",      NAVY,   "Open rate for cold lead re-engagement - benchmark: 22%+"),
+    ("Deliverability Score",   ORANGE, "% of emails landing in inbox vs spam - target: 98%+ (SPF/DKIM/DMARC health)"),
+    ("Bounce Rate",            ORANGE, "Hard + soft bounces - healthy: < 2%. High bounce = list hygiene needed"),
+    ("Unsubscribe Rate",       ORANGE, "% opting out - healthy: < 0.5%. Spike = messaging or frequency issue"),
     ("Revenue Attributed",     GREEN,  "Closed deal value where email was the last touch before call booking"),
     ("A/B Tests Running",      GREEN,  "Current subject line or CTA split tests and which variant is winning"),
     ("List Health Score",      GREEN,  "Combined score: engagement + deliverability + bounce + unsubscribe rate"),
@@ -735,7 +735,7 @@ for _label, _col, _desc in _email_rows:
     _row = Table([[
         Paragraph(_label, s(f"eml{_label}", fontName="Helvetica-Bold", fontSize=8.5, textColor=_col, leading=12)),
         Paragraph(_desc,  s(f"emd{_label}", fontName="Helvetica", fontSize=8.5, textColor=DGRAY, leading=12)),
-        Paragraph("— coming soon —", s(f"emv{_label}", fontName="Helvetica-Oblique", fontSize=8, textColor=MGRAY, leading=12, alignment=TA_RIGHT)),
+        Paragraph("- coming soon -", s(f"emv{_label}", fontName="Helvetica-Oblique", fontSize=8, textColor=MGRAY, leading=12, alignment=TA_RIGHT)),
     ]], colWidths=[1.65*inch, 3.65*inch, 1.7*inch])
     _row.setStyle(TableStyle([
         ("BACKGROUND",    (0,0),(-1,-1), CS_BG),
@@ -747,17 +747,17 @@ for _label, _col, _desc in _email_rows:
     story.append(_row)
 
 # ══════════════════════════════════════════════════════════════════════════════
-# PAGE 9 — BUYING INTENT DASHBOARD
+# PAGE 9 - BUYING INTENT DASHBOARD
 # ══════════════════════════════════════════════════════════════════════════════
 story.append(PageBreak())
-story.append(banner("BUYING INTENT DASHBOARD — WHO IS READY TO BUY?"))
+story.append(banner("BUYING INTENT DASHBOARD - WHO IS READY TO BUY?"))
 story.append(Spacer(1, 6))
 story.append(cs_bar())
 story.append(Spacer(1, 8))
 story.append(Paragraph(
-    "<b>The most powerful panel in the dashboard.</b> n8n tracks every behavioral signal across all agents — "
-    "email opens, webinar attendance, link clicks, page visits, DM replies — and assigns each lead "
-    "an Intent Score from 0–100. Randy sees exactly who is ready to buy right now, without lifting a finger.",
+    "<b>The most powerful panel in the dashboard.</b> n8n tracks every behavioral signal across all agents - "
+    "email opens, webinar attendance, link clicks, page visits, DM replies - and assigns each lead "
+    "an Intent Score from 0-100. Randy sees exactly who is ready to buy right now, without lifting a finger.",
     s("bi_intro", fontName="Helvetica", fontSize=10, textColor=DGRAY, leading=15, spaceAfter=8)))
 
 # Intent tier visual
@@ -765,10 +765,10 @@ def make_intent_tiers():
     TW = 504; H = 72
     d  = Drawing(TW, H)
     tiers = [
-        ("🔥  HOT",        "Score 80–100",  "Ready to buy — call today",   "#e74c3c", 0),
-        ("🟠  WARM",       "Score 50–79",   "Prioritise for outreach",     "#e67e22", 1),
-        ("🟡  INTERESTED", "Score 25–49",   "Keep in sequence",            "#f1c40f", 2),
-        ("🔵  COLD",       "Score 0–24",    "Long-term nurture",           "#95a5a6", 3),
+        ("HOT",        "Score 80-100",  "Ready to buy - call today",   "#e74c3c", 0),
+        ("WARM",       "Score 50-79",   "Prioritise for outreach",     "#e67e22", 1),
+        ("INTERESTED", "Score 25-49",   "Keep in sequence",            "#f1c40f", 2),
+        ("COLD",       "Score 0-24",    "Long-term nurture",           "#95a5a6", 3),
     ]
     bw = TW / 4; bh = 58
     for i, (label, score, desc, col, _) in enumerate(tiers):
@@ -778,7 +778,7 @@ def make_intent_tiers():
         d.add(String(x+bw/2-2, 14+bh-14, label, fontName="Helvetica-Bold", fontSize=9,  fillColor=WHITE, textAnchor="middle"))
         d.add(String(x+bw/2-2, 14+bh-28, score, fontName="Helvetica-Bold", fontSize=8,  fillColor=WHITE, textAnchor="middle"))
         d.add(String(x+bw/2-2, 14+bh-42, desc,  fontName="Helvetica",      fontSize=7,  fillColor=WHITE, textAnchor="middle"))
-        d.add(String(x+bw/2-2, 4,         "— —", fontName="Helvetica-Bold", fontSize=10, fillColor=colors.HexColor(col), textAnchor="middle"))
+        d.add(String(x+bw/2-2, 4,         "- -", fontName="Helvetica-Bold", fontSize=10, fillColor=colors.HexColor(col), textAnchor="middle"))
     return d
 
 story.append(make_intent_tiers())
@@ -821,39 +821,39 @@ story.append(make_scoring_visual())
 story.append(Spacer(1, 10))
 
 # Intent dashboard detail rows
-story.append(banner("INTENT DASHBOARD — METRIC DETAIL"))
+story.append(banner("INTENT DASHBOARD - METRIC DETAIL"))
 story.append(Spacer(1, 8))
 
 _intent_rows = [
-    ("Hot Leads (80–100)",    colors.HexColor("#e74c3c"),
-     "Leads with score 80+ — n8n alerts BrndGuru + Randy via email/Slack the moment a lead crosses this threshold"),
-    ("Warm Leads (50–79)",    colors.HexColor("#e67e22"),
-     "High-priority nurture targets — these leads need one more touchpoint to push them to Hot"),
-    ("Interested (25–49)",    colors.HexColor("#f39c12"),
-     "Engaged but not urgent — keep in email + LinkedIn sequence, monitor for score jumps"),
-    ("Cold Leads (0–24)",     colors.HexColor("#95a5a6"),
-     "Low engagement — in long-term nurture sequence, retargeted via Agent 2 LinkedIn ads"),
+    ("Hot Leads (80-100)",    colors.HexColor("#e74c3c"),
+     "Leads with score 80+ - n8n alerts BrndGuru + Randy via email/Slack the moment a lead crosses this threshold"),
+    ("Warm Leads (50-79)",    colors.HexColor("#e67e22"),
+     "High-priority nurture targets - these leads need one more touchpoint to push them to Hot"),
+    ("Interested (25-49)",    colors.HexColor("#f39c12"),
+     "Engaged but not urgent - keep in email + LinkedIn sequence, monitor for score jumps"),
+    ("Cold Leads (0-24)",     colors.HexColor("#95a5a6"),
+     "Low engagement - in long-term nurture sequence, retargeted via Agent 2 LinkedIn ads"),
     ("Avg. Intent Score",     NAVY,
-     "Average score across all active leads — rising average = messaging is working"),
+     "Average score across all active leads - rising average = messaging is working"),
     ("Score Velocity",        NAVY,
-     "How fast leads are moving up the scoring tiers week over week — measures funnel momentum"),
+     "How fast leads are moving up the scoring tiers week over week - measures funnel momentum"),
     ("Top Signal This Week",  PURPLE,
-     "The intent signal that fired most frequently — tells you which touchpoint is driving the most engagement"),
-    ("Intent → Booked Rate",  GREEN,
-     "% of Hot leads (80+) who go on to book a Calendly call — target: 60%+"),
+     "The intent signal that fired most frequently - tells you which touchpoint is driving the most engagement"),
+    ("Intent -> Booked Rate",  GREEN,
+     "% of Hot leads (80+) who go on to book a Calendly call - target: 60%+"),
     ("Avg. Days to Intent",   GREEN,
-     "Average days from registration to reaching score 80+ — shorter = better funnel efficiency"),
+     "Average days from registration to reaching score 80+ - shorter = better funnel efficiency"),
     ("Re-Engaged This Week",  GREEN,
-     "Cold leads who were inactive and suddenly triggered an intent signal — flag for personal outreach"),
+     "Cold leads who were inactive and suddenly triggered an intent signal - flag for personal outreach"),
     ("Top 5 Hottest Leads",   ORANGE,
-     "Ranked list of the 5 contacts with the highest intent scores right now — their name, score, and last action"),
+     "Ranked list of the 5 contacts with the highest intent scores right now - their name, score, and last action"),
 ]
 
 for _label, _col, _desc in _intent_rows:
     _row = Table([[
         Paragraph(_label, s(f"il{_label}", fontName="Helvetica-Bold", fontSize=8.5, textColor=_col, leading=12)),
         Paragraph(_desc,  s(f"id{_label}", fontName="Helvetica",      fontSize=8.5, textColor=DGRAY, leading=12)),
-        Paragraph("— coming soon —", s(f"iv{_label}", fontName="Helvetica-Oblique", fontSize=8, textColor=MGRAY, leading=12, alignment=TA_RIGHT)),
+        Paragraph("- coming soon -", s(f"iv{_label}", fontName="Helvetica-Oblique", fontSize=8, textColor=MGRAY, leading=12, alignment=TA_RIGHT)),
     ]], colWidths=[1.65*inch, 3.65*inch, 1.7*inch])
     _row.setStyle(TableStyle([
         ("BACKGROUND",    (0,0),(-1,-1), CS_BG),
@@ -871,11 +871,11 @@ _flow = Table([[
     Paragraph("HOW IT WORKS", s("hw", fontName="Helvetica-Bold", fontSize=9, textColor=NAVY, leading=13)),
     Paragraph(
         "Every time a lead opens an email, clicks a link, visits the landing page, attends the webinar, "
-        "or replies to a DM — n8n detects that signal via GHL webhooks, LinkedIn API, or Zoom API, "
+        "or replies to a DM - n8n detects that signal via GHL webhooks, LinkedIn API, or Zoom API, "
         "adds the points to a custom field in GHL, and updates the Intent Score. "
         "When a lead crosses 80 points, n8n sends an instant alert. "
         "The 'Top 5 Hottest Leads' list refreshes every hour. "
-        "Randy always knows exactly who to call — without checking anything manually.",
+        "Randy always knows exactly who to call - without checking anything manually.",
         s("hwt", fontName="Helvetica", fontSize=9, textColor=DGRAY, leading=14)),
 ]], colWidths=[1.3*inch, 5.7*inch])
 _flow.setStyle(TableStyle([

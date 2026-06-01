@@ -4,8 +4,10 @@ from reportlab.lib.units import inch
 from reportlab.lib import colors
 from reportlab.platypus import (
     SimpleDocTemplate, Paragraph, Spacer, Table, TableStyle,
-    KeepTogether, PageBreak
+    KeepTogether, PageBreak, Image as RLImage
 )
+
+INFOGRAPHIC2 = "/home/user/Brnd-Guru/clients/randy-wimmer/agent 2 info.png"
 from reportlab.lib.enums import TA_CENTER, TA_LEFT
 from reportlab.graphics.shapes import Drawing, Rect, String, Line, Polygon, Circle
 from reportlab.graphics import renderPDF
@@ -57,7 +59,7 @@ def banner(title):
     ]))
     return tbl
 
-# ── CANVAS CALLBACKS ──────────────────────────────────────────────────────────
+# -- CANVAS CALLBACKS ----------------------------------------------------------
 def cover_draw(canvas, doc):
     W, H = letter
     canvas.saveState()
@@ -95,7 +97,7 @@ def cover_draw(canvas, doc):
     # Agent label
     canvas.setFont("Helvetica-Bold", 9)
     canvas.setFillColor(ORANGE)
-    canvas.drawString(bx, H - 165, "A G E N T   2   —   D E M A N D   E N G I N E")
+    canvas.drawString(bx, H - 165, "A G E N T   2   -   D E M A N D   E N G I N E")
 
     # Main title
     canvas.setFont("Helvetica-Bold", 42)
@@ -105,7 +107,7 @@ def cover_draw(canvas, doc):
     canvas.drawString(bx, H - 258, "Agent")
     canvas.setFont("Helvetica", 13)
     canvas.setFillColor(colors.HexColor("#aaaaaa"))
-    canvas.drawString(bx, H - 284, "LinkedIn Ads + AI Creative Generation — Running 24/7")
+    canvas.drawString(bx, H - 284, "LinkedIn Ads + AI Creative Generation - Running 24/7")
 
     # Orange rule
     canvas.setFillColor(ORANGE)
@@ -129,7 +131,7 @@ def cover_draw(canvas, doc):
     for i, line in enumerate([
         "Fills your webinar pipeline with qualified leads,",
         "generates AI video ads automatically, and retargets",
-        "every no-show — all on autopilot.",
+        "every no-show - all on autopilot.",
     ]):
         canvas.drawString(bx + 12, box_y + box_h - 44 - i*18, line)
 
@@ -168,7 +170,7 @@ def cover_draw(canvas, doc):
     canvas.setFont("Helvetica-Bold", 9); canvas.setFillColor(ORANGE)
     canvas.drawString(50, 16, "brndguruofficial@gmail.com")
     canvas.setFont("Helvetica", 8); canvas.setFillColor(colors.HexColor("#666666"))
-    canvas.drawRightString(W - 50, 16, "Government Contracting Academy — Agent 2 Breakdown")
+    canvas.drawRightString(W - 50, 16, "Government Contracting Academy - Agent 2 Breakdown")
     canvas.restoreState()
 
 def later_pages(canvas, doc):
@@ -180,27 +182,33 @@ def later_pages(canvas, doc):
     canvas.setFont("Helvetica-Bold", 8); canvas.setFillColor(ORANGE)
     canvas.drawString(0.75*inch, H - 18, "BRNDGURU")
     canvas.setFont("Helvetica", 8); canvas.setFillColor(GRAY)
-    canvas.drawString(0.75*inch + 58, H - 18, "Agent 2 — Paid Acquisition Agent")
+    canvas.drawString(0.75*inch + 58, H - 18, "Agent 2 - Paid Acquisition Agent")
     canvas.drawRightString(W - 0.75*inch, H - 18, f"Page {doc.page}")
     canvas.setFillColor(colors.HexColor("#f0f0f0"))
     canvas.rect(0, 0, W, 26, fill=1, stroke=0)
     canvas.setFillColor(ORANGE); canvas.rect(0, 26, W, 1.5, fill=1, stroke=0)
     canvas.setFont("Helvetica", 7.5); canvas.setFillColor(GRAY)
-    canvas.drawCentredString(W/2, 8, "Confidential — Prepared for Randy Wimmer | Government Contracting Academy | BrndGuru")
+    canvas.drawCentredString(W/2, 8, "Confidential - Prepared for Randy Wimmer | Government Contracting Academy | BrndGuru")
     canvas.restoreState()
 
-# ── STORY ─────────────────────────────────────────────────────────────────────
+# -- STORY ---------------------------------------------------------------------
 story = []
 story.append(PageBreak())
 
-# ══════════════════════════════════════════════════════════════════════════════
-# PAGE 2 — WHAT IS AGENT 2
-# ══════════════════════════════════════════════════════════════════════════════
+# ==============================================================================
+# PAGE 2 - INFOGRAPHIC OVERVIEW
+# ==============================================================================
+story.append(RLImage(INFOGRAPHIC2, width=7*inch, height=4.667*inch))
+story.append(PageBreak())
+
+# ==============================================================================
+# PAGE 3 - WHAT IS AGENT 2
+# ==============================================================================
 story.append(banner("WHAT IS AGENT 2?"))
 story.append(Spacer(1, 10))
 story.append(Paragraph(
     "<b>Agent 2 is your traffic engine.</b><br/><br/>"
-    "Agent 1 runs the webinar funnel perfectly — but it needs people flowing into it. "
+    "Agent 1 runs the webinar funnel perfectly - but it needs people flowing into it. "
     "Agent 2 runs LinkedIn Ads targeting the exact right people: small business owners who are "
     "registered federal contractors and need ISO certification to win more government contracts. "
     "It generates AI video creatives automatically, optimizes spend weekly, and retargets every "
@@ -211,9 +219,9 @@ story.append(Paragraph(
 ba = Table([
     [Paragraph("WITHOUT AGENT 2", s("bh", fontName="Helvetica-Bold", fontSize=11, textColor=WHITE, leading=15, alignment=TA_CENTER)),
      Paragraph("WITH AGENT 2",    s("ah", fontName="Helvetica-Bold", fontSize=11, textColor=WHITE, leading=15, alignment=TA_CENTER))],
-    [Paragraph("✗  Manually design every ad creative\n✗  No idea which ad is working\n✗  No-shows disappear forever\n✗  Spend budget with no tracking\n✗  Start from scratch every webinar",
+    [Paragraph("[NO]  Manually design every ad creative\n[NO]  No idea which ad is working\n[NO]  No-shows disappear forever\n[NO]  Spend budget with no tracking\n[NO]  Start from scratch every webinar",
                s("bc", fontName="Helvetica", fontSize=9.5, textColor=RED, leading=17)),
-     Paragraph("✓  AI generates video ads automatically\n✓  Every dollar tracked to registrations\n✓  No-shows get retargeted for next webinar\n✓  Underperforming ads auto-paused\n✓  New creatives live in 8 minutes",
+     Paragraph("[YES]  AI generates video ads automatically\n[YES]  Every dollar tracked to registrations\n[YES]  No-shows get retargeted for next webinar\n[YES]  Underperforming ads auto-paused\n[YES]  New creatives live in 8 minutes",
                s("ac", fontName="Helvetica", fontSize=9.5, textColor=GREEN, leading=17))],
 ], colWidths=[3.5*inch, 3.5*inch])
 ba.setStyle(TableStyle([
@@ -251,14 +259,14 @@ st.setStyle(TableStyle([
 ]))
 story.append(st)
 
-# ══════════════════════════════════════════════════════════════════════════════
-# PAGE 3 — THE 5 PHASES
-# ══════════════════════════════════════════════════════════════════════════════
+# ==============================================================================
+# PAGE 3 - THE 5 PHASES
+# ==============================================================================
 story.append(PageBreak())
 story.append(banner("THE 5 PHASES OF AGENT 2"))
 story.append(Spacer(1, 8))
 story.append(Paragraph(
-    "Agent 2 runs across 5 distinct phases — from initial setup to weekly self-optimization. "
+    "Agent 2 runs across 5 distinct phases - from initial setup to weekly self-optimization. "
     "Once built, only Phase 1 requires human involvement.",
     S_body))
 story.append(Spacer(1, 10))
@@ -290,11 +298,11 @@ story.append(make_phases())
 story.append(Spacer(1, 14))
 
 phases_detail = [
-    ("1", "SETUP",       "#2c3e50", "One-time build by BrndGuru. LinkedIn Campaign Manager configured, audience targeting defined (GovCon founders, 1–50 employees, SAM.gov registered), GHL landing page built with Custom Values, LinkedIn Insight Tag pixel installed, VPS connections wired (Higgsfield + Claude + LinkedIn APIs)."),
-    ("2", "PRE-WEBINAR", "#FF6600", "Triggered automatically when Randy creates a new Zoom webinar. n8n reads the topic, date, and time → updates the GHL landing page instantly → calls Claude AI to write video prompts → calls Higgsfield API to generate 5 B-roll clips → FFmpeg assembles the final video ad → uploads everything to LinkedIn. Takes ~8 minutes. Zero manual work."),
-    ("3", "ADS RUNNING", "#2980b9", "LinkedIn campaigns run with all creatives live. LinkedIn Insight Tag tracks every registration back to the exact ad. Every 7 days, n8n pulls performance data → auto-pauses creatives with CTR below 0.3% → shifts budget to winners → alerts BrndGuru if CPL exceeds $20."),
-    ("4", "RETARGETING", "#8e44ad", "Agent 1 tags no-shows → GHL webhook → n8n → adds emails to LinkedIn 'No-Show' audience → separate retargeting campaign fires. Website visitors who didn't register are captured by the Insight Tag pixel and shown ads automatically. Lookalike audience built from Randy's 300+ contacts in GHL."),
-    ("5", "REPORTING",   "#27ae60", "Every Monday at 8AM, n8n pulls LinkedIn Ads API + GHL pipeline data → formats weekly report → pushes to Agent 6 dashboard → emails Randy and BrndGuru: registrations, CPL, calls booked, revenue attributed to LinkedIn. Full attribution from ad click to closed deal."),
+    ("1", "SETUP",       "#2c3e50", "One-time build by BrndGuru. LinkedIn Campaign Manager configured, audience targeting defined (GovCon founders, 1-50 employees, SAM.gov registered), GHL landing page built with Custom Values, LinkedIn Insight Tag pixel installed, VPS connections wired (Higgsfield + Claude + LinkedIn APIs)."),
+    ("2", "PRE-WEBINAR", "#FF6600", "Triggered automatically when Randy creates a new Zoom webinar. n8n reads the topic, date, and time -> updates the GHL landing page instantly -> calls Claude AI to write video prompts -> calls Higgsfield API to generate 5 B-roll clips -> FFmpeg assembles the final video ad -> uploads everything to LinkedIn. Takes ~8 minutes. Zero manual work."),
+    ("3", "ADS RUNNING", "#2980b9", "LinkedIn campaigns run with all creatives live. LinkedIn Insight Tag tracks every registration back to the exact ad. Every 7 days, n8n pulls performance data -> auto-pauses creatives with CTR below 0.3% -> shifts budget to winners -> alerts BrndGuru if CPL exceeds $20."),
+    ("4", "RETARGETING", "#8e44ad", "Agent 1 tags no-shows -> GHL webhook -> n8n -> adds emails to LinkedIn 'No-Show' audience -> separate retargeting campaign fires. Website visitors who didn't register are captured by the Insight Tag pixel and shown ads automatically. Lookalike audience built from Randy's 300+ contacts in GHL."),
+    ("5", "REPORTING",   "#27ae60", "Every Monday at 8AM, n8n pulls LinkedIn Ads API + GHL pipeline data -> formats weekly report -> pushes to Agent 6 dashboard -> emails Randy and BrndGuru: registrations, CPL, calls booked, revenue attributed to LinkedIn. Full attribution from ad click to closed deal."),
 ]
 for num, stage, col, desc in phases_detail:
     tbl = Table([[
@@ -313,14 +321,14 @@ for num, stage, col, desc in phases_detail:
     story.append(tbl)
     story.append(Spacer(1, 4))
 
-# ══════════════════════════════════════════════════════════════════════════════
-# PAGE 4 — AI CREATIVE PIPELINE
-# ══════════════════════════════════════════════════════════════════════════════
+# ==============================================================================
+# PAGE 4 - AI CREATIVE PIPELINE
+# ==============================================================================
 story.append(PageBreak())
 story.append(banner("THE AI CREATIVE PIPELINE"))
 story.append(Spacer(1, 8))
 story.append(Paragraph(
-    "Every webinar cycle, the system generates fresh LinkedIn ad creatives automatically — "
+    "Every webinar cycle, the system generates fresh LinkedIn ad creatives automatically - "
     "no design agency, no manual work. Here is the exact step-by-step flow:",
     S_body))
 story.append(Spacer(1, 10))
@@ -356,9 +364,9 @@ story.append(make_creative_pipeline())
 story.append(Spacer(1, 12))
 
 steps = [
-    ("1", "ZOOM WEBHOOK",   "#e67e22", "Randy creates a new Zoom Webinar → Zoom fires a webhook to n8n on the VPS instantly. Payload includes: webinar topic, date, time, and Zoom Webinar ID."),
+    ("1", "ZOOM WEBHOOK",   "#e67e22", "Randy creates a new Zoom Webinar -> Zoom fires a webhook to n8n on the VPS instantly. Payload includes: webinar topic, date, time, and Zoom Webinar ID."),
     ("2", "n8n ON VPS",     "#2c3e50", "n8n receives the webhook and orchestrates everything from here. It updates the GHL landing page via API (Custom Values), then calls Claude AI and Higgsfield in sequence."),
-    ("3", "CLAUDE AI",      "#2980b9", "n8n sends the webinar topic to Claude API. Claude writes 5 tailored Higgsfield video prompts — each targeting a different creative angle (authority, pain point, social proof, urgency, curiosity)."),
+    ("3", "CLAUDE AI",      "#2980b9", "n8n sends the webinar topic to Claude API. Claude writes 5 tailored Higgsfield video prompts - each targeting a different creative angle (authority, pain point, social proof, urgency, curiosity)."),
     ("4", "HIGGSFIELD API", "#ea4b71", "n8n sends all 5 prompts to Higgsfield API simultaneously. Model: Kling 3.0. Higgsfield renders 5 cinematic B-roll clips (8 seconds each). n8n polls every 30 seconds until all 5 are complete, then downloads them to the VPS."),
     ("5", "FFmpeg (VPS)",   "#16a085", "FFmpeg (free, runs on VPS) assembles the final video ad: combines best B-roll clips, adds animated webinar title overlay, adds Randy's pre-recorded voiceover, adds captions and background music. Output: polished 60-sec LinkedIn video ad."),
     ("6", "LINKEDIN ADS",   "#0077b5", "n8n calls LinkedIn Marketing API: uploads the video creative, creates the ad campaign, applies the saved audience targeting (GovCon founders), sets the daily budget. Ads go live. Total time from Zoom webinar creation to ads live: ~8 minutes."),
@@ -380,14 +388,14 @@ for num, stage, col, desc in steps:
     story.append(tbl)
     story.append(Spacer(1, 4))
 
-# ══════════════════════════════════════════════════════════════════════════════
-# PAGE 5 — THE RETARGETING LOOP
-# ══════════════════════════════════════════════════════════════════════════════
+# ==============================================================================
+# PAGE 5 - THE RETARGETING LOOP
+# ==============================================================================
 story.append(PageBreak())
-story.append(banner("THE RETARGETING LOOP — AGENT 1 ↔ AGENT 2"))
+story.append(banner("THE RETARGETING LOOP - AGENT 1 <-> AGENT 2"))
 story.append(Spacer(1, 8))
 story.append(Paragraph(
-    "No lead goes cold. Agent 1 feeds audience data back to Agent 2 automatically — "
+    "No lead goes cold. Agent 1 feeds audience data back to Agent 2 automatically - "
     "every no-show, every website visitor, every past registrant gets re-circulated into the next webinar cycle.",
     S_body))
 story.append(Spacer(1, 10))
@@ -398,7 +406,7 @@ def make_retargeting():
 
     # Agent 1 box (top)
     d.add(Rect(cx-85, H-50, 170, 38, fillColor=NAVY, strokeWidth=0))
-    d.add(String(cx, H-26, "AGENT 1 — WEBINAR FUNNEL", fontName="Helvetica-Bold", fontSize=10, fillColor=WHITE, textAnchor="middle"))
+    d.add(String(cx, H-26, "AGENT 1 - WEBINAR FUNNEL", fontName="Helvetica-Bold", fontSize=10, fillColor=WHITE, textAnchor="middle"))
     d.add(String(cx, H-39, "Tracks every attendee & no-show", fontName="Helvetica", fontSize=7.5, fillColor=colors.HexColor("#aaaaaa"), textAnchor="middle"))
 
     # Three audience types branching down
@@ -434,7 +442,7 @@ def make_retargeting():
     d.add(Line(cx, 72, cx, 38, strokeColor=ORANGE, strokeWidth=1.5))
     d.add(Rect(cx-90, 4, 180, 30, fillColor=ORANGE, strokeWidth=0))
     d.add(String(cx, 24, "NEW WEBINAR ADS SHOWN TO WARM AUDIENCES", fontName="Helvetica-Bold", fontSize=8, fillColor=WHITE, textAnchor="middle"))
-    d.add(String(cx, 11, "They register → Agent 1 takes over", fontName="Helvetica", fontSize=7, fillColor=WHITE, textAnchor="middle"))
+    d.add(String(cx, 11, "They register -> Agent 1 takes over", fontName="Helvetica", fontSize=7, fillColor=WHITE, textAnchor="middle"))
 
     return d
 
@@ -443,10 +451,10 @@ story.append(Spacer(1, 12))
 
 # Insight box
 ins = Table([[
-    Paragraph("💡", s("ii", fontName="Helvetica-Bold", fontSize=16, textColor=ORANGE, leading=20)),
+    Paragraph("", s("ii", fontName="Helvetica-Bold", fontSize=16, textColor=ORANGE, leading=20)),
     Paragraph("<b>The compounding effect.</b> Every webinar builds a larger retargeting audience. "
               "By month 3, Randy has hundreds of warm leads who've seen his content, visited his page, "
-              "or attended a previous webinar — and Agent 2 is showing them ads for the next one automatically. "
+              "or attended a previous webinar - and Agent 2 is showing them ads for the next one automatically. "
               "Cost per registration drops as audiences get warmer.",
               s("it", fontName="Helvetica", fontSize=10, textColor=DGRAY, leading=15)),
 ]], colWidths=[0.45*inch, 6.55*inch])
@@ -459,9 +467,9 @@ ins.setStyle(TableStyle([
 ]))
 story.append(ins)
 
-# ══════════════════════════════════════════════════════════════════════════════
-# PAGE 6 — PLATFORMS + CHECKLIST
-# ══════════════════════════════════════════════════════════════════════════════
+# ==============================================================================
+# PAGE 6 - PLATFORMS + CHECKLIST
+# ==============================================================================
 story.append(PageBreak())
 story.append(banner("THE 6 PLATFORMS POWERING AGENT 2"))
 story.append(Spacer(1, 10))
@@ -469,22 +477,22 @@ story.append(Spacer(1, 10))
 platforms = [
     ("LI",   "LinkedIn Campaign Manager", colors.HexColor("#0077b5"),
      "The ad platform. Campaign creation, audience targeting, bidding, and creative management all happen here. LinkedIn Insight Tag pixel installs on GHL page to track every conversion.",
-     "✅ Needs account setup", "Ad spend only"),
+     "[YES] Needs account setup", "Ad spend only"),
     ("GHL",  "GoHighLevel",               NAVY,
      "Hosts the landing page with Custom Values. Receives all leads from LinkedIn into CRM. UTM parameters stored on every contact record for full attribution.",
-     "✅ Already subscribed", "$97/month"),
+     "[YES] Already subscribed", "$97/month"),
     ("VPS",  "VPS + n8n",                 colors.HexColor("#2c3e50"),
-     "The automation brain. n8n on the VPS orchestrates the entire pipeline: Zoom webhook → Claude → Higgsfield → FFmpeg → LinkedIn API. Runs 24/7 on the same server as Agent 1.",
-     "✅ Already set up", "$250 / 2 years"),
+     "The automation brain. n8n on the VPS orchestrates the entire pipeline: Zoom webhook -> Claude -> Higgsfield -> FFmpeg -> LinkedIn API. Runs 24/7 on the same server as Agent 1.",
+     "[YES] Already set up", "$250 / 2 years"),
     ("HIG",  "Higgsfield AI",             PINK,
      "Generates cinematic B-roll video clips from text prompts. Called by n8n via API. Model: Kling 3.0. 5 clips per webinar cycle at ~6 credits each = 30 credits. Starter plan covers multiple cycles.",
-     "⚙️  API key needed", "$15/month"),
+     "  API key needed", "$15/month"),
     ("CAI",  "Claude AI API",             BLUE,
      "Writes the Higgsfield video prompts and ad copy based on the webinar topic. Called by n8n. One call per webinar cycle generates all creative briefs automatically.",
-     "⚙️  API key needed", "~$1–2/cycle"),
+     "  API key needed", "~$1-2/cycle"),
     ("FFM",  "FFmpeg (VPS)",              TEAL,
      "Free video editor that runs directly on the VPS. Combines Higgsfield clips, adds title overlays, Randy's voiceover, captions, and music. Outputs the final LinkedIn video ad. Zero cost.",
-     "✅ Free, open-source", "$0"),
+     "[YES] Free, open-source", "$0"),
 ]
 for abbr, name, col, desc, status, cost in platforms:
     tbl = Table([[
@@ -507,21 +515,21 @@ for abbr, name, col, desc, status, cost in platforms:
     story.append(Spacer(1, 4))
 
 story.append(Spacer(1, 10))
-story.append(banner("RANDY — YOUR 4-ITEM CHECKLIST TO GO LIVE"))
+story.append(banner("RANDY - YOUR 4-ITEM CHECKLIST TO GO LIVE"))
 story.append(Spacer(1, 10))
 
 checklist = [
-    ("01", "Create a LinkedIn Campaign Manager account",  "Go to linkedin.com/campaignmanager → connect to your LinkedIn profile → add billing card. BrndGuru handles everything else."),
-    ("02", "Set your first webinar ad budget",            "Recommendation: start with $200–$300 for the first webinar to test creative. BrndGuru optimizes from there."),
-    ("03", "Record a 60-second voiceover (once)",         "Randy speaks: 'If you're a federal contractor trying to win more contracts...' — recorded on phone or Zoom. Used across all video ads."),
-    ("04", "Confirm Higgsfield + Claude API access",      "BrndGuru sets up both API keys on the VPS. Randy only needs to approve the monthly spend (~$15–$17/month total for both)."),
+    ("01", "Create a LinkedIn Campaign Manager account",  "Go to linkedin.com/campaignmanager -> connect to your LinkedIn profile -> add billing card. BrndGuru handles everything else."),
+    ("02", "Set your first webinar ad budget",            "Recommendation: start with $200-$300 for the first webinar to test creative. BrndGuru optimizes from there."),
+    ("03", "Record a 60-second voiceover (once)",         "Randy speaks: 'If you're a federal contractor trying to win more contracts...' - recorded on phone or Zoom. Used across all video ads."),
+    ("04", "Confirm Higgsfield + Claude API access",      "BrndGuru sets up both API keys on the VPS. Randy only needs to approve the monthly spend (~$15-$17/month total for both)."),
 ]
 for num, task, detail in checklist:
     tbl = Table([[
         Paragraph(num, s(f"cn{num}", fontName="Helvetica-Bold", fontSize=12, textColor=WHITE, leading=16, alignment=TA_CENTER)),
         [Paragraph(f"<b>{task}</b>", s(f"ct{num}", fontName="Helvetica-Bold", fontSize=10, textColor=NAVY, leading=14)),
          Paragraph(detail,           s(f"cd{num}", fontName="Helvetica",      fontSize=8.5, textColor=DGRAY, leading=12))],
-        Paragraph("☐", s(f"cb{num}", fontName="Helvetica", fontSize=18, textColor=ORANGE, leading=22, alignment=TA_CENTER)),
+        Paragraph("[ ]", s(f"cb{num}", fontName="Helvetica", fontSize=18, textColor=ORANGE, leading=22, alignment=TA_CENTER)),
     ]], colWidths=[0.5*inch, 5.8*inch, 0.7*inch])
     tbl.setStyle(TableStyle([
         ("BACKGROUND", (0,0),(0,-1), ORANGE),
@@ -540,14 +548,14 @@ story.append(Paragraph(
     "Target: both agents live and ads running within 14 business days.",
     s("final", fontName="Helvetica-Bold", fontSize=10, textColor=NAVY, leading=15, alignment=TA_CENTER)))
 
-# ══════════════════════════════════════════════════════════════════════════════
-# PAGE 7 — TECHNICAL WORKFLOW & TRIGGER MAP
-# ══════════════════════════════════════════════════════════════════════════════
+# ==============================================================================
+# PAGE 7 - TECHNICAL WORKFLOW & TRIGGER MAP
+# ==============================================================================
 story.append(PageBreak())
-story.append(banner("AGENT 2 — FULL TECHNICAL WORKFLOW & TRIGGER MAP"))
+story.append(banner("AGENT 2 - FULL TECHNICAL WORKFLOW & TRIGGER MAP"))
 story.append(Spacer(1, 5))
 story.append(Paragraph(
-    "Complete trigger map — every automation step, every API call, every tool. For implementation reference.",
+    "Complete trigger map - every automation step, every API call, every tool. For implementation reference.",
     s("twi", fontName="Helvetica-Oblique", fontSize=9, textColor=GRAY, leading=13)))
 story.append(Spacer(1, 8))
 
@@ -558,7 +566,7 @@ _hdr = Table([[
     Paragraph("TRIGGER",         s("th1", fontName="Helvetica-Bold", fontSize=7.5, textColor=WHITE, leading=10)),
     Paragraph("TOOL",            s("th2", fontName="Helvetica-Bold", fontSize=7.5, textColor=WHITE, leading=10, alignment=TA_CENTER)),
     Paragraph("ACTION / OUTPUT", s("th3", fontName="Helvetica-Bold", fontSize=7.5, textColor=WHITE, leading=10)),
-    Paragraph("→ FIRES NEXT",    s("th4", fontName="Helvetica-Bold", fontSize=7.5, textColor=WHITE, leading=10)),
+    Paragraph("-> FIRES NEXT",    s("th4", fontName="Helvetica-Bold", fontSize=7.5, textColor=WHITE, leading=10)),
 ]], colWidths=_CW)
 _hdr.setStyle(TableStyle([
     ("BACKGROUND", (0,0),(-1,-1), NAVY),
@@ -579,38 +587,38 @@ _TCOLS = {
 
 _triggers = [
     ("T1",  "Zoom Webhook\nwebinar.created",     "n8n (VPS)",
-     "Zoom fires POST webhook → n8n extracts topic, date, time, zoom_id → stores in workflow context",
-     "→ T2 and T3 fire in parallel"),
+     "Zoom fires POST webhook -> n8n extracts topic, date, time, zoom_id -> stores in workflow context",
+     "-> T2 and T3 fire in parallel"),
     ("T2",  "n8n: landing\npage update",         "GoHighLevel",
-     "PATCH GHL /custom-values: webinar_topic, webinar_date, webinar_time, zoom_webinar_id\nLanding page updates instantly — same URL, new content",
-     "→ Agent 1 date triggers\nalso updated"),
+     "PATCH GHL /custom-values: webinar_topic, webinar_date, webinar_time, zoom_webinar_id\nLanding page updates instantly - same URL, new content",
+     "-> Agent 1 date triggers\nalso updated"),
     ("T3",  "n8n: creative\ngeneration start",   "Claude API",
-     "POST Claude API: 'Write 5 Higgsfield video prompts for webinar on [topic], audience: GovCon founders'\n→ Returns 5 cinematic prompts with different angles",
-     "→ T4 (5 parallel calls)"),
-    ("T4",  "Claude output\n→ 5 prompts ready",  "Higgsfield",
+     "POST Claude API: 'Write 5 Higgsfield video prompts for webinar on [topic], audience: GovCon founders'\n-> Returns 5 cinematic prompts with different angles",
+     "-> T4 (5 parallel calls)"),
+    ("T4",  "Claude output\n-> 5 prompts ready",  "Higgsfield",
      "POST /api/v1/generate/video × 5 (parallel)\nModel: kling-3.0 | Duration: 8s | Aspect: 16:9\nReturns 5 job_ids",
-     "→ T5 (poll loop)"),
+     "-> T5 (poll loop)"),
     ("T5",  "Poll: video\nstatus check",         "Higgsfield",
-     "GET /api/v1/jobs/{job_id} every 30s until status='complete'\nDownload all 5 .mp4 files → save to VPS /creatives/{date}/",
-     "→ T6 (FFmpeg)"),
+     "GET /api/v1/jobs/{job_id} every 30s until status='complete'\nDownload all 5 .mp4 files -> save to VPS /creatives/{date}/",
+     "-> T6 (FFmpeg)"),
     ("T6",  "Videos on VPS\nready",              "FFmpeg (VPS)",
      "FFmpeg assembles: combine clips + title overlay + Randy voiceover + captions + music\nExports final 60-sec ad-final.mp4",
-     "→ T7 (LinkedIn upload)"),
+     "-> T7 (LinkedIn upload)"),
     ("T7",  "Final video\nassembled",            "LinkedIn API",
-     "POST /v2/assets (video upload) → POST /v2/adCreatives (3 static + 1 video)\nPOST /v2/adCampaigns → POST targeting facets → campaign live",
-     "→ Ads live (~8 min\nfrom Zoom webhook)"),
+     "POST /v2/assets (video upload) -> POST /v2/adCreatives (3 static + 1 video)\nPOST /v2/adCampaigns -> POST targeting facets -> campaign live",
+     "-> Ads live (~8 min\nfrom Zoom webhook)"),
     ("T8",  "Schedule:\nevery 7 days",           "n8n Schedule",
-     "GET LinkedIn /adAnalytics → check CTR, CPL, impressions per creative\nIF CTR < 0.3% → PATCH creative status: PAUSED\nIF CPL > $20 → alert BrndGuru via email",
-     "→ Data pushed to\nAgent 6 dashboard"),
+     "GET LinkedIn /adAnalytics -> check CTR, CPL, impressions per creative\nIF CTR < 0.3% -> PATCH creative status: PAUSED\nIF CPL > $20 -> alert BrndGuru via email",
+     "-> Data pushed to\nAgent 6 dashboard"),
     ("T9",  "GHL Tag:\n'no-show' (Agent 1)",     "n8n (VPS)",
-     "GHL webhook fires → n8n → LinkedIn API: POST /v2/dmpSegments (add email to No-Show audience)\nRetargeting campaign fires: replay + next webinar ads",
-     "→ LinkedIn shows\nretargeting ads"),
+     "GHL webhook fires -> n8n -> LinkedIn API: POST /v2/dmpSegments (add email to No-Show audience)\nRetargeting campaign fires: replay + next webinar ads",
+     "-> LinkedIn shows\nretargeting ads"),
     ("T10", "GHL contacts\n> 300 (milestone)",   "n8n (VPS)",
-     "n8n exports GHL contact list (emails) → POST LinkedIn /v2/dmpSegments (Matched Audience)\nLinkedIn builds Lookalike Audience (2% similarity) automatically",
-     "→ New lookalike\ncampaign created"),
+     "n8n exports GHL contact list (emails) -> POST LinkedIn /v2/dmpSegments (Matched Audience)\nLinkedIn builds Lookalike Audience (2% similarity) automatically",
+     "-> New lookalike\ncampaign created"),
     ("T11", "Schedule:\nMonday 8AM",             "n8n Schedule",
-     "Pull LinkedIn Ads API + GHL pipeline data → format weekly report\nPush to Agent 6 dashboard → email Randy + BrndGuru with CPL, registrations, calls, revenue",
-     "→ Agent 6 dashboard\nupdated"),
+     "Pull LinkedIn Ads API + GHL pipeline data -> format weekly report\nPush to Agent 6 dashboard -> email Randy + BrndGuru with CPL, registrations, calls, revenue",
+     "-> Agent 6 dashboard\nupdated"),
 ]
 
 for _i, (_num, _trig, _tool, _action, _fires) in enumerate(_triggers):
@@ -646,7 +654,7 @@ for _i, (_num, _trig, _tool, _action, _fires) in enumerate(_triggers):
 
 story.append(Spacer(1, 10))
 story.append(Paragraph(
-    "⚠  T4–T6 (highlighted) are the Higgsfield AI creative generation nodes — "
+    "[!]  T4-T6 (highlighted) are the Higgsfield AI creative generation nodes - "
     "the core innovation of Agent 2. These replace a design agency entirely.",
     s("note2", fontName="Helvetica-Bold", fontSize=8, textColor=ORANGE, leading=12)))
 
