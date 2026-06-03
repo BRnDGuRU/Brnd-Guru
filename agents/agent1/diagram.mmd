@@ -1,0 +1,69 @@
+%% Agent 1 — Webinar Funnel flow. Render at https://mermaid.live or any Mermaid viewer.
+flowchart TD
+    subgraph SETUP["PHASE 1 · Setup (per webinar)"]
+        A1[Randy schedules Zoom webinar]:::zoom
+        A2[Randy submits GHL Admin Form]:::ghl
+        A3["n8n WF1 — T1<br/>update 9 custom values"]:::n8n
+        A1 --> A2 --> A3
+    end
+
+    A3 -->|page auto-fills| B1
+
+    subgraph REG["PHASE 2 · Register & Confirm"]
+        B1[Lead registers on /webinar]:::ghl
+        B2["GHL WF1 — T2<br/>tag webinar-registered<br/>set webinar_date_dt<br/>Email 1 + SMS 1"]:::ghl
+        B1 --> B2
+    end
+
+    B2 --> C1
+
+    subgraph NURTURE["PHASE 3 · Pre-Webinar Nurture (time-based)"]
+        C1["GHL WF2 — T3..T6<br/>Authority · Agenda · 24h · 3h · SMS"]:::ghl
+    end
+
+    C1 --> D1
+
+    subgraph LIVE["PHASE 4 · Webinar"]
+        D1[Randy delivers live on Zoom]:::zoom
+        D2[Zoom records attendance]:::zoom
+        D1 --> D2
+    end
+
+    D2 -->|webinar.ended| E1
+
+    subgraph SPLIT["PHASE 5 · Attendance Split (core)"]
+        E1["n8n WF2 — T7<br/>wait 75m · pull Zoom attendees"]:::n8n
+        E2["n8n WF2 — T8<br/>match email + name"]:::n8n
+        E3{Attended?}:::dec
+        E1 --> E2 --> E3
+    end
+
+    E3 -->|yes| F1
+    E3 -->|no| G1
+
+    subgraph PATHA["PHASE 6A · Attended"]
+        F1["GHL WF3 — T9<br/>Email 6 (1h) · 7 (24h) · 8 (48h)"]:::ghl
+    end
+
+    subgraph PATHB["PHASE 6B · No-Show"]
+        G1["GHL WF4 — T10<br/>Email 9 · 10 · 11 · 12 · 13"]:::ghl
+    end
+
+    F1 --> H1
+    G1 --> H1
+
+    subgraph BOOK["PHASE 7 · Call Booked"]
+        H1[Lead books on Calendly]:::cal
+        H2["n8n WF3 — T11<br/>find contact · tag call-booked"]:::n8n
+        H3["GHL WF5<br/>stage Call Booked<br/>notify Randy + call-prep"]:::ghl
+        H1 -->|invitee.created| H2 --> H3
+    end
+
+    H3 --> Z[Warm prospect in pipeline → Randy closes]:::win
+
+    classDef ghl fill:#0a1f44,color:#fff,stroke:#c8a44d;
+    classDef n8n fill:#1f7a4d,color:#fff,stroke:#9be3bd;
+    classDef zoom fill:#2d6cdf,color:#fff,stroke:#bcd3ff;
+    classDef cal fill:#d97706,color:#fff,stroke:#ffd9a8;
+    classDef dec fill:#c8a44d,color:#1a1407,stroke:#0a1f44;
+    classDef win fill:#155e3b,color:#fff,stroke:#9be3bd;

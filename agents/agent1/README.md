@@ -32,12 +32,19 @@ n8n handles everything *event-based that crosses platforms* (Zoom attendance, Ca
 ```
 agents/agent1/
   README.md                 ← you are here
+  WORKFLOW.md               ← detailed end-to-end flow (every trigger, data, timing)
   RUNBOOK.md                ← step-by-step setup for the login-required parts (GHL, DNS, Zoom, Calendly, n8n)
   TESTING.md                ← end-to-end test checklist before go-live
+  diagram.mmd               ← Mermaid flow diagram (render at mermaid.live)
   credentials.example.env   ← placeholder env vars; copy to credentials.env (gitignored) for real values
-  emails/                   ← all 10 emails + 2 SMS, paste-ready with GHL merge tags
+  emails/
+    SEQUENCE.md             ← all copy (10 emails + 2 SMS + 2 internal) with merge tags
+    html/                   ← branded, paste-ready HTML for emails 1–13 + call-prep + SUBJECTS.md
   n8n/                      ← 3 importable n8n workflow JSON files
   landing/                  ← registration + thank-you page HTML
+  scripts/
+    provision_ghl.py        ← creates custom values + tags via GHL API (idempotent; --dry-run)
+    build_emails.py         ← regenerates emails/html/ from the content table
 ```
 
 ---
@@ -46,14 +53,14 @@ agents/agent1/
 
 | # | Deliverable | Type | Status |
 |---|-------------|------|--------|
-| 1 | Email + SMS templates | File (this repo) | ✅ Built — see `emails/` |
+| 1 | Email + SMS copy + branded HTML | File (this repo) | ✅ Built — `emails/SEQUENCE.md` + `emails/html/` |
 | 2 | Landing + thank-you page | File (this repo) | ✅ Built — see `landing/` |
 | 3 | n8n: Update Webinar Details | File (this repo) | ✅ Built — `n8n/wf1-update-webinar-details.json` |
 | 4 | n8n: Zoom Attendance Split | File (this repo) | ✅ Built — `n8n/wf2-zoom-attendance-split.json` |
 | 5 | n8n: Calendly → GHL | File (this repo) | ✅ Built — `n8n/wf3-calendly-webhook.json` |
-| 6 | GHL custom values (4) | UI — needs login | ⏳ See RUNBOOK §2 |
+| 6 | GHL custom values (9) | Script (needs API key) | ⚡ `scripts/provision_ghl.py` — run after adding API key |
 | 7 | GHL pipeline (8 stages) | UI — needs login | ⏳ See RUNBOOK §3 |
-| 8 | GHL tags (5) | UI — needs login | ⏳ See RUNBOOK §3 |
+| 8 | GHL tags (5) | Script (needs API key) | ⚡ `scripts/provision_ghl.py` — run after adding API key |
 | 9 | GHL workflows (5) | UI — needs login | ⏳ See RUNBOOK §5 |
 | 10 | GHL admin form | UI — needs login | ⏳ See RUNBOOK §6 |
 | 11 | DNS records (SPF/DKIM/CNAME) | SiteGround — needs login | ⏳ See RUNBOOK §1 |

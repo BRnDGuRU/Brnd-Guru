@@ -3,3 +3,7 @@ credentials.env
 *.secret
 *.key
 .env
+
+# Python
+__pycache__/
+*.pyc

@@ -132,29 +132,26 @@
     },
     {
       "parameters": {
-        "method": "GET",
-        "url": "https://services.leadconnectorhq.com/contacts/",
+        "method": "POST",
+        "url": "https://services.leadconnectorhq.com/contacts/search",
         "authentication": "genericCredentialType",
         "genericAuthType": "httpHeaderAuth",
         "sendHeaders": true,
         "headerParameters": {
           "parameters": [
-            { "name": "Version", "value": "2021-07-28" }
+            { "name": "Version", "value": "2021-07-28" },
+            { "name": "Content-Type", "value": "application/json" }
           ]
         },
-        "sendQuery": true,
-        "queryParameters": {
-          "parameters": [
-            { "name": "locationId", "value": "={{ $env.GHL_LOCATION_ID }}" },
-            { "name": "query", "value": "" },
-            { "name": "limit", "value": "100" }
-          ]
-        },
+        "sendBody": true,
+        "specifyBody": "json",
+        "jsonBody": "={{ JSON.stringify({ locationId: $env.GHL_LOCATION_ID, pageLimit: 100, filters: [ { field: 'tags', operator: 'contains', value: 'webinar-registered' } ] }) }}",
         "options": { "pagination": { "pagination": {
-          "parameters": { "parameters": [ { "name": "startAfterId", "value": "={{ $response.body.meta.startAfterId }}" }, { "name": "startAfter", "value": "={{ $response.body.meta.startAfter }}" } ] },
+          "parameters": { "parameters": [ { "name": "searchAfter", "value": "={{ $response.body.contacts && $response.body.contacts.length ? JSON.stringify($response.body.contacts[$response.body.contacts.length - 1].searchAfter) : '' }}" } ] },
           "paginationCompleteWhen": "other",
-          "completeExpression": "={{ !$response.body.meta || !$response.body.meta.nextPageUrl }}",
-          "limitPagesFetched": false
+          "completeExpression": "={{ !$response.body.contacts || $response.body.contacts.length < 100 }}",
+          "limitPagesFetched": false,
+          "type": "body"
         } } }
       },
       "id": "ghl-registered",
@@ -165,7 +162,7 @@
       "credentials": {
         "httpHeaderAuth": { "id": "GHL_API", "name": "GHL API Key (Bearer)" }
       },
-      "notes": "Ideally filter by tag 'webinar-registered'. The simple Contacts list is shown; for tag filtering use the Search Contacts endpoint (POST /contacts/search) with a tag filter."
+      "notes": "Tag-filtered search: POST /contacts/search with filter tags contains 'webinar-registered'. Paginates 100 at a time via searchAfter from the last contact; stops when a page returns <100."
     },
     {
       "parameters": {
