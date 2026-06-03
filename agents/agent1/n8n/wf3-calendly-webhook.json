@@ -1,0 +1,140 @@
+{
+  "name": "Agent1 - WF3 Calendly to GHL",
+  "nodes": [
+    {
+      "parameters": {
+        "httpMethod": "POST",
+        "path": "calendly",
+        "responseMode": "onReceived",
+        "options": {}
+      },
+      "id": "calendly-webhook",
+      "name": "Calendly Webhook",
+      "type": "n8n-nodes-base.webhook",
+      "typeVersion": 2,
+      "position": [240, 300],
+      "webhookId": "calendly",
+      "notes": "Calendly event invitee.created posts here."
+    },
+    {
+      "parameters": {
+        "conditions": {
+          "options": { "caseSensitive": true, "typeValidation": "strict" },
+          "conditions": [
+            {
+              "id": "c1",
+              "leftValue": "={{ $json.body.event }}",
+              "rightValue": "invitee.created",
+              "operator": { "type": "string", "operation": "equals" }
+            }
+          ],
+          "combinator": "and"
+        },
+        "options": {}
+      },
+      "id": "is-created",
+      "name": "Is invitee.created?",
+      "type": "n8n-nodes-base.if",
+      "typeVersion": 2.2,
+      "position": [460, 300]
+    },
+    {
+      "parameters": {
+        "assignments": {
+          "assignments": [
+            { "id": "e1", "name": "invitee_email", "value": "={{ $json.body.payload.email }}", "type": "string" },
+            { "id": "e2", "name": "invitee_name", "value": "={{ $json.body.payload.name }}", "type": "string" },
+            { "id": "e3", "name": "event_start", "value": "={{ $json.body.payload.scheduled_event.start_time }}", "type": "string" }
+          ]
+        },
+        "options": {}
+      },
+      "id": "extract",
+      "name": "Extract Booking Data",
+      "type": "n8n-nodes-base.set",
+      "typeVersion": 3.4,
+      "position": [680, 220]
+    },
+    {
+      "parameters": {
+        "method": "POST",
+        "url": "https://services.leadconnectorhq.com/contacts/search",
+        "authentication": "genericCredentialType",
+        "genericAuthType": "httpHeaderAuth",
+        "sendHeaders": true,
+        "headerParameters": {
+          "parameters": [
+            { "name": "Version", "value": "2021-07-28" },
+            { "name": "Content-Type", "value": "application/json" }
+          ]
+        },
+        "sendBody": true,
+        "specifyBody": "json",
+        "jsonBody": "={{ JSON.stringify({ locationId: $env.GHL_LOCATION_ID, page: 1, pageLimit: 1, filters: [ { field: 'email', operator: 'eq', value: $('Extract Booking Data').first().json.invitee_email } ] }) }}",
+        "options": {}
+      },
+      "id": "ghl-search",
+      "name": "GHL: Find Contact by Email",
+      "type": "n8n-nodes-base.httpRequest",
+      "typeVersion": 4.2,
+      "position": [900, 220],
+      "credentials": {
+        "httpHeaderAuth": { "id": "GHL_API", "name": "GHL API Key (Bearer)" }
+      }
+    },
+    {
+      "parameters": {
+        "jsCode": "// Get the contactId; if not found, create the contact downstream instead.\nconst res = $input.first().json;\nconst contacts = res.contacts || [];\nconst booking = $('Extract Booking Data').first().json;\nif (contacts.length > 0) {\n  return [{ json: { contactId: contacts[0].id, found: true, ...booking } }];\n}\nreturn [{ json: { found: false, ...booking } }];"
+      },
+      "id": "resolve-contact",
+      "name": "Resolve Contact",
+      "type": "n8n-nodes-base.code",
+      "typeVersion": 2,
+      "position": [1120, 220]
+    },
+    {
+      "parameters": {
+        "method": "POST",
+        "url": "=https://services.leadconnectorhq.com/contacts/{{ $json.contactId }}/tags",
+        "authentication": "genericCredentialType",
+        "genericAuthType": "httpHeaderAuth",
+        "sendHeaders": true,
+        "headerParameters": {
+          "parameters": [
+            { "name": "Version", "value": "2021-07-28" },
+            { "name": "Content-Type", "value": "application/json" }
+          ]
+        },
+        "sendBody": true,
+        "specifyBody": "json",
+        "jsonBody": "={{ JSON.stringify({ tags: ['call-booked'] }) }}",
+        "options": {}
+      },
+      "id": "ghl-tag-booked",
+      "name": "GHL: Tag call-booked",
+      "type": "n8n-nodes-base.httpRequest",
+      "typeVersion": 4.2,
+      "position": [1340, 220],
+      "credentials": {
+        "httpHeaderAuth": { "id": "GHL_API", "name": "GHL API Key (Bearer)" }
+      },
+      "notes": "Tag 'call-booked' fires GHL Workflow 5 (move pipeline stage + notify Randy + send call-prep email)."
+    }
+  ],
+  "connections": {
+    "Calendly Webhook": { "main": [[{ "node": "Is invitee.created?", "type": "main", "index": 0 }]] },
+    "Is invitee.created?": { "main": [
+      [{ "node": "Extract Booking Data", "type": "main", "index": 0 }],
+      []
+    ] },
+    "Extract Booking Data": { "main": [[{ "node": "GHL: Find Contact by Email", "type": "main", "index": 0 }]] },
+    "GHL: Find Contact by Email": { "main": [[{ "node": "Resolve Contact", "type": "main", "index": 0 }]] },
+    "Resolve Contact": { "main": [[{ "node": "GHL: Tag call-booked", "type": "main", "index": 0 }]] }
+  },
+  "settings": { "executionOrder": "v1" },
+  "active": false,
+  "pinData": {},
+  "meta": {
+    "description": "T11. Calendly invitee.created -> find GHL contact by email -> tag 'call-booked'. GHL Workflow 5 handles the pipeline move, internal notification, and call-prep email. Requires env var GHL_LOCATION_ID and credential 'GHL API Key (Bearer)'."
+  }
+}
