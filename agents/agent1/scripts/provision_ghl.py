@@ -82,6 +82,21 @@ def api(method, path, token, body=None):
             return e.code, {"error": raw}
 
 
+def discover_location(token):
+    """Best-effort: find the Location ID the token is scoped to, so the user doesn't have to.
+    Tries the locations search endpoint; returns (loc_id, message)."""
+    status, data = api("GET", "/locations/search", token)
+    if status < 400:
+        locs = data.get("locations", []) or []
+        if len(locs) == 1:
+            return locs[0].get("id"), f"auto-discovered location: {locs[0].get('name')} ({locs[0].get('id')})"
+        if len(locs) > 1:
+            listing = "\n".join(f"    - {l.get('name')}: {l.get('id')}" for l in locs)
+            return None, "Multiple locations found — re-run with GHL_LOCATION_ID set to one of:\n" + listing
+    return None, (f"Could not auto-discover Location ID (HTTP {status}). "
+                  "Find it in the GHL URL after /location/, or Settings > Business Info.")
+
+
 def provision_custom_values(token, loc, dry):
     print("\n=== Custom Values ===")
     existing = {}
@@ -138,12 +153,17 @@ def main():
     token = env.get("GHL_API_KEY")
     loc = env.get("GHL_LOCATION_ID")
 
-    if not args.dry_run and (not token or not loc):
-        print("ERROR: set GHL_API_KEY and GHL_LOCATION_ID in credentials.env (or env vars).")
-        print("       To get them: GHL > Settings > Private Integrations (API key) and")
-        print("       Settings > Business Info (Location ID). See RUNBOOK §10.")
+    if not args.dry_run and not token:
+        print("ERROR: set GHL_API_KEY in credentials.env (or env var). See RUNBOOK §10.")
         print("       Run with --dry-run to preview without credentials.")
         sys.exit(1)
+
+    # If we have a token but no Location ID, try to find it automatically.
+    if not args.dry_run and token and not loc:
+        loc, note = discover_location(token)
+        print(note)
+        if not loc:
+            sys.exit(1)
 
     print(f"GHL provisioning {'(DRY RUN)' if args.dry_run else 'for location ' + (loc or '?')}")
     provision_custom_values(token, loc, args.dry_run)
