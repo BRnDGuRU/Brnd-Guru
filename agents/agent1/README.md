@@ -40,8 +40,8 @@ agents/agent1/
   emails/
     SEQUENCE.md             ← all copy (10 emails + 2 SMS + 2 internal) with merge tags
     html/                   ← branded, paste-ready HTML for emails 1–13 + call-prep + SUBJECTS.md
-  n8n/                      ← 3 importable n8n workflow JSON files
-  landing/                  ← registration + thank-you page HTML
+  n8n/                      ← 3 importable workflows + docker-compose/Caddy deploy stack + README
+  landing/                  ← registration, thank-you, and internal admin-form HTML
   scripts/
     provision_ghl.py        ← creates custom values + tags via GHL API (idempotent; --dry-run)
     build_emails.py         ← regenerates emails/html/ from the content table
@@ -62,7 +62,8 @@ agents/agent1/
 | 7 | GHL pipeline (8 stages) | UI — needs login | ⏳ See RUNBOOK §3 |
 | 8 | GHL tags (5) | Script (needs API key) | ⚡ `scripts/provision_ghl.py` — run after adding API key |
 | 9 | GHL workflows (5) | UI — needs login | ⏳ See RUNBOOK §5 |
-| 10 | GHL admin form | UI — needs login | ⏳ See RUNBOOK §6 |
+| 10 | GHL admin form | UI + standalone HTML | ✅ HTML built (`landing/admin-form.html`); GHL version per RUNBOOK §6 |
+| 14b | n8n deploy stack | File (this repo) | ✅ Built — `n8n/docker-compose.yml` + Caddy + README |
 | 11 | DNS records (SPF/DKIM/CNAME) | SiteGround — needs login | ⏳ See RUNBOOK §1 |
 | 12 | Zoom Server-to-Server OAuth app | Zoom — needs login | ⏳ See RUNBOOK §7 |
 | 13 | Calendly webhook + token | Calendly — needs login | ⏳ See RUNBOOK §8 |

@@ -1,0 +1,7 @@
+# Agent 1 — Caddy reverse proxy for n8n (automatic HTTPS via Let's Encrypt).
+# Replace the hostname with your real n8n subdomain. Caddy obtains + renews the cert automatically.
+
+n8n.fedgovstartup.com {
+    reverse_proxy n8n:5678
+    encode gzip
+}

@@ -1,0 +1,111 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8" />
+<meta name="viewport" content="width=device-width, initial-scale=1.0" />
+<title>Set This Week's Webinar — GovCon Academy (Internal)</title>
+<!--
+  Agent 1 — INTERNAL admin form. This is the backup/standalone version of the form Randy uses to
+  set each webinar's details (T1). It POSTs JSON to the n8n WF1 webhook, which updates the GHL
+  custom values so the landing page + emails auto-populate.
+
+  Two ways to use it:
+    A) Recreate these fields as a GHL internal Form and use a Webhook action (preferred — keeps it
+       inside GHL). See RUNBOOK §6.
+    B) Host this file privately (or open locally) and set N8N_WEBHOOK_URL below. It works as-is.
+
+  ⚠ Keep this page private — it rewrites live webinar details.
+-->
+<style>
+  :root{--navy:#0a1f44;--navy2:#0d2756;--gold:#c8a44d;--gold2:#e0bd66;--ink:#1a2230;--muted:#5b6470;--line:#e1e6ee}
+  *{box-sizing:border-box;margin:0;padding:0}
+  body{font-family:-apple-system,Segoe UI,Roboto,Helvetica,Arial,sans-serif;background:#eef1f6;color:var(--ink);
+    min-height:100vh;display:grid;place-items:center;padding:24px}
+  .card{background:#fff;max-width:560px;width:100%;border-radius:16px;box-shadow:0 18px 50px rgba(10,31,68,.15);overflow:hidden}
+  header{background:linear-gradient(160deg,var(--navy),var(--navy2));color:#fff;padding:24px 28px}
+  header .tag{color:var(--gold2);font-size:12px;font-weight:700;letter-spacing:.06em;text-transform:uppercase}
+  header h1{font-size:22px;margin-top:6px}
+  header p{color:#c3cfe6;font-size:14px;margin-top:4px}
+  form{padding:24px 28px}
+  label{display:block;font-size:13px;font-weight:600;margin:14px 0 6px}
+  input{width:100%;padding:12px 14px;border:1px solid #cdd5e0;border-radius:9px;font-size:15px}
+  input:focus{outline:none;border-color:var(--navy);box-shadow:0 0 0 3px rgba(13,39,86,.12)}
+  .hint{font-size:12px;color:var(--muted);margin-top:4px}
+  .btn{width:100%;margin-top:22px;padding:15px;border:0;border-radius:10px;background:var(--gold);color:#1a1407;
+    font-size:16px;font-weight:800;cursor:pointer}
+  .btn:hover{background:var(--gold2)}.btn:disabled{opacity:.6;cursor:wait}
+  #msg{margin-top:16px;padding:12px 14px;border-radius:9px;font-size:14px;display:none}
+  #msg.ok{display:block;background:#e6f7ee;color:#136c3e;border:1px solid #b6e6cb}
+  #msg.err{display:block;background:#fdeaea;color:#9b2222;border:1px solid #f4c2c2}
+  .config{padding:14px 28px;background:#f6f8fb;border-top:1px solid var(--line);font-size:12px;color:var(--muted)}
+  .config code{background:#fff;border:1px solid var(--line);padding:1px 5px;border-radius:4px}
+</style>
+</head>
+<body>
+  <div class="card">
+    <header>
+      <div class="tag">Internal · Government Contracting Academy</div>
+      <h1>Set this week's webinar</h1>
+      <p>Submitting updates the live landing page and email merge fields automatically.</p>
+    </header>
+    <form id="f">
+      <label for="webinar_topic">Webinar topic</label>
+      <input id="webinar_topic" name="webinar_topic" required
+             placeholder="Get On Contract Vehicles Without Extensive Past Performances" />
+
+      <label for="webinar_date">Date (as it should read on the page)</label>
+      <input id="webinar_date" name="webinar_date" required placeholder="Tuesday, June 17, 2026" />
+      <div class="hint">Free text — exactly how you want it displayed.</div>
+
+      <label for="webinar_time">Time</label>
+      <input id="webinar_time" name="webinar_time" required placeholder="7:00 PM EST" />
+
+      <label for="zoom_webinar_id">Zoom Webinar ID</label>
+      <input id="zoom_webinar_id" name="zoom_webinar_id" required placeholder="123 4567 8901" />
+
+      <label for="zoom_link">Zoom join link</label>
+      <input id="zoom_link" name="zoom_link" type="url" required placeholder="https://zoom.us/j/123456789" />
+
+      <button class="btn" id="submit" type="submit">Update Webinar Details</button>
+      <div id="msg"></div>
+    </form>
+    <div class="config">
+      Posts to n8n WF1: <code id="urlShow"></code>. Set the URL in the <code>N8N_WEBHOOK_URL</code> constant in this file.
+    </div>
+  </div>
+
+<script>
+  // ── CONFIG ──────────────────────────────────────────────
+  // Set this to your n8n WF1 production webhook (RUNBOOK §9).
+  const N8N_WEBHOOK_URL = "https://n8n.fedgovstartup.com/webhook/update-webinar";
+  // ────────────────────────────────────────────────────────
+  document.getElementById("urlShow").textContent = N8N_WEBHOOK_URL;
+
+  const form = document.getElementById("f");
+  const msg = document.getElementById("msg");
+  const btn = document.getElementById("submit");
+
+  form.addEventListener("submit", async (e) => {
+    e.preventDefault();
+    msg.className = ""; msg.style.display = "none";
+    btn.disabled = true; btn.textContent = "Updating…";
+    const payload = Object.fromEntries(new FormData(form).entries());
+    try {
+      const res = await fetch(N8N_WEBHOOK_URL, {
+        method: "POST",
+        headers: { "Content-Type": "application/json" },
+        body: JSON.stringify(payload),
+      });
+      if (!res.ok) throw new Error("HTTP " + res.status);
+      msg.className = "ok";
+      msg.textContent = "✓ Done. The landing page and emails now show the new webinar details.";
+    } catch (err) {
+      msg.className = "err";
+      msg.textContent = "Couldn't reach the automation (" + err.message + "). Check the webhook URL / n8n is running.";
+    } finally {
+      btn.disabled = false; btn.textContent = "Update Webinar Details";
+    }
+  });
+</script>
+</body>
+</html>
