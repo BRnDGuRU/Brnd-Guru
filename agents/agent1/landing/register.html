@@ -1,0 +1,104 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8" />
+<meta name="viewport" content="width=device-width, initial-scale=1.0" />
+<title>{{custom_values.webinar_topic}} — Free Webinar with Randy Wimmer</title>
+<meta name="description" content="Free live webinar for small businesses pursuing government contracts. Register now." />
+<!--
+  Agent 1 — Webinar registration page (reference build for fedgovstartup.com/webinar).
+  Merge tags use GHL's {{custom_values.x}} syntax so one page serves every webinar.
+  Two ways to use this in GHL:
+    A) Recreate this layout in the GHL Funnel/Page builder and drop in a GHL registration
+       form widget (recommended — gives you native form -> workflow triggering).
+    B) Paste into a GHL "Custom HTML" page and replace the <form> with your GHL form embed
+       code so submissions create a contact and fire Workflow 1.
+  The bare <form> below is a structural placeholder; wire its submit to your GHL form.
+-->
+<style>
+  :root{
+    --navy:#0a1f44; --navy-2:#0d2756; --gold:#c8a44d; --gold-2:#e0bd66;
+    --ink:#101418; --paper:#ffffff; --muted:#5b6470; --line:#e6e9ee;
+  }
+  *{box-sizing:border-box;margin:0;padding:0}
+  body{font-family:-apple-system,Segoe UI,Roboto,Helvetica,Arial,sans-serif;color:var(--ink);background:var(--paper);line-height:1.55}
+  .hero{background:linear-gradient(160deg,var(--navy),var(--navy-2));color:#fff;padding:64px 20px 88px}
+  .wrap{max-width:1040px;margin:0 auto}
+  .eyebrow{display:inline-block;background:rgba(200,164,77,.15);color:var(--gold-2);border:1px solid rgba(200,164,77,.4);
+    padding:6px 14px;border-radius:999px;font-size:13px;font-weight:600;letter-spacing:.04em;text-transform:uppercase;margin-bottom:22px}
+  h1{font-size:clamp(28px,5vw,46px);line-height:1.12;font-weight:800;max-width:18ch}
+  .when{margin:22px 0 6px;font-size:18px;color:#dce3f1}
+  .when b{color:var(--gold-2)}
+  .grid{display:grid;grid-template-columns:1.2fr .8fr;gap:36px;align-items:start;margin-top:-56px}
+  @media(max-width:820px){.grid{grid-template-columns:1fr;margin-top:-40px}}
+  .card{background:#fff;border:1px solid var(--line);border-radius:16px;padding:28px;box-shadow:0 20px 50px rgba(10,31,68,.12)}
+  .bullets{list-style:none;margin:8px 0 0}
+  .bullets li{position:relative;padding:10px 0 10px 34px;border-bottom:1px solid var(--line);font-size:16px}
+  .bullets li:last-child{border-bottom:0}
+  .bullets li::before{content:"✓";position:absolute;left:0;top:9px;width:22px;height:22px;border-radius:50%;
+    background:var(--navy);color:var(--gold-2);display:grid;place-items:center;font-size:13px;font-weight:700}
+  .form-card h2{font-size:22px;margin-bottom:4px}
+  .form-card p.sub{color:var(--muted);font-size:14px;margin-bottom:18px}
+  label{display:block;font-size:13px;font-weight:600;color:#2b3340;margin:12px 0 6px}
+  input{width:100%;padding:12px 14px;border:1px solid #cfd6e0;border-radius:10px;font-size:15px}
+  input:focus{outline:none;border-color:var(--navy);box-shadow:0 0 0 3px rgba(13,39,86,.12)}
+  .btn{width:100%;margin-top:20px;padding:15px;border:0;border-radius:10px;background:var(--gold);color:#1a1407;
+    font-size:17px;font-weight:800;cursor:pointer;transition:.15s}
+  .btn:hover{background:var(--gold-2)}
+  .tiny{font-size:12px;color:var(--muted);text-align:center;margin-top:12px}
+  .host{display:flex;gap:16px;align-items:center;margin-top:30px;color:#dce3f1;font-size:15px}
+  .host .badge{width:54px;height:54px;border-radius:50%;background:var(--gold);color:var(--navy);display:grid;place-items:center;font-weight:800;font-size:20px}
+  .host b{color:#fff}
+  footer{background:var(--navy);color:#9fb0cf;text-align:center;padding:28px 20px;font-size:13px}
+</style>
+</head>
+<body>
+  <section class="hero">
+    <div class="wrap">
+      <span class="eyebrow">Free Live Webinar · Government Contracting Academy</span>
+      <h1>{{custom_values.webinar_topic}}</h1>
+      <p class="when"><b>{{custom_values.webinar_date}}</b> &nbsp;·&nbsp; <b>{{custom_values.webinar_time}}</b> &nbsp;·&nbsp; Live on Zoom</p>
+      <div class="host">
+        <div class="badge">RW</div>
+        <div>Hosted by <b>Randy Wimmer</b> — Founder, Government Contracting Academy<br/>Author of “GOOD ENOUGH! to Launch Your Company”</div>
+      </div>
+    </div>
+  </section>
+
+  <div class="wrap">
+    <div class="grid">
+      <div class="card">
+        <h2 style="margin-bottom:10px">What you'll walk away with</h2>
+        <ul class="bullets">
+          <li>How to get on contract vehicles without years of past performance</li>
+          <li>The teaming and positioning moves that beat bigger competitors</li>
+          <li>How evaluators actually score proposals — and how to score higher</li>
+          <li>A clear next step for your business, plus live Q&amp;A</li>
+        </ul>
+      </div>
+
+      <div class="card form-card">
+        <h2>Save my seat</h2>
+        <p class="sub">Spots are limited. Enter your details to get the Zoom link instantly.</p>
+        <!-- Replace this form with your GHL registration form embed (see header comment). -->
+        <form id="reg-form" method="POST" action="REPLACE_WITH_GHL_FORM_ACTION">
+          <label for="first_name">First name</label>
+          <input id="first_name" name="first_name" type="text" required />
+          <label for="last_name">Last name</label>
+          <input id="last_name" name="last_name" type="text" required />
+          <label for="email">Email</label>
+          <input id="email" name="email" type="email" required />
+          <label for="phone">Phone (for text reminders)</label>
+          <input id="phone" name="phone" type="tel" required />
+          <button class="btn" type="submit">Reserve My Spot →</button>
+          <p class="tiny">We'll text and email your webinar link. Reply STOP anytime to opt out.</p>
+        </form>
+      </div>
+    </div>
+  </div>
+
+  <footer>
+    © Government Contracting Academy · fedgovstartup.com · You're registering for a free live webinar.
+  </footer>
+</body>
+</html>

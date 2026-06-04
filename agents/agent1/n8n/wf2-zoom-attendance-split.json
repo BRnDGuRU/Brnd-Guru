@@ -1,0 +1,225 @@
+{
+  "name": "Agent1 - WF2 Zoom Attendance Split",
+  "nodes": [
+    {
+      "parameters": {
+        "httpMethod": "POST",
+        "path": "zoom-webinar-ended",
+        "responseMode": "onReceived",
+        "options": {}
+      },
+      "id": "zoom-ended-webhook",
+      "name": "Zoom webinar.ended Webhook",
+      "type": "n8n-nodes-base.webhook",
+      "typeVersion": 2,
+      "position": [240, 300],
+      "webhookId": "zoom-webinar-ended",
+      "notes": "Subscribe Zoom event 'webinar.ended' to this URL. Also handle Zoom's URL-validation challenge (endpoint.url_validation) — see IF node."
+    },
+    {
+      "parameters": {
+        "conditions": {
+          "options": { "caseSensitive": true, "leftValue": "", "typeValidation": "strict" },
+          "conditions": [
+            {
+              "id": "c1",
+              "leftValue": "={{ $json.body.event }}",
+              "rightValue": "endpoint.url_validation",
+              "operator": { "type": "string", "operation": "equals" }
+            }
+          ],
+          "combinator": "and"
+        },
+        "options": {}
+      },
+      "id": "is-validation",
+      "name": "Is URL Validation?",
+      "type": "n8n-nodes-base.if",
+      "typeVersion": 2.2,
+      "position": [460, 300]
+    },
+    {
+      "parameters": {
+        "jsCode": "// Respond to Zoom's CRC validation challenge.\nconst crypto = require('crypto');\nconst plainToken = $json.body.payload.plainToken;\nconst secret = $env.ZOOM_WEBHOOK_SECRET_TOKEN;\nconst encryptedToken = crypto.createHmac('sha256', secret).update(plainToken).digest('hex');\nreturn [{ json: { plainToken, encryptedToken } }];"
+      },
+      "id": "crc-response",
+      "name": "Build CRC Response",
+      "type": "n8n-nodes-base.code",
+      "typeVersion": 2,
+      "position": [680, 180]
+    },
+    {
+      "parameters": {
+        "amount": 75,
+        "unit": "minutes"
+      },
+      "id": "wait-75",
+      "name": "Wait 75 min (report lag)",
+      "type": "n8n-nodes-base.wait",
+      "typeVersion": 1.1,
+      "position": [680, 420],
+      "webhookId": "wait-attendance"
+    },
+    {
+      "parameters": {
+        "assignments": {
+          "assignments": [
+            { "id": "w1", "name": "webinar_id", "value": "={{ $('Zoom webinar.ended Webhook').first().json.body.payload.object.id }}", "type": "string" }
+          ]
+        },
+        "options": {}
+      },
+      "id": "set-webinar-id",
+      "name": "Set Webinar ID",
+      "type": "n8n-nodes-base.set",
+      "typeVersion": 3.4,
+      "position": [900, 420]
+    },
+    {
+      "parameters": {
+        "method": "POST",
+        "url": "https://zoom.us/oauth/token",
+        "authentication": "genericCredentialType",
+        "genericAuthType": "httpBasicAuth",
+        "sendQuery": true,
+        "queryParameters": {
+          "parameters": [
+            { "name": "grant_type", "value": "account_credentials" },
+            { "name": "account_id", "value": "={{ $env.ZOOM_ACCOUNT_ID }}" }
+          ]
+        },
+        "options": {}
+      },
+      "id": "zoom-token",
+      "name": "Zoom: Get OAuth Token",
+      "type": "n8n-nodes-base.httpRequest",
+      "typeVersion": 4.2,
+      "position": [1120, 420],
+      "credentials": {
+        "httpBasicAuth": { "id": "ZOOM_BASIC", "name": "Zoom Client (Basic id:secret)" }
+      },
+      "notes": "Server-to-Server OAuth. Basic auth = base64(client_id:client_secret)."
+    },
+    {
+      "parameters": {
+        "method": "GET",
+        "url": "=https://api.zoom.us/v2/report/webinars/{{ $('Set Webinar ID').first().json.webinar_id }}/participants",
+        "sendHeaders": true,
+        "headerParameters": {
+          "parameters": [
+            { "name": "Authorization", "value": "=Bearer {{ $json.access_token }}" }
+          ]
+        },
+        "sendQuery": true,
+        "queryParameters": {
+          "parameters": [
+            { "name": "page_size", "value": "300" }
+          ]
+        },
+        "options": { "pagination": { "pagination": {
+          "parameters": { "parameters": [ { "name": "next_page_token", "value": "={{ $response.body.next_page_token }}" } ] },
+          "paginationCompleteWhen": "other",
+          "completeExpression": "={{ !$response.body.next_page_token }}",
+          "limitPagesFetched": false
+        } } }
+      },
+      "id": "zoom-participants",
+      "name": "Zoom: Get Attendees",
+      "type": "n8n-nodes-base.httpRequest",
+      "typeVersion": 4.2,
+      "position": [1340, 420],
+      "notes": "report/webinars/{id}/participants requires scope report:read:admin (or dashboard_webinars:read:admin). Returns who actually attended."
+    },
+    {
+      "parameters": {
+        "method": "POST",
+        "url": "https://services.leadconnectorhq.com/contacts/search",
+        "authentication": "genericCredentialType",
+        "genericAuthType": "httpHeaderAuth",
+        "sendHeaders": true,
+        "headerParameters": {
+          "parameters": [
+            { "name": "Version", "value": "2021-07-28" },
+            { "name": "Content-Type", "value": "application/json" }
+          ]
+        },
+        "sendBody": true,
+        "specifyBody": "json",
+        "jsonBody": "={{ JSON.stringify({ locationId: $env.GHL_LOCATION_ID, pageLimit: 100, filters: [ { field: 'tags', operator: 'contains', value: 'webinar-registered' } ] }) }}",
+        "options": { "pagination": { "pagination": {
+          "parameters": { "parameters": [ { "name": "searchAfter", "value": "={{ $response.body.contacts && $response.body.contacts.length ? JSON.stringify($response.body.contacts[$response.body.contacts.length - 1].searchAfter) : '' }}" } ] },
+          "paginationCompleteWhen": "other",
+          "completeExpression": "={{ !$response.body.contacts || $response.body.contacts.length < 100 }}",
+          "limitPagesFetched": false,
+          "type": "body"
+        } } }
+      },
+      "id": "ghl-registered",
+      "name": "GHL: Get Registered Contacts",
+      "type": "n8n-nodes-base.httpRequest",
+      "typeVersion": 4.2,
+      "position": [1340, 600],
+      "credentials": {
+        "httpHeaderAuth": { "id": "GHL_API", "name": "GHL API Key (Bearer)" }
+      },
+      "notes": "Tag-filtered search: POST /contacts/search with filter tags contains 'webinar-registered'. Paginates 100 at a time via searchAfter from the last contact; stops when a page returns <100."
+    },
+    {
+      "parameters": {
+        "jsCode": "// CORE LOGIC (T8): decide attended vs no-show for each registered GHL contact.\n// Build attendee match sets from Zoom (email + normalized name).\nconst attendeeItems = $('Zoom: Get Attendees').all();\nconst attendeeEmails = new Set();\nconst attendeeNames = new Set();\nconst norm = s => (s || '').toString().trim().toLowerCase().replace(/\\s+/g, ' ');\nfor (const it of attendeeItems) {\n  const parts = it.json.participants || [it.json];\n  for (const p of parts) {\n    if (p.user_email) attendeeEmails.add(norm(p.user_email));\n    if (p.name) attendeeNames.add(norm(p.name));\n  }\n}\n\n// Registered contacts from GHL.\nconst contactItems = $('GHL: Get Registered Contacts').all();\nconst out = [];\nfor (const it of contactItems) {\n  const list = it.json.contacts || [it.json];\n  for (const c of list) {\n    const email = norm(c.email);\n    const fullName = norm(`${c.firstName || c.first_name || ''} ${c.lastName || c.last_name || ''}`);\n    const attended = (email && attendeeEmails.has(email)) || (fullName && attendeeNames.has(fullName));\n    out.push({ json: {\n      contactId: c.id,\n      email: c.email,\n      name: fullName,\n      tag: attended ? 'webinar-attended' : 'webinar-noshow'\n    } });\n  }\n}\nif (out.length === 0) { return [{ json: { note: 'No registered contacts found — check tag filter / pagination.' } }]; }\nreturn out;"
+      },
+      "id": "decide-tag",
+      "name": "Decide Attended / No-Show",
+      "type": "n8n-nodes-base.code",
+      "typeVersion": 2,
+      "position": [1560, 510]
+    },
+    {
+      "parameters": {
+        "method": "POST",
+        "url": "=https://services.leadconnectorhq.com/contacts/{{ $json.contactId }}/tags",
+        "authentication": "genericCredentialType",
+        "genericAuthType": "httpHeaderAuth",
+        "sendHeaders": true,
+        "headerParameters": {
+          "parameters": [
+            { "name": "Version", "value": "2021-07-28" },
+            { "name": "Content-Type", "value": "application/json" }
+          ]
+        },
+        "sendBody": true,
+        "specifyBody": "json",
+        "jsonBody": "={{ JSON.stringify({ tags: [$json.tag] }) }}",
+        "options": {}
+      },
+      "id": "ghl-add-tag",
+      "name": "GHL: Add Attendance Tag",
+      "type": "n8n-nodes-base.httpRequest",
+      "typeVersion": 4.2,
+      "position": [1780, 510],
+      "credentials": {
+        "httpHeaderAuth": { "id": "GHL_API", "name": "GHL API Key (Bearer)" }
+      },
+      "notes": "Tag fires GHL Workflow 3 (attended) or 4 (no-show)."
+    }
+  ],
+  "connections": {
+    "Zoom webinar.ended Webhook": { "main": [[{ "node": "Is URL Validation?", "type": "main", "index": 0 }]] },
+    "Is URL Validation?": { "main": [
+      [{ "node": "Build CRC Response", "type": "main", "index": 0 }],
+      [{ "node": "Wait 75 min (report lag)", "type": "main", "index": 0 }]
+    ] },
+    "Wait 75 min (report lag)": { "main": [[{ "node": "Set Webinar ID", "type": "main", "index": 0 }]] },
+    "Set Webinar ID": { "main": [[{ "node": "Zoom: Get OAuth Token", "type": "main", "index": 0 }]] },
+    "Zoom: Get OAuth Token": { "main": [[{ "node": "Zoom: Get Attendees", "type": "main", "index": 0 }]] },
+    "Zoom: Get Attendees": { "main": [[{ "node": "GHL: Get Registered Contacts", "type": "main", "index": 0 }]] },
+    "GHL: Get Registered Contacts": { "main": [[{ "node": "Decide Attended / No-Show", "type": "main", "index": 0 }]] },
+    "Decide Attended / No-Show": { "main": [[{ "node": "GHL: Add Attendance Tag", "type": "main", "index": 0 }]] }
+  },
+  "settings": { "executionOrder": "v1" },
+  "active": false,
+  "pinData": {},
+  "meta": {
+    "description": "T7+T8. Triggered by Zoom 'webinar.ended', waits 75 min for the attendee report, pulls attendees, compares against GHL registered contacts, and tags each attended/no-show. Requires env vars ZOOM_ACCOUNT_ID, ZOOM_WEBHOOK_SECRET_TOKEN, GHL_LOCATION_ID; credentials 'Zoom Client (Basic id:secret)' and 'GHL API Key (Bearer)'. Zoom scope report:read:admin required for the participants report."
+  }
+}

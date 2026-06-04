@@ -1,0 +1,125 @@
+{
+  "name": "Agent1 - WF1 Update Webinar Details",
+  "nodes": [
+    {
+      "parameters": {
+        "httpMethod": "POST",
+        "path": "update-webinar",
+        "responseMode": "responseNode",
+        "options": {}
+      },
+      "id": "webhook-admin-form",
+      "name": "Admin Form Webhook",
+      "type": "n8n-nodes-base.webhook",
+      "typeVersion": 2,
+      "position": [240, 300],
+      "webhookId": "update-webinar"
+    },
+    {
+      "parameters": {
+        "assignments": {
+          "assignments": [
+            { "id": "a1", "name": "webinar_topic", "value": "={{ $json.body.webinar_topic }}", "type": "string" },
+            { "id": "a2", "name": "webinar_date", "value": "={{ $json.body.webinar_date }}", "type": "string" },
+            { "id": "a3", "name": "webinar_time", "value": "={{ $json.body.webinar_time }}", "type": "string" },
+            { "id": "a4", "name": "zoom_webinar_id", "value": "={{ $json.body.zoom_webinar_id }}", "type": "string" },
+            { "id": "a5", "name": "zoom_link", "value": "={{ $json.body.zoom_link }}", "type": "string" }
+          ]
+        },
+        "options": {}
+      },
+      "id": "normalize-input",
+      "name": "Normalize Input",
+      "type": "n8n-nodes-base.set",
+      "typeVersion": 3.4,
+      "position": [460, 300]
+    },
+    {
+      "parameters": {
+        "method": "GET",
+        "url": "=https://services.leadconnectorhq.com/locations/{{ $env.GHL_LOCATION_ID }}/customValues",
+        "authentication": "genericCredentialType",
+        "genericAuthType": "httpHeaderAuth",
+        "sendHeaders": true,
+        "headerParameters": {
+          "parameters": [
+            { "name": "Version", "value": "2021-07-28" },
+            { "name": "Accept", "value": "application/json" }
+          ]
+        },
+        "options": {}
+      },
+      "id": "ghl-list-custom-values",
+      "name": "GHL: List Custom Values",
+      "type": "n8n-nodes-base.httpRequest",
+      "typeVersion": 4.2,
+      "position": [680, 300],
+      "credentials": {
+        "httpHeaderAuth": { "id": "GHL_API", "name": "GHL API Key (Bearer)" }
+      },
+      "notes": "Returns all custom values so we can map name -> id for the PUT calls."
+    },
+    {
+      "parameters": {
+        "jsCode": "// Map each GHL custom value name -> its id, then pair with the new value from the webhook.\nconst cvList = $input.first().json.customValues || $input.first().json.customValue || [];\nconst incoming = $('Normalize Input').first().json;\n\nconst wanted = {\n  webinar_topic: incoming.webinar_topic,\n  webinar_date: incoming.webinar_date,\n  webinar_time: incoming.webinar_time,\n  zoom_webinar_id: incoming.zoom_webinar_id,\n  zoom_link: incoming.zoom_link\n};\n\nconst out = [];\nfor (const cv of cvList) {\n  const key = (cv.name || '').toLowerCase().replace(/\\s+/g, '_');\n  if (Object.prototype.hasOwnProperty.call(wanted, key) && wanted[key] !== undefined && wanted[key] !== '') {\n    out.push({ json: { id: cv.id, name: cv.name, value: String(wanted[key]) } });\n  }\n}\nif (out.length === 0) {\n  throw new Error('No matching custom values found. Create them in GHL first (RUNBOOK 2).');\n}\nreturn out;"
+      },
+      "id": "map-values",
+      "name": "Map Name → ID",
+      "type": "n8n-nodes-base.code",
+      "typeVersion": 2,
+      "position": [900, 300]
+    },
+    {
+      "parameters": {
+        "method": "PUT",
+        "url": "=https://services.leadconnectorhq.com/locations/{{ $env.GHL_LOCATION_ID }}/customValues/{{ $json.id }}",
+        "authentication": "genericCredentialType",
+        "genericAuthType": "httpHeaderAuth",
+        "sendHeaders": true,
+        "headerParameters": {
+          "parameters": [
+            { "name": "Version", "value": "2021-07-28" },
+            { "name": "Content-Type", "value": "application/json" }
+          ]
+        },
+        "sendBody": true,
+        "specifyBody": "json",
+        "jsonBody": "={{ JSON.stringify({ name: $json.name, value: $json.value }) }}",
+        "options": {}
+      },
+      "id": "ghl-update-custom-value",
+      "name": "GHL: Update Custom Value",
+      "type": "n8n-nodes-base.httpRequest",
+      "typeVersion": 4.2,
+      "position": [1120, 300],
+      "credentials": {
+        "httpHeaderAuth": { "id": "GHL_API", "name": "GHL API Key (Bearer)" }
+      }
+    },
+    {
+      "parameters": {
+        "respondWith": "json",
+        "responseBody": "={{ JSON.stringify({ ok: true, updated: $items().length }) }}",
+        "options": {}
+      },
+      "id": "respond",
+      "name": "Respond Success",
+      "type": "n8n-nodes-base.respondToWebhook",
+      "typeVersion": 1.1,
+      "position": [1340, 300]
+    }
+  ],
+  "connections": {
+    "Admin Form Webhook": { "main": [[{ "node": "Normalize Input", "type": "main", "index": 0 }]] },
+    "Normalize Input": { "main": [[{ "node": "GHL: List Custom Values", "type": "main", "index": 0 }]] },
+    "GHL: List Custom Values": { "main": [[{ "node": "Map Name → ID", "type": "main", "index": 0 }]] },
+    "Map Name → ID": { "main": [[{ "node": "GHL: Update Custom Value", "type": "main", "index": 0 }]] },
+    "GHL: Update Custom Value": { "main": [[{ "node": "Respond Success", "type": "main", "index": 0 }]] }
+  },
+  "settings": { "executionOrder": "v1" },
+  "active": false,
+  "pinData": {},
+  "meta": {
+    "description": "T1. Receives Randy's GHL admin-form submission and updates GHL custom values so the landing page + emails auto-populate. Set GHL_LOCATION_ID as an n8n env var and create an 'httpHeaderAuth' credential named 'GHL API Key (Bearer)' with header Authorization: Bearer <GHL_API_KEY>."
+  }
+}

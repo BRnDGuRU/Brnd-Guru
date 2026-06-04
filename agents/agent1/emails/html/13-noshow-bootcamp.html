@@ -1,0 +1,30 @@
+<!DOCTYPE html>
+<html lang="en"><head><meta charset="UTF-8"/>
+<meta name="viewport" content="width=device-width,initial-scale=1.0"/>
+<title>A different way in, {{contact.first_name}}</title></head>
+<body style="margin:0;padding:0;background:#f4f6fa">
+<!-- Agent 1 email: 13-noshow-bootcamp. Subject line: A different way in, {{contact.first_name}} -->
+<table role="presentation" width="100%" cellpadding="0" cellspacing="0" style="background:#f4f6fa;padding:24px 12px">
+<tr><td align="center">
+  <table role="presentation" width="600" cellpadding="0" cellspacing="0" style="max-width:600px;width:100%;background:#fff;border-radius:14px;overflow:hidden;box-shadow:0 8px 30px rgba(10,31,68,.08)">
+    <tr><td style="background:linear-gradient(160deg,#0a1f44,#0d2756);padding:26px 32px">
+      <span style="color:#e0bd66;font-size:13px;font-weight:700;letter-spacing:.06em;text-transform:uppercase">Government Contracting Academy</span>
+    </td></tr>
+    <tr><td style="padding:32px">
+      <p style="margin:0 0 16px;font-size:16px;line-height:1.6;color:#1a2230">Hi {{contact.first_name}},</p>
+<p style="margin:0 0 16px;font-size:16px;line-height:1.6;color:#1a2230">Not everyone wants to jump on a call — and that's fine.</p>
+<p style="margin:0 0 16px;font-size:16px;line-height:1.6;color:#1a2230">If you'd rather learn the whole system at your own pace, the Bootcamp is built exactly for that: the same frameworks I teach on the webinars, broken into steps you can work through whenever you have time.</p>
+<table role="presentation" cellpadding="0" cellspacing="0" style="margin:24px 0"><tr><td style="border-radius:10px;background:#c8a44d"><a href="{{custom_values.bootcamp_link}}" style="display:inline-block;padding:15px 30px;font-size:16px;font-weight:800;color:#1a1407;text-decoration:none;border-radius:10px">Explore the Bootcamp →</a></td></tr></table>
+<p style="margin:0 0 16px;font-size:16px;line-height:1.6;color:#1a2230">And whenever you're ready for a 1-on-1, <a href="{{custom_values.calendly_link}}">my calendar's here</a>.</p>
+<p style="margin:0 0 16px;font-size:16px;line-height:1.6;color:#1a2230">Rooting for you,<br>Randy</p>
+    </td></tr>
+    <tr><td style="background:#0a1f44;padding:20px 32px;text-align:center">
+      <p style="margin:0;color:#9fb0cf;font-size:12px;line-height:1.5">
+        Randy Wimmer · Government Contracting Academy · fedgovstartup.com<br>
+        You're receiving this because you registered for one of our webinars.
+        <a href="{{unsubscribe_link}}" style="color:#c8a44d">Unsubscribe</a>
+      </p>
+    </td></tr>
+  </table>
+</td></tr></table>
+</body></html>
