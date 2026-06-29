@@ -1,7 +1,7 @@
 <?php
 /**
  * Plugin Name: BrndGuru Footer Nav Inject v2
- * Description: Hide broken Elementor footer. Replace with orange branded footer.
+ * Description: Hide broken Elementor footer. Replace with light beige footer.
  * Version:     2.1
  * Author:      BrndGuru
  */
@@ -19,9 +19,9 @@ add_action('wp_head', function () { ?>
 .footer-widget-area { display: none !important; visibility: hidden !important; height: 0 !important; margin: 0 !important; padding: 0 !important; }
 footer { display: none !important; visibility: hidden !important; height: 0 !important; margin: 0 !important; padding: 0 !important; }
 
-/* NEW orange footer */
+/* NEW light beige footer */
 #bgnav-footer {
-    background: #e4522b !important;
+    background: #FEF1E4 !important;
     padding: 60px 40px 32px !important;
     margin: 0 !important;
     width: 100% !important;
@@ -42,13 +42,13 @@ footer { display: none !important; visibility: hidden !important; height: 0 !imp
     font-size: 26px;
     font-weight: 900;
     letter-spacing: -0.5px;
-    color: #ffffff;
+    color: #222222;
     margin: 0 0 14px;
     line-height: 1;
 }
-#bgnav-footer .bgnav-logo span { color: rgba(255,255,255,0.55); }
+#bgnav-footer .bgnav-logo span { color: #e4522b; }
 #bgnav-footer .bgnav-tagline {
-    color: rgba(255,255,255,0.75);
+    color: #555555;
     font-size: 13px;
     line-height: 1.6;
     margin: 0 0 20px;
@@ -57,23 +57,23 @@ footer { display: none !important; visibility: hidden !important; height: 0 !imp
 #bgnav-footer .bgnav-socials a {
     display: flex; align-items: center; justify-content: center;
     width: 36px; height: 36px;
-    background: rgba(255,255,255,0.18);
+    background: #e4522b;
     border-radius: 50%;
     color: #ffffff !important;
     font-size: 15px;
     text-decoration: none !important;
     transition: background .2s;
 }
-#bgnav-footer .bgnav-socials a:hover { background: rgba(255,255,255,0.35); }
+#bgnav-footer .bgnav-socials a:hover { background: #c03b1e; }
 #bgnav-footer .bgnav-col { flex: 1 1 140px; }
 #bgnav-footer .bgnav-col-heading {
-    color: #ffffff !important;
+    color: #222222 !important;
     font-size: 12px !important;
     font-weight: 800 !important;
     letter-spacing: 2px !important;
     text-transform: uppercase !important;
     margin: 0 0 20px !important;
-    opacity: 0.7 !important;
+    opacity: 1 !important;
 }
 #bgnav-footer .bgnav-col ul {
     list-style: none !important;
@@ -84,7 +84,7 @@ footer { display: none !important; visibility: hidden !important; height: 0 !imp
     display: block !important;
 }
 #bgnav-footer .bgnav-col ul li a {
-    color: rgba(255,255,255,0.85) !important;
+    color: #555555 !important;
     font-size: 14px !important;
     text-decoration: none !important;
     display: block !important;
@@ -93,19 +93,19 @@ footer { display: none !important; visibility: hidden !important; height: 0 !imp
     line-height: 1.4 !important;
     transition: color .15s !important;
 }
-#bgnav-footer .bgnav-col ul li a:hover { color: #ffffff !important; }
+#bgnav-footer .bgnav-col ul li a:hover { color: #e4522b !important; }
 #bgnav-footer .bgnav-cta { flex: 0 0 240px; }
 #bgnav-footer .bgnav-cta-label {
-    color: #ffffff !important;
+    color: #222222 !important;
     font-size: 12px !important;
     font-weight: 800 !important;
     letter-spacing: 2px !important;
     text-transform: uppercase !important;
     margin: 0 0 10px !important;
-    opacity: 0.7 !important;
+    opacity: 1 !important;
 }
 #bgnav-footer .bgnav-cta-title {
-    color: #ffffff !important;
+    color: #222222 !important;
     font-size: 17px !important;
     font-weight: 700 !important;
     margin: 0 0 18px !important;
@@ -113,8 +113,8 @@ footer { display: none !important; visibility: hidden !important; height: 0 !imp
 }
 #bgnav-footer .bgnav-cta a.bgnav-btn {
     display: inline-block !important;
-    background: #ffffff !important;
-    color: #e4522b !important;
+    background: #e4522b !important;
+    color: #ffffff !important;
     font-size: 14px !important;
     font-weight: 800 !important;
     padding: 13px 28px !important;
@@ -130,7 +130,7 @@ footer { display: none !important; visibility: hidden !important; height: 0 !imp
     max-width: 1200px;
     margin: 0 auto 24px;
     border: none;
-    border-top: 1px solid rgba(255,255,255,0.2);
+    border-top: 1px solid rgba(0,0,0,0.1);
 }
 #bgnav-footer .bgnav-bottom {
     max-width: 1200px;
@@ -143,11 +143,11 @@ footer { display: none !important; visibility: hidden !important; height: 0 !imp
 }
 #bgnav-footer .bgnav-copy,
 #bgnav-footer .bgnav-copy a {
-    color: rgba(255,255,255,0.6) !important;
+    color: #777777 !important;
     font-size: 12px !important;
     text-decoration: none !important;
 }
-#bgnav-footer .bgnav-copy a:hover { color: #ffffff !important; }
+#bgnav-footer .bgnav-copy a:hover { color: #e4522b !important; }
 
 @media (max-width: 900px) {
     #bgnav-footer { padding: 48px 24px 28px; }
