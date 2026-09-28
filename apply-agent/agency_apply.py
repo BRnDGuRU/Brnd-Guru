@@ -20,7 +20,7 @@ from playwright.async_api import async_playwright, TimeoutError as PlaywrightTim
 
 load_dotenv(Path(__file__).parent / ".env")
 
-# ── Paths ──────────────────────────────────────────────────────────────────────
+# ── Paths ──────────────────────────────────────────────────────────────────────────────
 BASE_DIR        = Path(__file__).parent
 REPO_DIR        = BASE_DIR.parent
 AGENCY_CSV      = BASE_DIR / "agency-list.csv"
@@ -29,13 +29,13 @@ PROFILE_JSON    = BASE_DIR / "profile.json"
 SESSION_DIR     = BASE_DIR / "playwright-session"
 CV_DIR          = REPO_DIR / "cv"
 
-# ── Config ─────────────────────────────────────────────────────────────────────
+# ── Config ────────────────────────────────────────────────────────────────────────────
 GMAIL_EMAIL    = os.getenv("GMAIL_EMAIL", "shivanhsuabroadjobs@gmail.com")
 GMAIL_PASSWORD = os.getenv("GMAIL_PASSWORD", "")
 FORM_TIMEOUT   = 15_000   # ms per action
 PAGE_TIMEOUT   = 45_000   # ms page load
 
-# ── Load profile ───────────────────────────────────────────────────────────────
+# ── Load profile ───────────────────────────────────────────────────────────────────────
 with open(PROFILE_JSON) as f:
     PROFILE = json.load(f)
 
@@ -80,7 +80,7 @@ def append_tracker(company: str, url: str, status: str, cv_used: str, notes: str
         w.writerow([date.today().isoformat(), company, url, status, cv_used, notes])
 
 
-# ── Form field helpers ─────────────────────────────────────────────────────────
+# ── Form field helpers ─────────────────────────────────────────────────────────────────────────
 FIELD_MAP = {
     # name fields
     "first.name":   PROFILE["personal"]["first_name"],
@@ -199,17 +199,6 @@ async def upload_cv(page, cv_file: Path) -> bool:
             await fi.set_input_files(str(cv_file))
             print(f"  ✓ CV uploaded: {cv_file.name}")
             return True
-        except Exception:
-            pass
-        try:
-            # Force-set on hidden inputs via JS
-            await page.evaluate(
-                """(el, path) => {
-                    const dt = new DataTransfer();
-                    fetch('file://' + path).catch(() => {});
-                }""",
-                fi, str(cv_file).replace("\\", "/")
-            )
         except Exception:
             pass
 
@@ -366,7 +355,7 @@ async def handle_google_login(page):
         pass  # Not a Google login gate
 
 
-# ── Main per-agency handler ────────────────────────────────────────────────────
+# ── Main per-agency handler ────────────────────────────────────────────────────────────────────
 async def process_agency(browser, row: dict) -> tuple[str, str]:
     """
     Visit one agency's form URL, fill + submit.
@@ -428,7 +417,7 @@ async def process_agency(browser, row: dict) -> tuple[str, str]:
         await context.close()
 
 
-# ── Entry point ────────────────────────────────────────────────────────────────
+# ── Entry point ────────────────────────────────────────────────────────────────────────────
 async def main():
     rows = read_agencies()
     pending = [r for r in rows if r.get("status", "").strip().lower() not in ("applied", "url_dead")]
