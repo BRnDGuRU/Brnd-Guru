@@ -6,9 +6,9 @@ set -e
 SCRIPT_DIR="$(cd "$(dirname "${BASH_SOURCE[0]}")" && pwd)"
 REPO_DIR="$(dirname "$SCRIPT_DIR")"
 
-echo "========================================"
+echo "========================================" 
 echo " Job Application Automation — $(date '+%Y-%m-%d')"
-echo "========================================"
+echo "========================================" 
 
 # Check .env exists
 if [ ! -f "$SCRIPT_DIR/.env" ]; then
@@ -19,7 +19,7 @@ if [ ! -f "$SCRIPT_DIR/.env" ]; then
 fi
 
 # Check CV folder exists and has files
-if [ -z "$(ls "$REPO_DIR/cv/"*.docx 2>/dev/null)" ]; then
+if [ -z "$(ls "$REPO_DIR/cv/"*.docx "$REPO_DIR/cv/"*.pdf 2>/dev/null)" ]; then
   echo "WARNING: No .docx CV files found in $REPO_DIR/cv/"
   echo "Add your CV files before running."
   exit 1
@@ -31,6 +31,6 @@ cd "$REPO_DIR"
 python apply-agent/agency_apply.py
 
 echo ""
-echo "========================================"
+echo "========================================" 
 echo " All done. Check apply-agent/recruitment-tracker.csv for results."
-echo "========================================"
+echo "========================================" 

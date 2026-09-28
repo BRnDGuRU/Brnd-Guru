@@ -61,14 +61,14 @@
     "year": "2021"
   },
   "cv_files": {
-    "general": "cv/master-cv-pm.docx",
-    "pm": "cv/master-cv-pm.docx",
-    "overseas": "cv/master-cv-pm.docx",
+    "general": "cv/master-cv-pm.pdf",
+    "pm": "cv/master-cv-pm.pdf",
+    "overseas": "cv/master-cv-pm.pdf",
     "bd": "cv/master-cv-business-development.docx",
     "sales": "cv/master-cv-business-development.docx",
     "marketing": "cv/master-cv-digital-marketing.docx",
     "digital": "cv/master-cv-digital-marketing.docx",
-    "remote": "cv/master-cv-pm.docx"
+    "remote": "cv/master-cv-pm.pdf"
   },
   "social": {
     "linkedin_url": "https://linkedin.com/in/shivanshukumarpm",
