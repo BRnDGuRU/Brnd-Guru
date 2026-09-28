@@ -20,7 +20,7 @@ from playwright.async_api import async_playwright, TimeoutError as PlaywrightTim
 
 load_dotenv(Path(__file__).parent / ".env")
 
-# ── Paths ──────────────────────────────────────────────────────────────────────
+# ── Paths ──────────────────────────────────────────────────────────────────────────────
 BASE_DIR        = Path(__file__).parent
 REPO_DIR        = BASE_DIR.parent
 AGENCY_CSV      = BASE_DIR / "agency-list.csv"
@@ -29,13 +29,13 @@ PROFILE_JSON    = BASE_DIR / "profile.json"
 SESSION_DIR     = BASE_DIR / "playwright-session"
 CV_DIR          = REPO_DIR / "cv"
 
-# ── Config ─────────────────────────────────────────────────────────────────────
+# ── Config ────────────────────────────────────────────────────────────────────────────
 GMAIL_EMAIL    = os.getenv("GMAIL_EMAIL", "shivanhsuabroadjobs@gmail.com")
 GMAIL_PASSWORD = os.getenv("GMAIL_PASSWORD", "")
 FORM_TIMEOUT   = 15_000   # ms per action
-PAGE_TIMEOUT   = 30_000   # ms page load
+PAGE_TIMEOUT   = 45_000   # ms page load
 
-# ── Load profile ───────────────────────────────────────────────────────────────
+# ── Load profile ───────────────────────────────────────────────────────────────────────
 with open(PROFILE_JSON) as f:
     PROFILE = json.load(f)
 
@@ -80,7 +80,7 @@ def append_tracker(company: str, url: str, status: str, cv_used: str, notes: str
         w.writerow([date.today().isoformat(), company, url, status, cv_used, notes])
 
 
-# ── Form field helpers ─────────────────────────────────────────────────────────
+# ── Form field helpers ─────────────────────────────────────────────────────────────────────────
 FIELD_MAP = {
     # name fields
     "first.name":   PROFILE["personal"]["first_name"],
@@ -192,6 +192,7 @@ async def fill_inputs(page, exclude_types=("submit", "button", "hidden", "file",
 
 async def upload_cv(page, cv_file: Path) -> bool:
     """Attempt to upload CV via file input. Returns True if successful."""
+    # Try all file inputs including hidden ones
     file_inputs = await page.query_selector_all("input[type='file']")
     for fi in file_inputs:
         try:
@@ -199,17 +200,20 @@ async def upload_cv(page, cv_file: Path) -> bool:
             print(f"  ✓ CV uploaded: {cv_file.name}")
             return True
         except Exception:
-            continue
+            pass
 
-    # Fallback: look for upload button by text
+    # Fallback: look for upload button / drag-drop zone by text or class
     for selector in [
         "text=Upload CV", "text=Upload Resume", "text=Attach CV",
-        "text=Browse", "text=Choose File", "[data-upload]", ".upload-btn"
+        "text=Attach Resume", "text=Browse", "text=Choose File",
+        "text=Drop your CV", "text=Drop CV here",
+        "[data-upload]", ".upload-btn", ".upload-area",
+        "[class*='upload']", "[class*='dropzone']", "[class*='drop-zone']",
     ]:
         try:
             btn = page.locator(selector).first
             if await btn.is_visible(timeout=2000):
-                async with page.expect_file_chooser() as fc_info:
+                async with page.expect_file_chooser(timeout=5000) as fc_info:
                     await btn.click()
                 file_chooser = await fc_info.value
                 await file_chooser.set_files(str(cv_file))
@@ -230,12 +234,30 @@ async def submit_form(page) -> bool:
         "button:has-text('Submit')",
         "button:has-text('Send')",
         "button:has-text('Apply')",
+        "button:has-text('Apply Now')",
         "button:has-text('Register')",
         "button:has-text('Upload')",
+        "button:has-text('Upload CV')",
         "button:has-text('Send CV')",
         "button:has-text('Send Resume')",
         "button:has-text('Submit CV')",
         "button:has-text('Submit Resume')",
+        "button:has-text('Post CV')",
+        "button:has-text('Post Resume')",
+        "button:has-text('Proceed')",
+        "button:has-text('Continue')",
+        "button:has-text('Confirm')",
+        "button:has-text('Done')",
+        "a:has-text('Submit')",
+        "a:has-text('Apply Now')",
+        "a:has-text('Send CV')",
+        "[role='button']:has-text('Submit')",
+        "[role='button']:has-text('Apply')",
+        "[role='button']:has-text('Send')",
+        "[class*='submit']",
+        "[class*='btn-send']",
+        "[class*='btn-apply']",
+        "[id*='submit']",
     ]
     for sel in submit_selectors:
         try:
@@ -243,25 +265,64 @@ async def submit_form(page) -> bool:
             if await btn.is_visible(timeout=2000):
                 await btn.click()
                 try:
-                    await page.wait_for_load_state("networkidle", timeout=10_000)
+                    await page.wait_for_load_state("networkidle", timeout=12_000)
                 except PlaywrightTimeout:
                     pass
                 return True
         except Exception:
             continue
+
+    # Last resort: click any visible button not labelled Back/Cancel/Close
+    try:
+        buttons = await page.query_selector_all("button, input[type='button']")
+        for btn in buttons:
+            try:
+                if not await btn.is_visible():
+                    continue
+                txt = (await btn.inner_text()).strip().lower()
+                if txt and txt not in ("back", "cancel", "close", "reset", "clear", "no", "skip"):
+                    await btn.click()
+                    try:
+                        await page.wait_for_load_state("networkidle", timeout=12_000)
+                    except PlaywrightTimeout:
+                        pass
+                    return True
+            except Exception:
+                continue
+    except Exception:
+        pass
+
     return False
 
 
 async def detect_success(page) -> bool:
-    """Heuristic: check page for success/thank-you indicators."""
+    """Heuristic: check page content and URL for success/thank-you indicators."""
     content = (await page.content()).lower()
+    url = page.url.lower()
+
     success_phrases = [
         "thank you", "thanks for", "successfully", "received your",
         "we will be in touch", "we'll be in touch", "application submitted",
         "cv received", "resume received", "submission successful",
-        "message sent", "form submitted"
+        "message sent", "form submitted", "your application",
+        "get back to you", "hear from you", "hear from us",
+        "touch with you", "been received", "has been submitted",
+        "profile received", "shortlisted", "under review",
+        "your cv", "your resume", "we have received", "noted your",
+        "registered successfully", "uploaded successfully",
+        "sent successfully", "details received",
     ]
-    return any(p in content for p in success_phrases)
+    if any(p in content for p in success_phrases):
+        return True
+
+    # URL-based success detection (redirected to /thank-you, /success, etc.)
+    success_url_patterns = [
+        "thank", "success", "confirm", "submitted", "received", "done"
+    ]
+    if any(p in url for p in success_url_patterns):
+        return True
+
+    return False
 
 
 async def handle_google_login(page):
@@ -294,7 +355,7 @@ async def handle_google_login(page):
         pass  # Not a Google login gate
 
 
-# ── Main per-agency handler ────────────────────────────────────────────────────
+# ── Main per-agency handler ────────────────────────────────────────────────────────────────────
 async def process_agency(browser, row: dict) -> tuple[str, str]:
     """
     Visit one agency's form URL, fill + submit.
@@ -356,7 +417,7 @@ async def process_agency(browser, row: dict) -> tuple[str, str]:
         await context.close()
 
 
-# ── Entry point ────────────────────────────────────────────────────────────────
+# ── Entry point ────────────────────────────────────────────────────────────────────────────
 async def main():
     rows = read_agencies()
     pending = [r for r in rows if r.get("status", "").strip().lower() not in ("applied", "url_dead")]
