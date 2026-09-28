@@ -4,7 +4,6 @@ apply-agent/playwright-session/
 
 # Runtime outputs — contain personal data
 apply-agent/recruitment-tracker.csv
-apply-agent/agency-list.csv
 
 # CV files — personal documents
 cv/
