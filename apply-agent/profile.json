@@ -1,0 +1,80 @@
+{
+  "personal": {
+    "full_name": "Shivanshu Sinha",
+    "legal_name": "Shivanshu Kumar",
+    "first_name": "Shivanshu",
+    "last_name": "Sinha",
+    "email": "shivanhsuabroadjobs@gmail.com",
+    "phone": "+917210625970",
+    "phone_country_code": "+91",
+    "linkedin": "https://linkedin.com/in/shivanshukumarpm",
+    "location_city": "New Delhi",
+    "location_state": "Delhi",
+    "location_country": "India",
+    "nationality": "Indian",
+    "current_location": "New Delhi, India"
+  },
+  "professional": {
+    "current_title": "Project Management Consultant & Strategy Lead",
+    "years_experience": 8,
+    "notice_period": "30 days",
+    "notice_period_weeks": 4,
+    "availability": "Immediate to 30 days",
+    "current_employer": "BRND GURU",
+    "salary_current_inr": "",
+    "salary_expected_usd": "Open to global market rate",
+    "salary_expected_range": "Negotiable based on role and location",
+    "work_authorization_india": "Yes - Indian Citizen",
+    "work_authorization_uae": "Require visa sponsorship",
+    "work_authorization_uk": "Require visa sponsorship",
+    "work_authorization_us": "Require visa sponsorship",
+    "open_to_relocation": "Yes - UAE, UK, remote globally",
+    "open_to_remote": "Yes",
+    "employment_type": "Full-time only"
+  },
+  "target_roles": [
+    "Project Manager",
+    "Program Manager",
+    "Delivery Manager",
+    "GTM Manager",
+    "GTM Strategist",
+    "Business Development Manager",
+    "BD Director",
+    "Head of Business Development",
+    "Digital Marketing Director",
+    "Head of Growth",
+    "Marketing Automation Lead"
+  ],
+  "target_industries": [
+    "Technology",
+    "SaaS",
+    "E-commerce",
+    "Consulting",
+    "Digital Marketing",
+    "Fintech"
+  ],
+  "education": {
+    "degree": "MSc",
+    "field": "Project Management",
+    "institution": "Anglia Ruskin University",
+    "location": "Cambridge, UK",
+    "year": "2021"
+  },
+  "cv_files": {
+    "general": "cv/master-cv-pm.pdf",
+    "pm": "cv/master-cv-pm.pdf",
+    "overseas": "cv/master-cv-pm.pdf",
+    "bd": "cv/master-cv-business-development.docx",
+    "sales": "cv/master-cv-business-development.docx",
+    "marketing": "cv/master-cv-digital-marketing.docx",
+    "digital": "cv/master-cv-digital-marketing.docx",
+    "remote": "cv/master-cv-pm.pdf"
+  },
+  "social": {
+    "linkedin_url": "https://linkedin.com/in/shivanshukumarpm",
+    "linkedin_handle": "shivanshukumarpm",
+    "portfolio": "",
+    "website": ""
+  },
+  "cover_letter_intro": "I am a Project Management Consultant and Strategy Lead with 8+ years of experience delivering complex programmes across technology, e-commerce, and consulting sectors. I am actively exploring senior remote and international opportunities and would welcome the chance to connect with your team."
+}

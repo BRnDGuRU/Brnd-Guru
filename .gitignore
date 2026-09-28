@@ -1,0 +1,14 @@
+# Environment & credentials
+apply-agent/.env
+apply-agent/playwright-session/
+
+# Runtime outputs — contain personal data
+apply-agent/recruitment-tracker.csv
+
+
+# Python
+__pycache__/
+*.pyc
+*.pyo
+.venv/
+venv/
