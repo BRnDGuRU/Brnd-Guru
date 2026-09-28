@@ -370,11 +370,14 @@ async def main():
     SESSION_DIR.mkdir(exist_ok=True)
 
     async with async_playwright() as p:
-        browser = await p.chromium.launch_persistent_context(
-            str(SESSION_DIR),
-            headless=False,   # set True after confirming it works
-            viewport={"width": 1280, "height": 900},
-            args=["--disable-blink-features=AutomationControlled"],
+        browser = await p.chromium.launch(
+            headless=True,
+            executable_path="/opt/pw-browsers/chromium",
+            args=[
+                "--disable-blink-features=AutomationControlled",
+                "--no-sandbox",
+                "--disable-dev-shm-usage",
+            ],
         )
 
         for row in rows:
