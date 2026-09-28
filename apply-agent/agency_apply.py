@@ -371,13 +371,8 @@ async def main():
 
     async with async_playwright() as p:
         browser = await p.chromium.launch(
-            headless=True,
-            executable_path="/opt/pw-browsers/chromium",
-            args=[
-                "--disable-blink-features=AutomationControlled",
-                "--no-sandbox",
-                "--disable-dev-shm-usage",
-            ],
+            headless=False,
+            args=["--disable-blink-features=AutomationControlled"],
         )
 
         for row in rows:
